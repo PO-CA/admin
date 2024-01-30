@@ -1,0 +1,22 @@
+.sidebarContainer {
+  background-color: rgb(108, 108, 175);
+  width: 200px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.menusContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 50px 0 0 0;
+}
+
+.menusItem {
+  color: #ffffff;
+  font-size: 30px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+}
