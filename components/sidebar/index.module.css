@@ -1,6 +1,7 @@
 .sidebarContainer {
   background-color: rgb(108, 108, 175);
-  width: 200px;
+  width: 140px;
+  min-width: 140px;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -16,7 +17,7 @@
 
 .menusItem {
   color: #ffffff;
-  font-size: 30px;
+  font-size: 22px;
   font-weight: 600;
   margin: 0 0 20px 0;
 }

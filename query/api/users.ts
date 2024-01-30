@@ -1,12 +1,22 @@
 import { API_URL } from '@/constants/apis';
 import axios from 'axios';
 
+// export const getAllUsersWithOrderItemsQty = async () => {
+//   const { data } = await axios({
+//     method: 'get',
+//     url: `${API_URL}/userswithorderitemsqty`,
+//   });
+//   return data;
+// };
+
 export const getAllUsersWithOrderItemsQty = async () => {
-  const { data } = await axios({
-    method: 'get',
-    url: `${API_URL}/userswithorderitemsqty`,
-  });
-  return data;
+  const result = await fetch(`${API_URL}/userswithorderitemsqty`);
+
+  if (!result.ok) {
+    throw new Error('Failed to fetch users');
+  }
+
+  return await result.json();
 };
 
 export const getUserDetailByUsersNickname = async (usersNickname: string) => {
