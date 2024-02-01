@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 import styles from './layout.module.css';
 import Sidebar from '../components/sidebar';
 import ReactQueryProvider from './ReactQueryProvider';
 import { menus } from '@/constants/menus';
-const inter = Inter({ subsets: ['latin'] });
+// const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -19,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={(inter.className, styles.rootLayoutContainer)}>
+      <body className={styles.rootLayoutContainer}>
         <ReactQueryProvider>
           <Sidebar>
             <Sidebar.MenusConatiner>
