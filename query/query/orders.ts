@@ -11,6 +11,7 @@ export function useGetAllPickedOrderByUserNickname(userNickname: string) {
       const data = await getAllPickedOrderByUserNickname(userNickname);
       return data;
     },
+    enabled: !!userNickname,
   });
 }
 
@@ -21,5 +22,6 @@ export function useGetAllUnpickedOrderByUserNickname(userNickname: string) {
       const data = await getAllUnpickedOrderByUserNickname(userNickname);
       return data;
     },
+    enabled: !!userNickname,
   });
 }

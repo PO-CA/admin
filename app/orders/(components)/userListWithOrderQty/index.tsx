@@ -1,18 +1,9 @@
-'use client';
-
-import { useGetAllUsersWithOrderItemsQty } from '@/query/query/users';
-import React from 'react';
 import { ordersColumns } from '../tableColumns/ordersColumns';
 import TanTable from '@/components/table';
+import { getAllUsersWithOrderItemsQty } from '@/query/api/users';
 
-export default function UserListWithOrderQty() {
-  const {
-    data: userData,
-    isLoading: isUserLoading,
-    isSuccess: isUserSuccess,
-  } = useGetAllUsersWithOrderItemsQty();
-  return (
-    !isUserLoading &&
-    isUserSuccess && <TanTable data={userData} columns={ordersColumns} />
-  );
+export default async function UserListWithOrderQty() {
+  const result = await getAllUsersWithOrderItemsQty();
+
+  return <TanTable data={result} columns={ordersColumns} />;
 }

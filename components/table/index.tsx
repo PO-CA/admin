@@ -2,7 +2,7 @@
 // @ts-nocheck
 import { useEffect, useMemo, useState } from 'react';
 
-import './index.css';
+import styles from './index.module.css';
 
 import {
   Column,
@@ -97,18 +97,18 @@ export default function TanTable({
     table.getGroupedSelectedRowModel().rows,
   ); //get grouped client-side selected rows
   return (
-    <div>
+    <div className={styles.tableContainer}>
       {useSearch && (
-        <div style={{ display: 'flex' }}>
+        <div className={styles.topPanal}>
           <DebouncedInput
             value={globalFilter ?? ''}
             onChange={(value) => setGlobalFilter(String(value))}
-            className="p-2 font-lg shadow border border-block"
-            placeholder="Search all columns..."
+            className={styles.searchInput}
+            placeholder="전체 검색"
           />
-          <div>{table.getPrePaginationRowModel().rows.length} Rows</div>
           <select
             value={table.getState().pagination.pageSize}
+            className={styles.selactInput}
             onChange={(e) => {
               table.setPageSize(Number(e.target.value));
             }}
@@ -120,6 +120,10 @@ export default function TanTable({
             ))}
           </select>
           개 씩 보기
+          <div className={styles.totalRowcount}>
+            {' '}
+            총 {table.getPrePaginationRowModel().rows.length} 개
+          </div>
         </div>
       )}
 
@@ -130,14 +134,18 @@ export default function TanTable({
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <th key={header.id} colSpan={header.colSpan}>
+                  <th
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    className={styles.tableHeader}
+                  >
                     {header.isPlaceholder ? null : (
                       <>
                         <div
                           {...{
                             // 클래스네임 대신 모듈로
                             className: header.column.getCanSort()
-                              ? 'cursor-pointer select-none'
+                              ? styles.sortable
                               : '',
                             onClick: header.column.getToggleSortingHandler(),
                           }}
@@ -170,7 +178,7 @@ export default function TanTable({
               <tr key={row.id}>
                 {row.getVisibleCells().map((cell) => {
                   return (
-                    <td key={cell.id}>
+                    <td key={cell.id} className={styles.tableRow}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -185,38 +193,42 @@ export default function TanTable({
       </table>
       <div />
       {usePagenation && (
-        <div>
+        <div className={styles.paginationPanel}>
           <button
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
+            className={styles.paginationButton}
           >
             {'<<'}
           </button>
           <button
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
+            className={styles.paginationButton}
           >
             {'<'}
           </button>
           <button
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
+            className={styles.paginationButton}
           >
             {'>'}
           </button>
           <button
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
+            className={styles.paginationButton}
           >
             {'>>'}
           </button>
-          <span>
+          <div className={styles.paginationText}>
             <strong>
               {table.getState().pagination.pageIndex + 1} of{' '}
               {table.getPageCount()}
             </strong>
-          </span>
-          <span>
+          </div>
+          <div className={styles.paginationInputContainer}>
             <input
               type="number"
               defaultValue={table.getState().pagination.pageIndex + 1}
@@ -224,8 +236,10 @@ export default function TanTable({
                 const page = e.target.value ? Number(e.target.value) - 1 : 0;
                 table.setPageIndex(page);
               }}
+              className={styles.paginationInput}
             />
-          </span>
+            페이지
+          </div>
         </div>
       )}
     </div>

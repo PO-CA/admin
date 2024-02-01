@@ -10,7 +10,10 @@ import axios from 'axios';
 // };
 
 export const getAllUsersWithOrderItemsQty = async () => {
-  const result = await fetch(`${API_URL}/userswithorderitemsqty`);
+  const result = await fetch(`${API_URL}/userswithorderitemsqty`, {
+    method: 'GET',
+    cache: 'no-store',
+  });
 
   if (!result.ok) {
     throw new Error('Failed to fetch users');

@@ -1,11 +1,27 @@
 import { API_URL } from '@/constants/apis';
-import axios from 'axios';
 
 export const getAllProducts = async () => {
-  const { data } = await axios({
+  const data = await fetch(`${API_URL}/logi/products`, {
     method: 'get',
-    url: `${API_URL}/logi/products`,
+    cache: 'no-store',
   });
 
-  return data;
+  if (!data.ok) {
+    throw new Error('Failed to fetch products');
+  }
+
+  return data.json();
+};
+
+export const getAProduct = async (productId: string) => {
+  const data = await fetch(`${API_URL}/logi/productdetail/${productId}`, {
+    method: 'get',
+    cache: 'no-store',
+  });
+
+  if (!data.ok) {
+    throw new Error('Failed to fetch products');
+  }
+
+  return data.json();
 };

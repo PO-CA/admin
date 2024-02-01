@@ -1,24 +1,15 @@
-'use client';
-
-import { useGetAllShippings } from '@/query/query/shippings';
 import styles from './page.module.css';
 import TanTable from '@/components/table';
 import { shippingColumns } from './(components)/tableColumns/shippingColumns';
+import { getAllShippings } from '@/query/api/shipping';
 
-export default function Shippings() {
-  const {
-    data: shippingData,
-    isLoading: isShippingLoading,
-    isSuccess: isShippingSuccess,
-  } = useGetAllShippings();
+export default async function Shippings() {
+  const shippingData = await getAllShippings();
 
-  console.log('shippingData', shippingData);
   return (
     <main className={styles.shippingsContainer}>
-      <div>배송</div>
-      {!isShippingLoading && isShippingSuccess && (
-        <TanTable data={shippingData} columns={shippingColumns} />
-      )}
+      <div className={styles.subTitle}>배송</div>
+      <TanTable data={shippingData} columns={shippingColumns} />
     </main>
   );
 }

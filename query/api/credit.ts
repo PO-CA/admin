@@ -1,11 +1,13 @@
 import { API_URL } from '@/constants/apis';
-import axios from 'axios';
 
 export const getCreditsByUserNickname = async (userNickname: string) => {
-  const { data } = await axios({
+  const result = await fetch(`${API_URL}/logi/credits/${userNickname}`, {
     method: 'get',
-    url: `${API_URL}/logi/credits/${userNickname}`,
   });
 
-  return data;
+  if (!result) {
+    throw new Error('Failed to fetch credits');
+  }
+
+  return result.json();
 };

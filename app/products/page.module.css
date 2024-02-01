@@ -1,2 +1,11 @@
 .productsContainer {
+  width: 100%;
+  padding: 30px;
+}
+
+.subTitle {
+  font-size: 25px;
+  font-weight: 600;
+  text-align: center;
+  padding: 10px;
 }

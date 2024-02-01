@@ -18,5 +18,6 @@ export function useGetDCAmountByUserNickname(userNickname: string) {
       const data = await getDCAmountByUserNickname(userNickname);
       return data;
     },
+    enabled: !!userNickname,
   });
 }

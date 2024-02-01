@@ -4,7 +4,7 @@ import React from 'react';
 import { compareItems } from '@tanstack/match-sorter-utils';
 import Link from 'next/link';
 
-export const shippingColumns: ColumnDef<any, any>[] = [
+export const shippingItemColumns: ColumnDef<any, any>[] = [
   // {
   //   id: 'select-col',
   //   header: ({ table }) => (

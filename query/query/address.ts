@@ -8,5 +8,6 @@ export function useGetAddressByUserNickname(userNickname: string) {
       const data = await getAddressByUserNickname(userNickname);
       return data;
     },
+    enabled: !!userNickname,
   });
 }

@@ -1,19 +1,14 @@
-'use client';
-
 import TanTable from '@/components/table';
-import { useGetCreditsByUserNickname } from '@/query/query/credit';
 import React from 'react';
 import { creditsColumns } from '../tableColumns/creditsColumns';
+import { getCreditsByUserNickname } from '@/query/api/credit';
 
-export default function Credits({ userNickname }: any) {
-  const {
-    data: creditData,
-    isLoading: isCreditLoading,
-    isSuccess: isCreditSuccess,
-  } = useGetCreditsByUserNickname(userNickname);
+export default async function Credits({
+  userNickname,
+}: {
+  userNickname: string;
+}) {
+  const result = await getCreditsByUserNickname(userNickname);
 
-  return (
-    !isCreditLoading &&
-    isCreditSuccess && <TanTable data={creditData} columns={creditsColumns} />
-  );
+  return <TanTable data={result} columns={creditsColumns} />;
 }

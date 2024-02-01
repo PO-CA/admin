@@ -8,7 +8,7 @@ export default async function Customers() {
 
   return (
     <main className={styles.customersContainer}>
-      <div>유저-목록</div>
+      <div className={styles.subTitle}>유저-목록</div>
       <TanTable data={result} columns={usersColumns} />
     </main>
   );

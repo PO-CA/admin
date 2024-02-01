@@ -1,11 +1,28 @@
 import { API_URL } from '@/constants/apis';
-import axios from 'axios';
 
 export const getAllCategory = async () => {
-  const { data } = await axios({
+  const data = await fetch(`${API_URL}/logi/category`, {
     method: 'get',
-    url: `${API_URL}/logi/category`,
+    next: { tags: ['category'] },
   });
 
-  return data;
+  if (!data.ok) {
+    throw new Error('Failed to fetch category');
+  }
+
+  return data.json();
+};
+
+export const createACategory = async (categoryTitle: string) => {
+  const data = await fetch(`${API_URL}/logi/category`, {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title: categoryTitle }),
+  });
+
+  if (!data.ok) {
+    throw new Error('Failed to fetch category');
+  }
+
+  return data.json();
 };

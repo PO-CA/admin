@@ -2,19 +2,33 @@ import { API_URL } from '@/constants/apis';
 import axios from 'axios';
 
 export const getAllShippings = async () => {
-  const { data } = await axios({
+  const data = await fetch(`${API_URL}/logi/shipping`, {
     method: 'get',
-    url: `${API_URL}/logi/shipping`,
+    cache: 'no-store',
   });
-
-  return data;
+  return await data.json();
 };
 
 export const getAllShippingsByStatus = async (shippingStatus: string) => {
-  const { data } = await axios({
+  const data = await fetch(`${API_URL}/logi/shipping/${shippingStatus}`, {
     method: 'get',
-    url: `${API_URL}/logi/shipping/${shippingStatus}`,
+    cache: 'no-store',
   });
+  return await data.json();
+};
 
-  return data;
+export const getAllShippingsByUserNickname = async (userNickname: string) => {
+  const data = await fetch(`${API_URL}/logi/shipping/name/${userNickname}`, {
+    method: 'get',
+    cache: 'no-store',
+  });
+  return await data.json();
+};
+
+export const getAllShippingsByShippingId = async (shippingId: string) => {
+  const data = await fetch(`${API_URL}/logi/shipping/${shippingId}`, {
+    method: 'get',
+    cache: 'no-store',
+  });
+  return await data.json();
 };

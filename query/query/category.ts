@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import { getAllCategory } from '../api/category';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createACategory, getAllCategory } from '../api/category';
 
 export function useGetAllCategory() {
   return useQuery({
@@ -8,5 +8,15 @@ export function useGetAllCategory() {
       const data = await getAllCategory();
       return data;
     },
+  });
+}
+
+export function useCreateACategory() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (categoryTitle: string) => createACategory(categoryTitle),
+
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['category'] }),
   });
 }
