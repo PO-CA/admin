@@ -19,3 +19,17 @@ export const getAllUnpickedOrderByUserNickname = async (
 
   return data;
 };
+
+export const createAOrderItem = async (payload: object) => {
+  const data = await fetch(`${API_URL}/logi/orderitems`, {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!data.ok) {
+    throw new Error('Failed to fetch orderitems');
+  }
+
+  return data.json();
+};

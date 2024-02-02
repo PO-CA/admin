@@ -1,7 +1,4 @@
-'use client';
-import { ordersColumns } from '../tableColumns/ordersColumns';
-import TanTable, { fuzzyFilter } from '@/components/table';
-import { useGetAllUsersWithOrderItemsQty } from '@/query/query/users';
+import { useGetAddressByUserNickname } from '@/query/query/address';
 import {
   ColumnFiltersState,
   getCoreRowModel,
@@ -13,20 +10,27 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { addressColumns } from '../../tableColumns/addressColumns';
+import TanTable, { fuzzyFilter } from '@/components/table';
 
-export default function UserListWithOrderQty() {
+export default function UserAddress({
+  userNickname,
+}: {
+  userNickname: string;
+}) {
   const {
-    data: usersData,
-    isLoading: isUsersLoading,
-    isSuccess: isUsersSuccess,
-  } = useGetAllUsersWithOrderItemsQty();
+    data: addressData,
+    isLoading: isAddressLoading,
+    isSuccess: isAddressSuccess,
+  } = useGetAddressByUserNickname(userNickname);
+
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
 
   const table = useReactTable({
-    data: usersData,
-    columns: ordersColumns,
+    data: addressData,
+    columns: addressColumns,
     filterFns: {
       fuzzy: fuzzyFilter,
     },
@@ -49,11 +53,11 @@ export default function UserListWithOrderQty() {
     debugColumns: false,
   });
 
-  if (isUsersLoading) {
+  if (isAddressLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!isUsersSuccess) {
+  if (!isAddressSuccess) {
     return <div>Failed to load</div>;
   }
 
@@ -62,6 +66,9 @@ export default function UserListWithOrderQty() {
       table={table}
       globalFilter={globalFilter}
       setGlobalFilter={setGlobalFilter}
+      useSearch={false}
+      useFilter={false}
+      usePagenation={false}
     />
   );
 }

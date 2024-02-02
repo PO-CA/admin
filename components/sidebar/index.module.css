@@ -1,5 +1,6 @@
 .sidebarContainer {
   background-color: rgb(108, 108, 175);
+  position: fixed;
   width: 140px;
   min-width: 140px;
   height: 100vh;

@@ -5,6 +5,26 @@ import React from 'react';
 
 export const orderItemsColumns: ColumnDef<any, any>[] = [
   {
+    id: 'select-col',
+    header: ({ table }) => (
+      <input
+        type="checkbox"
+        checked={table.getIsAllRowsSelected()}
+        // indeterminate={table.getIsSomeRowsSelected()}
+        // onChange={table.getToggleAllRowsSelectedHandler()} //or getToggleAllPageRowsSelectedHandler
+        onChange={table.getToggleAllPageRowsSelectedHandler()} //or getToggleAllPageRowsSelectedHandler
+      />
+    ),
+    cell: ({ row }) => (
+      <input
+        type="checkbox"
+        checked={row.getIsSelected()}
+        disabled={!row.getCanSelect()}
+        onChange={row.getToggleSelectedHandler()}
+      />
+    ),
+  },
+  {
     accessorFn: (row) => row.thumbNailUrl,
     id: 'thumbNailUrl',
     cell: (info) => <img src={info.getValue()} />,

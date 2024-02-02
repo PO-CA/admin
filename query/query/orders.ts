@@ -1,5 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  createAOrderItem,
   getAllPickedOrderByUserNickname,
   getAllUnpickedOrderByUserNickname,
 } from '../api/orders';
@@ -23,5 +24,16 @@ export function useGetAllUnpickedOrderByUserNickname(userNickname: string) {
       return data;
     },
     enabled: !!userNickname,
+  });
+}
+
+export function useCreateAOrderItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: object) => createAOrderItem(payload),
+
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['orderItems'] }),
   });
 }

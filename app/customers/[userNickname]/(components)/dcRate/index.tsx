@@ -1,7 +1,3 @@
-'use client';
-import { ordersColumns } from '../tableColumns/ordersColumns';
-import TanTable, { fuzzyFilter } from '@/components/table';
-import { useGetAllUsersWithOrderItemsQty } from '@/query/query/users';
 import {
   ColumnFiltersState,
   getCoreRowModel,
@@ -13,20 +9,24 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import TanTable, { fuzzyFilter } from '@/components/table';
+import { useGetDCRateByUserNickname } from '@/query/query/dc';
+import { dcRateColumns } from '../../tableColumns/dcRateColumns';
 
-export default function UserListWithOrderQty() {
+export default function UserDcRate({ userNickname }: { userNickname: string }) {
   const {
-    data: usersData,
-    isLoading: isUsersLoading,
-    isSuccess: isUsersSuccess,
-  } = useGetAllUsersWithOrderItemsQty();
+    data: dcRateData,
+    isLoading: isDcRateLoading,
+    isSuccess: isDcRateSuccess,
+  } = useGetDCRateByUserNickname(userNickname);
+
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
 
   const table = useReactTable({
-    data: usersData,
-    columns: ordersColumns,
+    data: dcRateData,
+    columns: dcRateColumns,
     filterFns: {
       fuzzy: fuzzyFilter,
     },
@@ -49,11 +49,11 @@ export default function UserListWithOrderQty() {
     debugColumns: false,
   });
 
-  if (isUsersLoading) {
+  if (isDcRateLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!isUsersSuccess) {
+  if (!isDcRateSuccess) {
     return <div>Failed to load</div>;
   }
 
@@ -62,6 +62,9 @@ export default function UserListWithOrderQty() {
       table={table}
       globalFilter={globalFilter}
       setGlobalFilter={setGlobalFilter}
+      useSearch={false}
+      useFilter={false}
+      usePagenation={false}
     />
   );
 }

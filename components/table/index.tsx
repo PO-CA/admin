@@ -4,22 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import styles from './index.module.css';
 
-import {
-  Column,
-  Table,
-  useReactTable,
-  ColumnFiltersState,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFacetedMinMaxValues,
-  getPaginationRowModel,
-  getSortedRowModel,
-  FilterFn,
-  flexRender,
-  ColumnDef,
-} from '@tanstack/react-table';
+import { Column, Table, FilterFn, flexRender } from '@tanstack/react-table';
 
 import { RankingInfo, rankItem } from '@tanstack/match-sorter-utils';
 
@@ -32,7 +17,7 @@ declare module '@tanstack/table-core' {
   }
 }
 
-const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+export const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value);
 
@@ -46,56 +31,20 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 };
 
 export default function TanTable({
-  data,
-  columns,
+  table,
+  globalFilter,
+  setGlobalFilter,
   useSearch = true,
   useFilter = true,
   usePagenation = true,
 }: {
-  data: any[];
-  columns: ColumnDef<any, any>[];
+  table: any;
   useSearch?: boolean;
   useFilter?: boolean;
   usePagenation?: boolean;
+  globalFilter?: string;
+  setGlobalFilter: (value: string) => void;
 }) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [globalFilter, setGlobalFilter] = useState('');
-
-  const table = useReactTable({
-    data,
-    columns: columns,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
-    state: {
-      columnFilters,
-      globalFilter,
-    },
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: fuzzyFilter,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: false,
-  });
-
-  console.log('getState', table.getState().rowSelection); //get the row selection state - { 1: true, 2: false, etc... }
-  console.log('getSelectedRowModel', table.getSelectedRowModel().rows); //get full client-side selected rows
-  console.log(
-    'getFilteredSelectedRowModel',
-    table.getFilteredSelectedRowModel().rows,
-  ); //get filtered client-side selected rows
-  console.log(
-    'getGroupedSelectedRowModel',
-    table.getGroupedSelectedRowModel().rows,
-  ); //get grouped client-side selected rows
   return (
     <div className={styles.tableContainer}>
       {useSearch && (
@@ -130,9 +79,9 @@ export default function TanTable({
       <div />
       <table>
         <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
+          {table.getHeaderGroups().map((headerGroup: any) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
+              {headerGroup.headers.map((header: any) => {
                 return (
                   <th
                     key={header.id}
@@ -173,10 +122,10 @@ export default function TanTable({
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map((row) => {
+          {table.getRowModel().rows.map((row: any) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
+                {row.getVisibleCells().map((cell: any) => {
                   return (
                     <td key={cell.id} className={styles.tableRow}>
                       {flexRender(

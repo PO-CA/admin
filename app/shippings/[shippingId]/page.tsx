@@ -144,13 +144,13 @@ export default function ShippingDetail({
           </div>
         </div>
       </div>
-      <TanTable
+      {/* <TanTable
         data={shippingData?.logiShippingItems}
         columns={shippingItemColumns}
         useSearch={false}
         useFilter={false}
         usePagenation={false}
-      />
+      /> */}
     </main>
   );
 }

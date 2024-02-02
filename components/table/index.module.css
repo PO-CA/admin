@@ -29,6 +29,8 @@ tfoot th {
   margin-bottom: 50px;
   display: flex;
   flex-direction: column;
+  border-bottom: 1px solid black;
+  padding: 20px 0 40px 0;
 }
 
 .topPanal {
@@ -67,6 +69,10 @@ tfoot th {
   border-collapse: collapse;
   padding: 5px 12px;
   text-align: center;
+}
+
+.tableRow:nth-child(1) {
+  width: 150px;
 }
 
 .sortable {

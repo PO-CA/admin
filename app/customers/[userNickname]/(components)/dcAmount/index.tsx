@@ -1,7 +1,3 @@
-'use client';
-import { ordersColumns } from '../tableColumns/ordersColumns';
-import TanTable, { fuzzyFilter } from '@/components/table';
-import { useGetAllUsersWithOrderItemsQty } from '@/query/query/users';
 import {
   ColumnFiltersState,
   getCoreRowModel,
@@ -13,20 +9,28 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import TanTable, { fuzzyFilter } from '@/components/table';
+import { useGetDCAmountByUserNickname } from '@/query/query/dc';
+import { dcAmountColumns } from '../../tableColumns/dcAmountColumns';
 
-export default function UserListWithOrderQty() {
+export default function UserDcAmount({
+  userNickname,
+}: {
+  userNickname: string;
+}) {
   const {
-    data: usersData,
-    isLoading: isUsersLoading,
-    isSuccess: isUsersSuccess,
-  } = useGetAllUsersWithOrderItemsQty();
+    data: dcAmountData,
+    isLoading: isDcAmountLoading,
+    isSuccess: isDcAmountSuccess,
+  } = useGetDCAmountByUserNickname(userNickname);
+
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
 
   const table = useReactTable({
-    data: usersData,
-    columns: ordersColumns,
+    data: dcAmountData,
+    columns: dcAmountColumns,
     filterFns: {
       fuzzy: fuzzyFilter,
     },
@@ -49,11 +53,11 @@ export default function UserListWithOrderQty() {
     debugColumns: false,
   });
 
-  if (isUsersLoading) {
+  if (isDcAmountLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!isUsersSuccess) {
+  if (!isDcAmountSuccess) {
     return <div>Failed to load</div>;
   }
 
@@ -62,6 +66,9 @@ export default function UserListWithOrderQty() {
       table={table}
       globalFilter={globalFilter}
       setGlobalFilter={setGlobalFilter}
+      useSearch={false}
+      useFilter={false}
+      usePagenation={false}
     />
   );
 }

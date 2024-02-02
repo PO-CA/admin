@@ -1,15 +1,9 @@
 'use client';
 import { useGetUsersDetailByUsersNickname } from '@/query/query/users';
 import styles from './page.module.css';
-import TanTable from '@/components/table';
-import {
-  useGetDCAmountByUserNickname,
-  useGetDCRateByUserNickname,
-} from '@/query/query/dc';
-import { useGetAddressByUserNickname } from '@/query/query/address';
-import { dcAmountColumns } from './tableColumns/dcAmountColumns';
-import { dcRateColumns } from './tableColumns/dcRateColumns';
-import { addressColumns } from './tableColumns/addressColumns';
+import UserAddress from './(components)/address';
+import UserDcAmount from './(components)/dcAmount';
+import UserDcRate from './(components)/dcRate';
 
 export default function CustomerDetail({
   params,
@@ -22,24 +16,6 @@ export default function CustomerDetail({
     isLoading: isUsersLoading,
     isSuccess: isUsersSuccess,
   } = useGetUsersDetailByUsersNickname(userNickname);
-
-  const {
-    data: dcAmountData,
-    isLoading: isDcAmountLoading,
-    isSuccess: isDcAmountSuccess,
-  } = useGetDCAmountByUserNickname(userNickname);
-
-  const {
-    data: dcRateData,
-    isLoading: isDcRateLoading,
-    isSuccess: isDcRateSuccess,
-  } = useGetDCRateByUserNickname(userNickname);
-
-  const {
-    data: addressData,
-    isLoading: isAddressLoading,
-    isSuccess: isAddressSuccess,
-  } = useGetAddressByUserNickname(userNickname);
 
   return (
     <main className={styles.customersDetailContainer}>
@@ -56,38 +32,16 @@ export default function CustomerDetail({
       <div style={{ display: 'flex' }}>
         <div>
           <div className={styles.subTitle}>유저-할인률</div>
-          {!isDcRateLoading && isDcRateSuccess && (
-            <TanTable
-              data={dcRateData}
-              columns={dcRateColumns}
-              useSearch={false}
-              useFilter={false}
-            />
-          )}
+          <UserDcAmount userNickname={userNickname} />
         </div>
         <div>
           <div className={styles.subTitle}>유저-할인액</div>
-          {!isDcAmountLoading && isDcAmountSuccess && (
-            <TanTable
-              data={dcAmountData}
-              columns={dcAmountColumns}
-              useSearch={false}
-              useFilter={false}
-            />
-          )}
+          <UserDcRate userNickname={userNickname} />
         </div>
       </div>
 
       <div className={styles.subTitle}>배송지</div>
-      {!isAddressLoading && isAddressSuccess && (
-        <TanTable
-          data={addressData}
-          columns={addressColumns}
-          useSearch={false}
-          useFilter={false}
-          usePagenation={false}
-        />
-      )}
+      <UserAddress userNickname={userNickname} />
     </main>
   );
 }

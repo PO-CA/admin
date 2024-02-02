@@ -4,7 +4,6 @@ import styles from './layout.module.css';
 import Sidebar from '../components/sidebar';
 import ReactQueryProvider from './ReactQueryProvider';
 import { menus } from '@/constants/menus';
-// const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -34,7 +33,7 @@ export default function RootLayout({
               <Sidebar.Menus href="/" text="로그아웃" />
             </Sidebar.MenusConatiner>
           </Sidebar>
-          {children}
+          <div className={styles.contentContainer}>{children}</div>
         </ReactQueryProvider>
       </body>
     </html>
