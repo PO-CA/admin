@@ -1,6 +1,6 @@
 'use client';
 import { useCreateAOrderItem } from '@/query/query/orders';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function AddOrderButton({ info }: any) {
   const { mutate: createOrderItem } = useCreateAOrderItem();
@@ -10,6 +10,13 @@ export default function AddOrderButton({ info }: any) {
     orderQty: 0,
     userNickname: window.location.pathname.replace('/orders/', ''),
   });
+
+  useEffect(() => {
+    setAddOrderPayload({
+      ...addOrderPayload,
+      userNickname: window.location.pathname.replace('/orders/', ''),
+    });
+  }, [window.location.pathname]);
 
   return (
     <div style={{ display: 'flex', width: '100px' }}>
