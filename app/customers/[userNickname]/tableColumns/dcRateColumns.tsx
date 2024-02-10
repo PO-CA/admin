@@ -1,6 +1,5 @@
 'use client';
 import { ColumnDef } from '@tanstack/react-table';
-import Link from 'next/link';
 import React from 'react';
 
 export const dcRateColumns: ColumnDef<any, any>[] = [
@@ -18,13 +17,4 @@ export const dcRateColumns: ColumnDef<any, any>[] = [
     header: () => <span>할인률</span>,
     footer: (props) => props.column.id,
   },
-  // {
-  //   accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-  //   id: 'fullName',
-  //   header: 'Full Name',
-  //   cell: (info) => info.getValue(),
-  //   footer: (props) => props.column.id,
-  //   filterFn: 'fuzzy',
-  //   sortingFn: fuzzySort,
-  // },
 ];

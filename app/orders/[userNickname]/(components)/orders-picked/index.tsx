@@ -1,6 +1,6 @@
 'use client';
 import { useGetAllPickedOrderByUserNickname } from '@/query/query/orders';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { orderItemsColumns } from '../tableColumns/orderItemsColumns';
 import {
   ColumnFiltersState,
@@ -51,24 +51,36 @@ export default function OrdersPicked({ userNickname }: any) {
     debugColumns: false,
   });
 
-  if (isPickedOrderItemsLoading) {
-    return <div>Loading...</div>;
+  const [selectedRowIds, setSelectedRowIds] = useState([]);
+
+  let selectedRows: any = null;
+  if (!isPickedOrderItemsLoading && isPickedOrderItemsSuccess) {
+    selectedRows = table.getSelectedRowModel().rows;
   }
 
-  if (!isPickedOrderItemsSuccess) {
-    return <div>Failed to load</div>;
-  }
+  useEffect(() => {
+    if (selectedRows !== null) {
+      if (!isPickedOrderItemsLoading && isPickedOrderItemsSuccess) {
+        setSelectedRowIds(selectedRows.map((row: any) => row.original.id));
+      }
+    }
+  }, [
+    table,
+    isPickedOrderItemsLoading,
+    isPickedOrderItemsSuccess,
+    selectedRows,
+  ]);
 
   return (
     <>
-      <TanTable
-        table={table}
-        globalFilter={globalFilter}
-        setGlobalFilter={setGlobalFilter}
-        useSearch={false}
-        useFilter={false}
-        usePagenation={false}
-      />
+      {!isPickedOrderItemsLoading && isPickedOrderItemsSuccess && (
+        <TanTable
+          table={table}
+          globalFilter={globalFilter}
+          setGlobalFilter={setGlobalFilter}
+        />
+      )}
+
       <div>
         <div className={styles.subTitle}>주문처리</div>
 

@@ -3,6 +3,7 @@ import {
   createAOrderItem,
   getAllPickedOrderByUserNickname,
   getAllUnpickedOrderByUserNickname,
+  putToPickOrderItem,
 } from '../api/orders';
 
 export function useGetAllPickedOrderByUserNickname(userNickname: string) {
@@ -32,6 +33,17 @@ export function useCreateAOrderItem() {
 
   return useMutation({
     mutationFn: (payload: object) => createAOrderItem(payload),
+
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['orderItems'] }),
+  });
+}
+
+export function usePutToPickOrderItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (orderIds: number[]) => putToPickOrderItem(orderIds),
 
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ['orderItems'] }),

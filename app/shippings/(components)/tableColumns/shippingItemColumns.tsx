@@ -1,29 +1,9 @@
 'use client';
-import { ColumnDef, SortingFn, sortingFns } from '@tanstack/react-table';
+import { ColumnDef } from '@tanstack/react-table';
 import React from 'react';
-import { compareItems } from '@tanstack/match-sorter-utils';
 import Link from 'next/link';
 
 export const shippingItemColumns: ColumnDef<any, any>[] = [
-  // {
-  //   id: 'select-col',
-  //   header: ({ table }) => (
-  //     <input
-  //       type="checkbox"
-  //       checked={table.getIsAllRowsSelected()}
-  //       // indeterminate={table.getIsSomeRowsSelected()}
-  //       onChange={table.getToggleAllRowsSelectedHandler()} //or getToggleAllPageRowsSelectedHandler
-  //     />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <input
-  //       type="checkbox"
-  //       checked={row.getIsSelected()}
-  //       disabled={!row.getCanSelect()}
-  //       onChange={row.getToggleSelectedHandler()}
-  //     />
-  //   ),
-  // },
   {
     accessorFn: (row) => row.id,
     id: 'id',
@@ -68,20 +48,4 @@ export const shippingItemColumns: ColumnDef<any, any>[] = [
     header: () => <span>배송메모</span>,
     footer: (props) => props.column.id,
   },
-  // {
-  //   accessorFn: (row) => row.logiCategory.title,
-  //   id: 'logiCategory',
-  //   cell: (info) => info.getValue(),
-  //   header: () => <span>카테고리</span>,
-  //   footer: (props) => props.column.id,
-  // },
-  // {
-  //   accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-  //   id: 'fullName',
-  //   header: 'Full Name',
-  //   cell: (info) => info.getValue(),
-  //   footer: (props) => props.column.id,
-  //   filterFn: 'fuzzy',
-  //   sortingFn: fuzzySort,
-  // },
 ];

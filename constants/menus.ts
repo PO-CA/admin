@@ -23,8 +23,4 @@ export const menus = [
     href: '/customers',
     text: '고객',
   },
-  // {
-  //   href: '/orders',
-  //   text: 'Shop',
-  // },
 ];

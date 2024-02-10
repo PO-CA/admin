@@ -1,7 +1,6 @@
 'use client';
-import { ColumnDef, SortingFn, sortingFns } from '@tanstack/react-table';
+import { ColumnDef } from '@tanstack/react-table';
 import React from 'react';
-import { compareItems } from '@tanstack/match-sorter-utils';
 import Link from 'next/link';
 
 export const productColumns: ColumnDef<any, any>[] = [
@@ -11,8 +10,7 @@ export const productColumns: ColumnDef<any, any>[] = [
       <input
         type="checkbox"
         checked={table.getIsAllRowsSelected()}
-        // indeterminate={table.getIsSomeRowsSelected()}
-        onChange={table.getToggleAllRowsSelectedHandler()} //or getToggleAllPageRowsSelectedHandler
+        onChange={table.getToggleAllRowsSelectedHandler()}
       />
     ),
     cell: ({ row }) => (
@@ -75,13 +73,4 @@ export const productColumns: ColumnDef<any, any>[] = [
     header: () => <span>가격</span>,
     footer: (props) => props.column.id,
   },
-  // {
-  //   accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-  //   id: 'fullName',
-  //   header: 'Full Name',
-  //   cell: (info) => info.getValue(),
-  //   footer: (props) => props.column.id,
-  //   filterFn: 'fuzzy',
-  //   sortingFn: fuzzySort,
-  // },
 ];

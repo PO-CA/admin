@@ -1,6 +1,9 @@
 'use client';
-import { useGetAllUnpickedOrderByUserNickname } from '@/query/query/orders';
-import React from 'react';
+import {
+  useGetAllUnpickedOrderByUserNickname,
+  usePutToPickOrderItem,
+} from '@/query/query/orders';
+import React, { useEffect } from 'react';
 import { orderItemsColumns } from '../tableColumns/orderItemsColumns';
 import {
   ColumnFiltersState,
@@ -50,6 +53,28 @@ export default function OrdersUnpicked({ userNickname }: any) {
     debugColumns: false,
   });
 
+  const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
+
+  let selectedRows: any = null;
+  if (!isUnpickedOrderItemsLoading && isUnpickedOrderItemsSuccess) {
+    selectedRows = table.getSelectedRowModel().rows;
+  }
+
+  useEffect(() => {
+    if (selectedRows !== null) {
+      if (!isUnpickedOrderItemsLoading && isUnpickedOrderItemsSuccess) {
+        setSelectedRowIds(selectedRows.map((row: any) => row.original.id));
+      }
+    }
+  }, [
+    table,
+    isUnpickedOrderItemsLoading,
+    isUnpickedOrderItemsSuccess,
+    selectedRows,
+  ]);
+
+  const { mutate: putToPickOrderItem } = usePutToPickOrderItem();
+
   if (isUnpickedOrderItemsLoading) {
     return <div>Loading...</div>;
   }
@@ -61,7 +86,18 @@ export default function OrdersUnpicked({ userNickname }: any) {
   return (
     <>
       <div>
-        <button>포장 처리</button>
+        <button
+          type="button"
+          onClick={() => {
+            if (selectedRowIds.length > 0) {
+              putToPickOrderItem(selectedRowIds);
+            } else {
+              alert('포장 처리할 주문을 선택해 주세요');
+            }
+          }}
+        >
+          포장 처리
+        </button>
         <button>주문 삭제</button>
       </div>
       <TanTable

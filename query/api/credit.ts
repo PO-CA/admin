@@ -9,5 +9,14 @@ export const getCreditsByUserNickname = async (userNickname: string) => {
     throw new Error('Failed to fetch credits');
   }
 
-  return result.json();
+  const data = await result.json();
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  return data;
 };

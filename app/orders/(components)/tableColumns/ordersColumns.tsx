@@ -48,20 +48,4 @@ export const ordersColumns: ColumnDef<any, any>[] = [
     header: () => <span>[포카]수수료율</span>,
     footer: (props) => props.column.id,
   },
-  // {
-  //   accessorFn: (row) => row.price,
-  //   id: 'price',
-  //   cell: (info) => info.getValue(),
-  //   header: () => <span>가격</span>,
-  //   footer: (props) => props.column.id,
-  // },
-  // {
-  //   accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-  //   id: 'fullName',
-  //   header: 'Full Name',
-  //   cell: (info) => info.getValue(),
-  //   footer: (props) => props.column.id,
-  //   filterFn: 'fuzzy',
-  //   sortingFn: fuzzySort,
-  // },
 ];

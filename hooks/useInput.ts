@@ -7,7 +7,6 @@ const useInput = <T>(initialValue: T) => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { id, value } = e.target;
-    console.log('value', value);
     setValue((prevValue) => ({
       ...prevValue,
       [id]: value,

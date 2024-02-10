@@ -16,6 +16,8 @@ export default function AddOrderButton({ info }: any) {
       ...addOrderPayload,
       userNickname: window.location.pathname.replace('/orders/', ''),
     });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [window.location.pathname]);
 
   return (
@@ -33,7 +35,6 @@ export default function AddOrderButton({ info }: any) {
       <button
         type="button"
         onClick={() => {
-          console.log('asd', addOrderPayload);
           createOrderItem(addOrderPayload);
           setAddOrderPayload({ ...addOrderPayload, orderQty: 0 });
         }}

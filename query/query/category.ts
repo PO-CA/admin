@@ -17,6 +17,9 @@ export function useCreateACategory() {
   return useMutation({
     mutationFn: (categoryTitle: string) => createACategory(categoryTitle),
 
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['category'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['category'] });
+      alert('카테고리 생성을 성공했습니다');
+    },
   });
 }

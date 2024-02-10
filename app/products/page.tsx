@@ -51,7 +51,6 @@ export default function Products() {
   });
 
   const [selectedRowIds, setSelectedRowIds] = useState([]);
-  console.log('selectedRowIds', selectedRowIds);
 
   let selectedRows: any = null;
   if (!isProductsLoading && isProductsSuccess) {

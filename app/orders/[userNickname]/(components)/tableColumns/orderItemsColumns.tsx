@@ -1,6 +1,5 @@
 'use client';
 import { ColumnDef } from '@tanstack/react-table';
-import Link from 'next/link';
 import React from 'react';
 
 export const orderItemsColumns: ColumnDef<any, any>[] = [
@@ -10,9 +9,7 @@ export const orderItemsColumns: ColumnDef<any, any>[] = [
       <input
         type="checkbox"
         checked={table.getIsAllRowsSelected()}
-        // indeterminate={table.getIsSomeRowsSelected()}
-        // onChange={table.getToggleAllRowsSelectedHandler()} //or getToggleAllPageRowsSelectedHandler
-        onChange={table.getToggleAllPageRowsSelectedHandler()} //or getToggleAllPageRowsSelectedHandler
+        onChange={table.getToggleAllRowsSelectedHandler()}
       />
     ),
     cell: ({ row }) => (

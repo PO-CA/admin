@@ -71,12 +71,8 @@ export default function ProductDetail({
       });
   }, [productData, setValue]);
 
-  console.log('productInputData', productInputData);
-  console.log('productData', productData);
-
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('sub', productInputData);
   };
 
   if (isProductLoading) return <div>loading</div>;
