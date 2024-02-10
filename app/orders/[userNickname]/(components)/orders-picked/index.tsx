@@ -15,6 +15,7 @@ import {
 } from '@tanstack/react-table';
 import { useState } from 'react';
 import TanTable, { fuzzyFilter } from '@/components/table';
+import styles from '../../page.module.css';
 
 export default function OrdersPicked({ userNickname }: any) {
   const {
@@ -59,13 +60,46 @@ export default function OrdersPicked({ userNickname }: any) {
   }
 
   return (
-    <TanTable
-      table={table}
-      globalFilter={globalFilter}
-      setGlobalFilter={setGlobalFilter}
-      useSearch={false}
-      useFilter={false}
-      usePagenation={false}
-    />
+    <>
+      <TanTable
+        table={table}
+        globalFilter={globalFilter}
+        setGlobalFilter={setGlobalFilter}
+        useSearch={false}
+        useFilter={false}
+        usePagenation={false}
+      />
+      <div>
+        <div className={styles.subTitle}>주문처리</div>
+
+        <div style={{ display: 'flex' }}>
+          {!isPickedOrderItemsLoading && isPickedOrderItemsSuccess && (
+            <div>총 {table.getSelectedRowModel().rows.length} 개</div>
+          )}
+          <div>
+            <div>배송방법</div>
+            <select name="" id="">
+              <option value="">퀵</option>
+              <option value="">택배</option>
+            </select>
+          </div>
+          <div>
+            <div>송장번호</div>
+            <input />
+          </div>
+          <div>
+            <div>배송지</div>
+            <select name="" id="">
+              <option value="">메인</option>
+              <option value="">1</option>
+            </select>
+          </div>
+          <div>
+            <div>배송비</div> <input type="number" />{' '}
+          </div>
+        </div>
+        <button>주문 처리</button>
+      </div>
+    </>
   );
 }

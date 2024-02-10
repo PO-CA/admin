@@ -26,6 +26,7 @@ export default function AddOrderButton({ info }: any) {
       <button
         type="button"
         onClick={() => {
+          console.log('asd', addOrderPayload);
           createOrderItem(addOrderPayload);
           setAddOrderPayload({ ...addOrderPayload, orderQty: 0 });
         }}

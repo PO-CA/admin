@@ -17,7 +17,7 @@ export const createACategory = async (categoryTitle: string) => {
   const data = await fetch(`${API_URL}/logi/category`, {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title: categoryTitle }),
+    body: JSON.stringify({ title: categoryTitle, visible: true }),
   });
 
   if (!data.ok) {

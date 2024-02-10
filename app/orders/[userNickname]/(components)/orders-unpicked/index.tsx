@@ -59,13 +59,19 @@ export default function OrdersUnpicked({ userNickname }: any) {
   }
 
   return (
-    <TanTable
-      table={table}
-      globalFilter={globalFilter}
-      setGlobalFilter={setGlobalFilter}
-      useSearch={false}
-      useFilter={false}
-      usePagenation={false}
-    />
+    <>
+      <div>
+        <button>포장 처리</button>
+        <button>주문 삭제</button>
+      </div>
+      <TanTable
+        table={table}
+        globalFilter={globalFilter}
+        setGlobalFilter={setGlobalFilter}
+        useSearch={false}
+        useFilter={false}
+        usePagenation={false}
+      />
+    </>
   );
 }
