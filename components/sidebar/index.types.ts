@@ -1,4 +1,5 @@
 export interface MenusPropsInterface {
-  href: string;
+  href?: string;
   text: string;
+  onClick?: () => {};
 }

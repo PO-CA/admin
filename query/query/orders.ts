@@ -1,30 +1,32 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createAOrderItem,
-  getAllPickedOrderByUserNickname,
-  getAllUnpickedOrderByUserNickname,
+  createOrderItemsInCart,
+  getAllPickedOrderByUsersEmail,
+  getAllUnpickedOrderByUsersEmail,
   putToPickOrderItem,
+  putToUnPickOrderItem,
 } from '../api/orders';
 
-export function useGetAllPickedOrderByUserNickname(userNickname: string) {
+export function useGetAllPickedOrderByUsersEmail(usersEmail: string) {
   return useQuery({
-    queryKey: ['orderItems', 'picked', `${userNickname}`],
+    queryKey: ['orderItems', 'picked', `${usersEmail}`],
     queryFn: async () => {
-      const data = await getAllPickedOrderByUserNickname(userNickname);
+      const data = await getAllPickedOrderByUsersEmail(usersEmail);
       return data;
     },
-    enabled: !!userNickname,
+    enabled: !!usersEmail,
   });
 }
 
-export function useGetAllUnpickedOrderByUserNickname(userNickname: string) {
+export function useGetAllUnpickedOrderByusersEmail(usersEmail: string) {
   return useQuery({
-    queryKey: ['orderItems', 'unpicked', `${userNickname}`],
+    queryKey: ['orderItems', 'unpicked', `${usersEmail}`],
     queryFn: async () => {
-      const data = await getAllUnpickedOrderByUserNickname(userNickname);
+      const data = await getAllUnpickedOrderByUsersEmail(usersEmail);
       return data;
     },
-    enabled: !!userNickname,
+    enabled: !!usersEmail,
   });
 }
 
@@ -47,5 +49,26 @@ export function usePutToPickOrderItem() {
 
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ['orderItems'] }),
+  });
+}
+
+export function usePutToUnPickOrderItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (orderIds: number[]) => putToUnPickOrderItem(orderIds),
+
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['orderItems'] }),
+  });
+}
+
+export function useCreateOrderItemsInCart() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (userId: number | null) => createOrderItemsInCart(userId),
+
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cartitems'] }),
   });
 }

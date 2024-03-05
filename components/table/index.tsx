@@ -2,8 +2,6 @@
 // @ts-nocheck
 import { useEffect, useMemo, useState } from 'react';
 
-import styles from './index.module.css';
-
 import { Column, Table, FilterFn, flexRender } from '@tanstack/react-table';
 
 import { RankingInfo, rankItem } from '@tanstack/match-sorter-utils';
@@ -34,20 +32,24 @@ export default function TanTable({
   table,
   globalFilter,
   setGlobalFilter,
-  useSearch = true,
-  useFilter = true,
-  usePagenation = true,
+  search = false,
+  filter = false,
+  pagenation = false,
+  sort = false,
+  styles,
 }: {
   table: any;
-  useSearch?: boolean;
-  useFilter?: boolean;
-  usePagenation?: boolean;
+  search?: boolean;
+  filter?: boolean;
+  pagenation?: boolean;
+  sort?: boolean;
+  styles: any;
   globalFilter?: string;
   setGlobalFilter: (value: string) => void;
 }) {
   return (
     <div className={styles.tableContainer}>
-      {useSearch && (
+      {search && (
         <div className={styles.topPanal}>
           <DebouncedInput
             value={globalFilter ?? ''}
@@ -96,7 +98,9 @@ export default function TanTable({
                             className: header.column.getCanSort()
                               ? styles.sortable
                               : '',
-                            onClick: header.column.getToggleSortingHandler(),
+                            onClick: sort
+                              ? header.column.getToggleSortingHandler()
+                              : () => {},
                           }}
                         >
                           {flexRender(
@@ -108,7 +112,7 @@ export default function TanTable({
                             desc: ' 👇',
                           }[header.column.getIsSorted() as string] ?? '👉'}
                         </div>
-                        {useFilter && header.column.getCanFilter() ? (
+                        {filter && header.column.getCanFilter() ? (
                           <div>
                             <Filter column={header.column} table={table} />
                           </div>
@@ -141,7 +145,7 @@ export default function TanTable({
         </tbody>
       </table>
       <div />
-      {usePagenation && (
+      {pagenation && (
         <div className={styles.paginationPanel}>
           <button
             onClick={() => table.setPageIndex(0)}

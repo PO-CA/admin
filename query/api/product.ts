@@ -42,3 +42,16 @@ export const getAProduct = async (productId: string) => {
   }
   return data;
 };
+
+export const getUsersAllProducts = async (userId: number | null) => {
+  const data = await fetch(`${API_URL}/logi/products/${userId}`, {
+    method: 'get',
+    cache: 'no-store',
+  });
+
+  if (!data.ok) {
+    throw new Error('Failed to fetch products');
+  }
+
+  return data.json();
+};

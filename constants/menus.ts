@@ -1,6 +1,6 @@
 export const menus = [
   {
-    href: '/',
+    href: '/dashboard',
     text: '대시보드',
   },
   {
@@ -22,5 +22,9 @@ export const menus = [
   {
     href: '/customers',
     text: '고객',
+  },
+  {
+    href: '/store',
+    text: 'store',
   },
 ];

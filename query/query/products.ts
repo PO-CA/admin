@@ -1,5 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { getAProduct, getAllProducts } from '../api/product';
+import {
+  getAProduct,
+  getAllProducts,
+  getUsersAllProducts,
+} from '../api/product';
 
 export function useGetAllproducts() {
   return useQuery({
@@ -19,5 +23,16 @@ export function useGetAProduct(productId: string) {
       return data;
     },
     enabled: !!productId,
+  });
+}
+
+export function useGetUsersAllproducts(userId: number | null) {
+  return useQuery({
+    queryKey: ['products', `${userId}`],
+    queryFn: async () => {
+      const data = await getUsersAllProducts(userId);
+      return data;
+    },
+    enabled: !!userId,
   });
 }

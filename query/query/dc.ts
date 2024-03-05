@@ -1,23 +1,23 @@
 import { useQuery } from '@tanstack/react-query';
-import { getDCAmountByUserNickname, getDCRateByUserNickname } from '../api/dc';
+import { getDCAmountByUsersEmail, getDCRateByUsersEmail } from '../api/dc';
 
-export function useGetDCRateByUserNickname(userNickname: string) {
+export function useGetDCRateByUsersEmail(usersEmail: string) {
   return useQuery({
-    queryKey: ['dcRate', `${userNickname}`],
+    queryKey: ['dcRate', `${usersEmail}`],
     queryFn: async () => {
-      const data = await getDCRateByUserNickname(userNickname);
+      const data = await getDCRateByUsersEmail(usersEmail);
       return data;
     },
   });
 }
 
-export function useGetDCAmountByUserNickname(userNickname: string) {
+export function useGetDCAmountByUsersEmail(usersEmail: string) {
   return useQuery({
-    queryKey: ['dcAmount', `${userNickname}`],
+    queryKey: ['dcAmount', `${usersEmail}`],
     queryFn: async () => {
-      const data = await getDCAmountByUserNickname(userNickname);
+      const data = await getDCAmountByUsersEmail(usersEmail);
       return data;
     },
-    enabled: !!userNickname,
+    enabled: !!usersEmail,
   });
 }

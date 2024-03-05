@@ -1,10 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  createAShipping,
   getAllShippings,
   getAllShippingsByShippingId,
   getAllShippingsByStatus,
-  getAllShippingsByUserNickname,
+  getAllShippingsByUsersEmail,
 } from '../api/shipping';
+import { CreateShippingDTO } from '@/types/createShippingDTO';
 
 export function useGetAllShippings() {
   return useQuery({
@@ -27,14 +29,14 @@ export function useGetAllShippingsByStatus(shippingStatus: string) {
   });
 }
 
-export function useGetAllShippingsByUserNickname(userNickname: string) {
+export function useGetAllShippingsByUsersEmail(usersEmail: string) {
   return useQuery({
-    queryKey: ['shippings', `${userNickname}`],
+    queryKey: ['shippings', `${usersEmail}`],
     queryFn: async () => {
-      const data = await getAllShippingsByUserNickname(userNickname);
+      const data = await getAllShippingsByUsersEmail(usersEmail);
       return data;
     },
-    enabled: !!userNickname,
+    enabled: !!usersEmail,
   });
 }
 
@@ -48,3 +50,15 @@ export function useGetAllShippingsByShippingId(shippingId: string) {
     enabled: !!shippingId,
   });
 }
+
+export const useCreateShipping = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: CreateShippingDTO) => createAShipping(payload),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+    },
+  });
+};

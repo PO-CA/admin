@@ -1,0 +1,62 @@
+.mainContainer {
+  margin-bottom: 300px;
+}
+
+.subTitle {
+  font-size: 25px;
+  font-weight: 600;
+  text-align: center;
+  padding: 10px;
+}
+
+.signUpBox {
+  width: 360px;
+  margin: 50px auto;
+  border: 0.1rem solid #e6e8eb;
+  border-radius: 5px;
+  padding: 60px 40px;
+}
+
+.signUpLabel {
+  width: 100%;
+  font-size: 14px;
+}
+
+.signUpInput {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #cbcaca;
+  height: 40px;
+  outline: none;
+  margin-bottom: 20px;
+}
+
+.signUpInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.signUpInput::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.signUpInput ::-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.bigButton {
+  background-color: #356e70;
+  padding: 10px 20px;
+  font-size: 25px;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 5px;
+  margin-right: 20px;
+}

@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { getCreditsByUserNickname } from '../api/credit';
+import { getCreditsByUsersEmail } from '../api/credit';
 
-export function useGetCreditsByUserNickname(userNickname: string) {
+export function useGetCreditsByUsersEmail(usersEmail: string) {
   return useQuery({
-    queryKey: ['credits', `${userNickname}`],
+    queryKey: ['credits', `${usersEmail}`],
     queryFn: async () => {
-      const data = await getCreditsByUserNickname(userNickname);
+      const data = await getCreditsByUsersEmail(usersEmail);
       return data;
     },
   });

@@ -3,10 +3,16 @@ import styles from './index.module.css';
 import Link from 'next/link';
 import { MenusPropsInterface } from './index.types';
 
-export default function Menus({ href, text }: MenusPropsInterface) {
+export default function Menus({ href, text, onClick }: MenusPropsInterface) {
   return (
-    <Link href={href} className={styles.menusItem}>
-      {text}
-    </Link>
+    <>
+      {href && href.length > 0 ? (
+        <Link href={href} className={styles.menusItem}>
+          {text}
+        </Link>
+      ) : (
+        <div onClick={onClick}>{text}</div>
+      )}
+    </>
   );
 }

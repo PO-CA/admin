@@ -1,7 +1,7 @@
 import { API_URL } from '@/constants/apis';
 
-export const getCreditsByUserNickname = async (userNickname: string) => {
-  const result = await fetch(`${API_URL}/logi/credits/${userNickname}`, {
+export const getCreditsByUsersEmail = async (usersEmail: string) => {
+  const result = await fetch(`${API_URL}/logi/credits/${usersEmail}`, {
     method: 'get',
   });
 

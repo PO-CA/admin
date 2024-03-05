@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import { getAddressByUserNickname } from '../api/address';
+import { getAddressByUsersEmail } from '../api/address';
 
-export function useGetAddressByUserNickname(userNickname: string) {
+export function useGetAddressByUsersEmail(usersEmail: string) {
   return useQuery({
-    queryKey: ['address', `${userNickname}`],
+    queryKey: ['address', `${usersEmail}`],
     queryFn: async () => {
-      const data = await getAddressByUserNickname(userNickname);
+      const data = await getAddressByUsersEmail(usersEmail);
       return data;
     },
-    enabled: !!userNickname,
+    enabled: !!usersEmail,
   });
 }
