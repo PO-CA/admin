@@ -1,14 +1,11 @@
 import { API_URL } from '@/constants/apis';
 import { CreateShippingDTO } from '@/types/createShippingDTO';
-import axios from 'axios';
+import { requests } from '../request';
 
 export const getAllShippings = async () => {
-  const result = await fetch(`${API_URL}/logi/shipping`, {
+  const { data } = await requests(`${API_URL}/logi/shipping`, {
     method: 'get',
-    cache: 'no-store',
   });
-
-  const data = await result.json();
 
   const { errorMessage, errorCode, customMessage } = data;
 
@@ -21,11 +18,12 @@ export const getAllShippings = async () => {
 };
 
 export const getAllShippingsByStatus = async (shippingStatus: string) => {
-  const result = await fetch(`${API_URL}/logi/shipping/${shippingStatus}`, {
-    method: 'get',
-    cache: 'no-store',
-  });
-  const data = await result.json();
+  const { data } = await requests(
+    `${API_URL}/logi/shipping/${shippingStatus}`,
+    {
+      method: 'get',
+    },
+  );
 
   const { errorMessage, errorCode, customMessage } = data;
 
@@ -38,11 +36,12 @@ export const getAllShippingsByStatus = async (shippingStatus: string) => {
 };
 
 export const getAllShippingsByUsersEmail = async (usersEmail: string) => {
-  const result = await fetch(`${API_URL}/logi/shipping/email/${usersEmail}`, {
-    method: 'get',
-    cache: 'no-store',
-  });
-  const data = await result.json();
+  const { data } = await requests(
+    `${API_URL}/logi/shipping/email/${usersEmail}`,
+    {
+      method: 'get',
+    },
+  );
 
   const { errorMessage, errorCode, customMessage } = data;
 
@@ -55,11 +54,9 @@ export const getAllShippingsByUsersEmail = async (usersEmail: string) => {
 };
 
 export const getAllShippingsByShippingId = async (shippingId: string) => {
-  const result = await fetch(`${API_URL}/logi/shipping/${shippingId}`, {
+  const { data } = await requests(`${API_URL}/logi/shipping/${shippingId}`, {
     method: 'get',
-    cache: 'no-store',
   });
-  const data = await result.json();
 
   const { errorMessage, errorCode, customMessage } = data;
 
@@ -72,12 +69,11 @@ export const getAllShippingsByShippingId = async (shippingId: string) => {
 };
 
 export const createAShipping = async (payload: CreateShippingDTO) => {
-  const result = await fetch(`${API_URL}/logi/shipping`, {
+  const { data } = await requests(`${API_URL}/logi/shipping`, {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
+    data: JSON.stringify(payload),
   });
-  const data = await result.json();
 
   const { errorMessage, errorCode, customMessage } = data;
 

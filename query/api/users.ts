@@ -58,16 +58,9 @@ export const reIssue = async () => {
 };
 
 export const getAllUsersWithOrderItemsQty = async () => {
-  const result = await fetch(`${API_URL}/users/userswithorderitemsqty`, {
+  const { data } = await requests(`${API_URL}/users/userswithorderitemsqty`, {
     method: 'GET',
-    cache: 'no-store',
   });
-
-  if (!result.ok) {
-    throw new Error('Failed to fetch users');
-  }
-
-  const data = await result.json();
 
   const { errorMessage, errorCode, customMessage } = data;
 
@@ -80,7 +73,7 @@ export const getAllUsersWithOrderItemsQty = async () => {
 };
 
 export const getUserDetailByUsersEmail = async (usersEmail: string) => {
-  const { data } = await axios({
+  const { data } = await requests({
     method: 'get',
     url: `${API_URL}/users/${usersEmail}`,
   });

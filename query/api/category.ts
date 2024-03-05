@@ -1,16 +1,10 @@
 import { API_URL } from '@/constants/apis';
+import { requests } from '../request';
 
 export const getAllCategory = async () => {
-  const result = await fetch(`${API_URL}/logi/category`, {
+  const { data } = await requests(`${API_URL}/logi/category`, {
     method: 'get',
-    next: { tags: ['category'] },
   });
-
-  if (!result.ok) {
-    throw new Error('Failed to fetch category');
-  }
-
-  const data = await result.json();
 
   const { errorMessage, errorCode, customMessage } = data;
 
@@ -23,17 +17,11 @@ export const getAllCategory = async () => {
 };
 
 export const createACategory = async (categoryTitle: string) => {
-  const result = await fetch(`${API_URL}/logi/category`, {
+  const { data } = await requests(`${API_URL}/logi/category`, {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title: categoryTitle, visible: true }),
+    data: JSON.stringify({ title: categoryTitle, visible: true }),
   });
-
-  if (!result.ok) {
-    throw new Error('Failed to fetch category');
-  }
-
-  const data = await result.json();
 
   const { errorMessage, errorCode, customMessage } = data;
 

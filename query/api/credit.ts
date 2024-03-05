@@ -1,15 +1,10 @@
 import { API_URL } from '@/constants/apis';
+import { requests } from '../request';
 
 export const getCreditsByUsersEmail = async (usersEmail: string) => {
-  const result = await fetch(`${API_URL}/logi/credits/${usersEmail}`, {
+  const { data } = await requests(`${API_URL}/logi/credits/${usersEmail}`, {
     method: 'get',
   });
-
-  if (!result) {
-    throw new Error('Failed to fetch credits');
-  }
-
-  const data = await result.json();
 
   const { errorMessage, errorCode, customMessage } = data;
 

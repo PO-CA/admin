@@ -1,36 +1,46 @@
 import { API_URL } from '@/constants/apis';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import { requests } from '../request';
 
 export const getAllPickedOrderByUsersEmail = async (usersEmail: string) => {
-  const { data } = await axios({
+  const { data } = await requests({
     method: 'get',
     url: `${API_URL}/logi/orderitems/${usersEmail}/picked`,
   });
 
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+
   return data;
 };
 export const getAllUnpickedOrderByUsersEmail = async (usersEmail: string) => {
-  const { data } = await axios({
+  const { data } = await requests({
     method: 'get',
     url: `${API_URL}/logi/orderitems/${usersEmail}/unpicked`,
   });
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
 
   return data;
 };
 
 export const createAOrderItem = async (payload: object) => {
-  const result = await fetch(`${API_URL}/logi/orderitems`, {
+  const { data } = await requests(`${API_URL}/logi/orderitems`, {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
+    data: JSON.stringify(payload),
   });
-
-  if (!result.ok) {
-    throw new Error('Failed to fetch orderitems');
-  }
-
-  const data = await result.json();
 
   const { errorMessage, errorCode, customMessage } = data;
 
@@ -43,17 +53,11 @@ export const createAOrderItem = async (payload: object) => {
 };
 
 export const putToPickOrderItem = async (orderIds: number[]) => {
-  const result = await fetch(`${API_URL}/logi/orderitems/picked`, {
+  const { data } = await requests(`${API_URL}/logi/orderitems/picked`, {
     method: 'put',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ids: orderIds }),
+    data: JSON.stringify({ ids: orderIds }),
   });
-
-  if (!result.ok) {
-    throw new Error('Failed to fetch orderitems');
-  }
-
-  const data = await result.json();
 
   const { errorMessage, errorCode, customMessage } = data;
 
@@ -66,17 +70,11 @@ export const putToPickOrderItem = async (orderIds: number[]) => {
 };
 
 export const putToUnPickOrderItem = async (orderIds: number[]) => {
-  const result = await fetch(`${API_URL}/logi/orderitems/unpicked`, {
+  const { data } = await requests(`${API_URL}/logi/orderitems/unpicked`, {
     method: 'put',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ids: orderIds }),
+    data: JSON.stringify({ ids: orderIds }),
   });
-
-  if (!result.ok) {
-    throw new Error('Failed to fetch orderitems');
-  }
-
-  const data = await result.json();
 
   const { errorMessage, errorCode, customMessage } = data;
 
@@ -89,7 +87,7 @@ export const putToUnPickOrderItem = async (orderIds: number[]) => {
 };
 
 export const getAllOrderByUsersEmail = async (usersEmail: string) => {
-  const { data } = await axios({
+  const { data } = await requests({
     method: 'get',
     url: `${API_URL}/logi/orderitems/${usersEmail}`,
   });
@@ -109,14 +107,19 @@ export function useGetAllOrderByusersEmail(usersEmail: string) {
 }
 
 export const createOrderItemsInCart = async (userId: number | null) => {
-  const data = await fetch(`${API_URL}/logi/orderitemsincart/${userId}`, {
-    method: 'post',
-    headers: { 'Content-Type': 'application/json' },
-  });
+  const { data } = await requests(
+    `${API_URL}/logi/orderitemsincart/${userId}`,
+    {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+    },
+  );
+  const { errorMessage, errorCode, customMessage } = data;
 
-  if (!data.ok) {
-    throw new Error('Failed to fetch orderitems');
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
   }
-
-  return data.json();
+  return data;
 };
