@@ -1,15 +1,6 @@
 'use client';
 import styles from './page.module.css';
-import useInput from '@/hooks/useInput';
-import { useEffect } from 'react';
-import ProductInput from '@/components/productInput';
-import { UpdateProductData } from '@/types/updateProductData';
-import {
-  useGetAllShippingsByShippingId,
-  useGetAllShippingsByUserNickname,
-} from '@/query/query/shippings';
-import TanTable from '@/components/table';
-import { shippingItemColumns } from '../(components)/tableColumns/shippingItemColumns';
+import { useGetAllShippingsByShippingId } from '@/query/query/shippings';
 
 export default function ShippingDetail({
   params,
