@@ -57,7 +57,7 @@ export function useGetMyInfo() {
       const data = await myInfo();
       return data;
     },
-    retry: 2,
+    retry: 0,
   });
 }
 

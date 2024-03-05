@@ -27,7 +27,9 @@ export const useIsAdmin = () => {
           }
         }
       } else {
-        router.push('/login');
+        if (pathname !== '/signup') {
+          router.push('/login');
+        }
       }
     }
   }, [signOut, pathname, myInfoLoading, router, isAuthenticated, userLevel]);
