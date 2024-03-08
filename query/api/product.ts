@@ -1,5 +1,6 @@
 import { API_URL } from '@/constants/apis';
 import { requests } from '../request';
+import { ProductData } from '@/types/productData';
 
 export const getAllProducts = async () => {
   const { data } = await requests(`${API_URL}/logi/products`, {
@@ -37,6 +38,23 @@ export const getAProduct = async (productId: string) => {
 export const getUsersAllProducts = async (userId: number | null) => {
   const { data } = await requests(`${API_URL}/logi/products/${userId}`, {
     method: 'get',
+  });
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  return data;
+};
+
+export const creatAProduct = async (payload: ProductData) => {
+  const { data } = await requests(`${API_URL}/logi/products`, {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    data: payload,
   });
 
   const { errorMessage, errorCode, customMessage } = data;

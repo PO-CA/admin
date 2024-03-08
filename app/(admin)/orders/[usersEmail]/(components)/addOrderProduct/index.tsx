@@ -66,7 +66,6 @@ export default function AddOrderProduct() {
       setGlobalFilter={setGlobalFilter}
       styles={tableStyles}
       search
-      filter
       pagenation
     />
   );

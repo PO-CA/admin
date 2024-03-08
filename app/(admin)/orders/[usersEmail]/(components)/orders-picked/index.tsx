@@ -14,7 +14,7 @@ import {
 } from '@tanstack/react-table';
 import { useState } from 'react';
 import TanTable, { fuzzyFilter } from '@/components/table';
-import styles from '../../page.module.css';
+import styles from './index.module.css';
 import tableStyles from './table.module.css';
 import {
   useGetAllPickedOrderByUsersEmail,
@@ -116,7 +116,7 @@ export default function OrdersPicked({ usersEmail }: any) {
   };
   return (
     <>
-      <div>
+      <div className={styles.buttons}>
         <button
           type="button"
           onClick={() => {
@@ -137,10 +137,12 @@ export default function OrdersPicked({ usersEmail }: any) {
           globalFilter={globalFilter}
           setGlobalFilter={setGlobalFilter}
           styles={tableStyles}
+          pagenation
+          search
         />
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <div className={styles.subTitle}>주문처리</div>
 
         <div style={{ display: 'flex' }}>

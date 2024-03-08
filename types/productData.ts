@@ -1,5 +1,5 @@
 export interface ProductData {
-  category: string;
+  categoryId: string;
   sku: string;
   title: string;
   thumbNailUrl: string;
@@ -15,6 +15,6 @@ export interface ProductData {
   y: number;
   z: number;
   barcode: string;
-  releaseDate: string;
-  deadlineDate: string;
+  releaseDate: string | number;
+  deadlineDate: string | number;
 }

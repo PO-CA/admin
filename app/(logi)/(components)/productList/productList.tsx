@@ -1,3 +1,4 @@
+import TanTable, { fuzzyFilter } from '@/components/table';
 import React, { useState } from 'react';
 import {
   ColumnFiltersState,
@@ -10,25 +11,23 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { cartColumns } from './tableColumns/cartColumns';
-import { useGetUsersAllCarts } from '@/query/query/cart';
-import { useCreateOrderItemsInCart } from '@/query/query/orders';
-import TanTable, { fuzzyFilter } from '@/components/table';
-import tableStyles from './cartListTable.module.css';
+import { productColumns } from '../tableColumns/productColumns';
+import { useGetUsersAllproducts } from '@/query/query/products';
+import tableStyles from './productListTable.module.css';
 import { useAuth } from '@/hooks/useAuth';
-export default function CartList() {
+export default function ProductList() {
   const { userId } = useAuth();
   const {
-    data: cartsData,
-    isLoading: isCartsLoading,
-    isSuccess: isCartsSuccess,
-  } = useGetUsersAllCarts(userId);
+    data: productsData,
+    isLoading: isProductsLoading,
+    isSuccess: isProductsSuccess,
+  } = useGetUsersAllproducts(userId || null);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
 
   const table = useReactTable({
-    data: cartsData,
-    columns: cartColumns,
+    data: productsData,
+    columns: productColumns,
     filterFns: {
       fuzzy: fuzzyFilter,
     },
@@ -50,13 +49,10 @@ export default function CartList() {
     debugHeaders: true,
     debugColumns: false,
   });
-
-  const { mutate: createOrderItem } = useCreateOrderItemsInCart();
-
   return (
     <div>
-      <div>장바구니</div>
-      {!isCartsLoading && isCartsSuccess && (
+      <div>상품-목록</div>
+      {!isProductsLoading && isProductsSuccess && (
         <TanTable
           table={table}
           globalFilter={globalFilter}
@@ -66,18 +62,6 @@ export default function CartList() {
           pagenation
         />
       )}
-      <div>
-        <div>
-          {/* TODO 배송지 API */}
-          <div>배송지</div>
-          <select name="" id="">
-            <option value="">메인</option>
-            <option value="">서브</option>
-            <option value="">서브2</option>
-          </select>
-        </div>
-        <button onClick={() => createOrderItem(userId)}>주문하기</button>
-      </div>
     </div>
   );
 }

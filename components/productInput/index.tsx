@@ -80,12 +80,12 @@ const addProductColumns = [
     keyName: 'barcode',
   },
   {
-    inputType: 'number',
+    inputType: 'date',
     labelName: '출시일',
     keyName: 'releaseDate',
   },
   {
-    inputType: 'number',
+    inputType: 'date',
     labelName: '주문마감일',
     keyName: 'deadlineDate',
   },

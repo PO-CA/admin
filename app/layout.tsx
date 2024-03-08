@@ -1,6 +1,4 @@
 import type { Metadata } from 'next';
-import styles from './layout.module.css';
-import './globals.css';
 import ReactQueryProvider from './ReactQueryProvider';
 
 export const metadata: Metadata = {
@@ -15,7 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={styles.rootLayoutContainer}>
+      <body>
         <ReactQueryProvider>{children}</ReactQueryProvider>
       </body>
     </html>

@@ -1,8 +1,8 @@
 'use client';
 import { ColumnDef } from '@tanstack/react-table';
 import React from 'react';
-import AddOrderButton from '../addCartButton';
-import AddCartButton from '../addCartButton';
+import AddOrderButton from '../cartList/addCartButton';
+import AddCartButton from '../cartList/addCartButton';
 
 export const productColumns: ColumnDef<any, any>[] = [
   {

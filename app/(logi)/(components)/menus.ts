@@ -11,8 +11,8 @@ export const menus = [
     href: '/store/shippings',
     text: '배송',
   },
-  {
-    href: '/store/mypage',
-    text: '내정보',
-  },
+  // {
+  //   href: '/store/mypage',
+  //   text: '내정보',
+  // },
 ];

@@ -28,6 +28,7 @@ export default function AddOrderButton({ info }: any) {
       <input
         type="number"
         value={addOrderPayload.orderQty}
+        style={{ width: '60px', height: '30px' }}
         onChange={(e) =>
           setAddOrderPayload({
             ...addOrderPayload,
@@ -37,13 +38,14 @@ export default function AddOrderButton({ info }: any) {
       />
       <button
         type="button"
+        style={{ width: '40px' }}
         onClick={() => {
           console.log('addOrderPayload', addOrderPayload);
           createOrderItem(addOrderPayload);
           setAddOrderPayload({ ...addOrderPayload, orderQty: 0 });
         }}
       >
-        추가하기
+        추가
       </button>
     </div>
   );

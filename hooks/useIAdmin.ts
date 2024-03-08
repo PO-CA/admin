@@ -22,13 +22,19 @@ export const useIsAdmin = () => {
             alert('권한이 없습니다. 관리자의 승인을 대기중입니다.');
           }
         } else {
-          if (pathname === '/login') {
+          if (
+            pathname === '/login' ||
+            pathname === '/signup' ||
+            pathname === '/'
+          ) {
             router.push('/dashboard');
           }
         }
       } else {
         if (pathname !== '/signup') {
           router.push('/login');
+        } else {
+          router.push('/signup');
         }
       }
     }

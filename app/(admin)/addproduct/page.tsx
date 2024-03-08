@@ -5,6 +5,8 @@ import useInput from '@/hooks/useInput';
 import CategorySelect from './(components)/CategorySelect';
 import { ProductData } from '@/types/productData';
 import ProductInput from '@/components/productInput';
+import { useCreateAProduct } from '@/query/query/products';
+import { log } from 'console';
 
 export default function AddProduct() {
   const {
@@ -12,7 +14,7 @@ export default function AddProduct() {
     onChange,
     reset,
   } = useInput<ProductData>({
-    category: '',
+    categoryId: '',
     sku: '',
     title: '',
     thumbNailUrl: '',
@@ -28,15 +30,28 @@ export default function AddProduct() {
     y: 0,
     z: 0,
     barcode: '',
-    releaseDate: '',
-    deadlineDate: '',
+    releaseDate: 0,
+    deadlineDate: 0,
   });
+
+  const { mutateAsync: createAProduct } = useCreateAProduct();
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    reset();
-  };
 
+    if (addProductData.categoryId === '')
+      return alert('카테고리를 선택해주세요.');
+    if (addProductData.title === '') return alert('상품명을 작성해주세요.');
+
+    addProductData.releaseDate = new Date(
+      addProductData.releaseDate,
+    ).toISOString();
+    addProductData.deadlineDate = new Date(
+      addProductData.deadlineDate,
+    ).toISOString();
+
+    createAProduct(addProductData).then(() => reset());
+  };
   return (
     <main className={styles.addProductContainer}>
       <div className={styles.addProductTitle}>상품-등록</div>

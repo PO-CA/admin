@@ -1,3 +1,9 @@
 .mainContainer {
-  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-weight: 600;
+  font-size: 50px;
+  color: #356e70;
 }

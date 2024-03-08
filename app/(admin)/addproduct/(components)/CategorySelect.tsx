@@ -20,10 +20,10 @@ export default function CategorySelect({
   return (
     <div className={styles.inputContainer}>
       <label className={styles.inputLabel}>카테고리</label>
-      <select id="category" onChange={onChange}>
+      <select id="categoryId" onChange={onChange}>
         <option defaultChecked></option>
         {categoryData.map((category: any, i: number) => (
-          <option key={`category.title${i}`} value={category.title}>
+          <option key={`category.title${i}`} value={category.id}>
             {category.title}
           </option>
         ))}

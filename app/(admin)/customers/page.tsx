@@ -60,6 +60,8 @@ export default function Customers() {
           globalFilter={globalFilter}
           setGlobalFilter={setGlobalFilter}
           styles={tableStyles}
+          search
+          pagenation
         />
       )}
     </main>

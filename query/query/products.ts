@@ -1,9 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  creatAProduct,
   getAProduct,
   getAllProducts,
   getUsersAllProducts,
 } from '../api/product';
+import { ProductData } from '@/types/productData';
 
 export function useGetAllproducts() {
   return useQuery({
@@ -34,5 +36,15 @@ export function useGetUsersAllproducts(userId: number | null) {
       return data;
     },
     enabled: !!userId,
+  });
+}
+
+export function useCreateAProduct() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: ProductData) => creatAProduct(payload),
+
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['products'] }),
   });
 }

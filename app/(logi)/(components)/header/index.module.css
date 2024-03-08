@@ -1,21 +1,24 @@
 .sidebarContainer {
   background-color: rgb(108, 108, 175);
-  position: fixed;
-  width: 100vw;
+  position: sticky;
+  top: 0;
   height: 50px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .menusContainer {
   display: flex;
   align-items: center;
-  margin: 50px 0 0 0;
 }
 
 .menusItem {
   color: #ffffff;
   font-size: 22px;
   font-weight: 600;
-  margin: 0 0 20px 0;
+  margin: 10px;
+  background-color: inherit;
+  border: none;
+  cursor: pointer;
 }
