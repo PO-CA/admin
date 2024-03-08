@@ -26,7 +26,7 @@ export default function ProductDetail({
     onChange,
   } = useInput<UpdateProductData>({
     id: 0,
-    category: '',
+    categoryId: '',
     sku: '',
     title: '',
     thumbNailUrl: '',
@@ -50,7 +50,7 @@ export default function ProductDetail({
     if (productData !== undefined)
       setValue({
         id: productData.id || 0,
-        category: productData.category || '',
+        categoryId: productData.category || '',
         sku: productData.sku || '',
         title: productData.title || '',
         thumbNailUrl: productData.thumbNailUrl || '',
