@@ -4,7 +4,11 @@ import {
   getAllProducts,
   getUsersAllProducts,
 } from '../api/product';
-import { createACartItem, getUsersAllCarts } from '../api/cart';
+import {
+  createACartItem,
+  deleteACartItem,
+  getUsersAllCarts,
+} from '../api/cart';
 import { CreateCartItemDTO } from '@/types/createCartItemDTO';
 
 // export function useGetAllproducts() {
@@ -33,6 +37,16 @@ export function useCreateACart() {
 
   return useMutation({
     mutationFn: (payload: CreateCartItemDTO) => createACartItem(payload),
+
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cartitems'] }),
+  });
+}
+
+export function useDeleteACart() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (cartItemId: number) => deleteACartItem(cartItemId),
 
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cartitems'] }),
   });

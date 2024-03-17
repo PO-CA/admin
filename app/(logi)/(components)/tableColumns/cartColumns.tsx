@@ -1,6 +1,7 @@
 'use client';
 import { ColumnDef } from '@tanstack/react-table';
 import React from 'react';
+import DeleteCartButton from '../deleteCartButton';
 
 export const cartColumns: ColumnDef<any, any>[] = [
   {
@@ -38,5 +39,14 @@ export const cartColumns: ColumnDef<any, any>[] = [
     cell: (info) => info.getValue(),
     header: () => <span>총액</span>,
     footer: (props) => props.column.id,
+  },
+  {
+    accessorFn: (row) => row.id,
+    id: 'id',
+    header: () => '',
+
+    cell: (info) => {
+      return <DeleteCartButton info={info} />;
+    },
   },
 ];

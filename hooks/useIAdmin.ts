@@ -19,7 +19,7 @@ export const useIsAdmin = () => {
           } else if (userLevel?.includes('STAFF_2')) {
             router.push('/poca');
           } else {
-            alert('권한이 없습니다. 관리자의 승인을 대기중입니다.');
+            alert('로그인 여부를 확인중입니다.');
           }
         } else {
           if (

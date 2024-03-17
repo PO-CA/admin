@@ -95,6 +95,9 @@ export default function OrdersPicked({ usersEmail }: any) {
     formState: { errors },
   } = useForm<CreateShippingDTO>({
     mode: 'onChange',
+    defaultValues: {
+      shippingFee: 0,
+    },
   });
 
   const { mutateAsync: createShipping } = useCreateShipping();
@@ -102,10 +105,12 @@ export default function OrdersPicked({ usersEmail }: any) {
   const onSubmit: SubmitHandler<CreateShippingDTO> = (data) => {
     if (selectedRowIds.length < 1)
       return alert('배송처리할 주문을 선택해 주세요');
-    if (Number(data.shippingFee) < 1)
+    if (Number(data.shippingFee) < 0)
       return alert('올바른 배송비를 작성해 주세요.');
     data.usersEmail = userEmail;
     data.orderItemsIds = selectedRowIds;
+    console.log('data', data);
+
     createShipping(data);
     reset({
       shippingFee: 0,
@@ -137,8 +142,10 @@ export default function OrdersPicked({ usersEmail }: any) {
           globalFilter={globalFilter}
           setGlobalFilter={setGlobalFilter}
           styles={tableStyles}
-          pagenation
+          sort
           search
+          filter
+          pagenation
         />
       )}
 

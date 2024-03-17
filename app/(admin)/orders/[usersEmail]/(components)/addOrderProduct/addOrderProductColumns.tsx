@@ -2,6 +2,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import React from 'react';
 import AddOrderButton from './addOrderButton';
+import Image from 'next/image';
 
 export const addOrderProductColumns: ColumnDef<any, any>[] = [
   {
@@ -12,38 +13,40 @@ export const addOrderProductColumns: ColumnDef<any, any>[] = [
     },
   },
   {
-    accessorFn: (row) => row.artist,
-    id: 'artist',
-    cell: (info) => info.getValue(),
-    header: () => <span>가수</span>,
-    footer: (props) => props.column.id,
-  },
-  {
     accessorFn: (row) => row.barcode,
     id: 'barcode',
-    cell: (info) => info.getValue(),
-    header: () => <span>바코드</span>,
+    cell: (info) => (
+      <div>
+        <div>{info.getValue()}</div>
+        <div>{info?.row?.original?.sku}</div>
+      </div>
+    ),
+    header: () => <span>바코드/sku</span>,
     footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.ent,
-    id: 'ent',
-    cell: (info) => info.getValue(),
-    header: () => <span>ent</span>,
+    accessorFn: (row) => row.thumbNailUrl,
+    id: 'thumbNailUrl',
+    cell: (info) => (
+      <div>
+        <Image
+          alt="asd"
+          unoptimized={true}
+          src={info.getValue()}
+          width={100}
+          height={100}
+        />
+        <div>상세페이지</div>
+      </div>
+    ),
+    header: () => <span>썸네일</span>,
     footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.logiCategory.title,
-    id: 'logiCategory',
+    accessorFn: (row) => row.title,
+    id: 'title',
     cell: (info) => info.getValue(),
-    header: () => <span>카테고리</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    accessorFn: (row) => row.member,
-    id: 'member',
-    cell: (info) => info.getValue(),
-    header: () => <span>맴버</span>,
+    header: () => <span>제목</span>,
     footer: (props) => props.column.id,
   },
   {
@@ -51,6 +54,20 @@ export const addOrderProductColumns: ColumnDef<any, any>[] = [
     id: 'price',
     cell: (info) => info.getValue(),
     header: () => <span>가격</span>,
+    footer: (props) => props.column.id,
+  },
+  {
+    accessorFn: (row) => row.stock,
+    id: 'stock',
+    cell: (info) => info.getValue(),
+    header: () => <span>재고</span>,
+    footer: (props) => props.column.id,
+  },
+  {
+    accessorFn: (row) => row.releaseDate,
+    id: 'releaseDate',
+    cell: (info) => info.getValue(),
+    header: () => <span>출시일</span>,
     footer: (props) => props.column.id,
   },
 ];

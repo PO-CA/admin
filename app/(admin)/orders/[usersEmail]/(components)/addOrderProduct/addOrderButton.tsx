@@ -40,7 +40,6 @@ export default function AddOrderButton({ info }: any) {
         type="button"
         style={{ width: '40px' }}
         onClick={() => {
-          console.log('addOrderPayload', addOrderPayload);
           createOrderItem(addOrderPayload);
           setAddOrderPayload({ ...addOrderPayload, orderQty: 0 });
         }}

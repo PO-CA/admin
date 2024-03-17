@@ -14,17 +14,17 @@ export const shippingColumns: ColumnDef<any, any>[] = [
     footer: (props) => props.column.id,
   },
   {
+    accessorFn: (row) => row.createdAt,
+    id: 'createdAt',
+    cell: (info) => info.getValue(),
+    header: () => <span>발송일</span>,
+    footer: (props) => props.column.id,
+  },
+  {
     accessorFn: (row) => row.userNickname,
     id: 'userNickname',
     cell: (info) => info.getValue(),
     header: () => <span>닉네임</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    accessorFn: (row) => row.totalQty,
-    id: 'totalQty',
-    cell: (info) => info.getValue(),
-    header: () => <span>수량</span>,
     footer: (props) => props.column.id,
   },
   {
@@ -46,6 +46,13 @@ export const shippingColumns: ColumnDef<any, any>[] = [
     id: 'memo',
     cell: (info) => info.getValue(),
     header: () => <span>배송메모</span>,
+    footer: (props) => props.column.id,
+  },
+  {
+    // accessorFn: (row) => row.memo,
+    id: '인보이스버튼',
+    cell: (info) => <button>인보이스</button>,
+    header: () => <span>인보이스</span>,
     footer: (props) => props.column.id,
   },
 ];

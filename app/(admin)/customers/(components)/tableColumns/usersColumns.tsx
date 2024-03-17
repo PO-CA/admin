@@ -23,17 +23,17 @@ export const usersColumns: ColumnDef<any, any>[] = [
   //   footer: (props) => props.column.id,
   // },
   {
-    accessorFn: (row) => row.userLevel,
-    id: 'userLevel',
+    accessorFn: (row) => row.nickname,
+    id: 'nickname',
     cell: (info) => info.getValue(),
-    header: () => <span>권한</span>,
+    header: () => <span>회사명</span>,
     footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.payRate,
-    id: 'payRate',
+    accessorFn: (row) => row.phoneNumber,
+    id: 'phoneNumber',
     cell: (info) => info.getValue(),
-    header: () => <span>[포카]수수료율</span>,
+    header: () => <span>연락처</span>,
     footer: (props) => props.column.id,
   },
   {
@@ -41,14 +41,6 @@ export const usersColumns: ColumnDef<any, any>[] = [
     id: 'inCharge',
     cell: (info) => info.getValue(),
     header: () => <span>담당자</span>,
-    footer: (props) => props.column.id,
-  },
-
-  {
-    accessorFn: (row) => row.phoneNumber,
-    id: 'phoneNumber',
-    cell: (info) => info.getValue(),
-    header: () => <span>전화번호</span>,
     footer: (props) => props.column.id,
   },
 ];

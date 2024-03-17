@@ -1,13 +1,25 @@
 'use client';
 import { ColumnDef } from '@tanstack/react-table';
+import Image from 'next/image';
 import React from 'react';
 
 export const orderItemsColumns: ColumnDef<any, any>[] = [
   {
     accessorFn: (row) => row.thumbNailUrl,
     id: 'thumbNailUrl',
-    cell: (info) => <img src={info.getValue()} />,
-    header: () => <span>[앨범]주문건</span>,
+    cell: (info) => (
+      <div>
+        <Image
+          alt="asd"
+          unoptimized={true}
+          src={info.getValue()}
+          width={100}
+          height={100}
+        />
+        <div>상세페이지</div>
+      </div>
+    ),
+    header: () => <span>썸네일</span>,
     footer: (props) => props.column.id,
   },
   {
@@ -18,10 +30,15 @@ export const orderItemsColumns: ColumnDef<any, any>[] = [
     footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.sku,
-    id: 'sku',
-    cell: (info) => info.getValue(),
-    header: () => <span>SKU</span>,
+    accessorFn: (row) => row.barcode,
+    id: 'barcode',
+    cell: (info) => (
+      <div>
+        <div>{info.getValue()}</div>
+        <div>{info?.row?.original?.sku}</div>
+      </div>
+    ),
+    header: () => <span>바코드/sku</span>,
     footer: (props) => props.column.id,
   },
   {

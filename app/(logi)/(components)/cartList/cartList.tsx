@@ -16,13 +16,21 @@ import { useCreateOrderItemsInCart } from '@/query/query/orders';
 import TanTable, { fuzzyFilter } from '@/components/table';
 import tableStyles from './cartListTable.module.css';
 import { useAuth } from '@/hooks/useAuth';
+import Addresses from './addresses';
+import { useGetAddressByUsersEmail } from '@/query/query/address';
 export default function CartList() {
-  const { userId } = useAuth();
+  const { userId, userEmail } = useAuth();
   const {
     data: cartsData,
     isLoading: isCartsLoading,
     isSuccess: isCartsSuccess,
   } = useGetUsersAllCarts(userId);
+  const {
+    data: addressData,
+    isLoading: isAddressLoading,
+    isSuccess: isAddressSuccess,
+  } = useGetAddressByUsersEmail(userEmail);
+
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
 
@@ -53,6 +61,12 @@ export default function CartList() {
 
   const { mutate: createOrderItem } = useCreateOrderItemsInCart();
 
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedOption(Number(event.target.value));
+  };
+
   return (
     <div>
       <div>장바구니</div>
@@ -67,16 +81,22 @@ export default function CartList() {
         />
       )}
       <div>
-        <div>
-          {/* TODO 배송지 API */}
-          <div>배송지</div>
-          <select name="" id="">
-            <option value="">메인</option>
-            <option value="">서브</option>
-            <option value="">서브2</option>
-          </select>
-        </div>
-        <button onClick={() => createOrderItem(userId)}>주문하기</button>
+        {!isAddressLoading && isAddressSuccess && (
+          <Addresses
+            data={addressData}
+            handleSelectChange={handleSelectChange}
+            selectedOption={selectedOption}
+          />
+        )}
+
+        <button
+          onClick={() => {
+            if (!selectedOption) return alert('배송지를 선택해 주세요.');
+            createOrderItem({ userId, addressId: selectedOption });
+          }}
+        >
+          주문하기
+        </button>
       </div>
     </div>
   );

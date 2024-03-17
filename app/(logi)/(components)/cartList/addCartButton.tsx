@@ -29,7 +29,6 @@ export default function AddCartButton({ info }: any) {
       <button
         type="button"
         onClick={() => {
-          console.log('asd', addOrderPayload);
           createCartItem(addOrderPayload);
           setAddOrderPayload({ ...addOrderPayload, qty: 0 });
         }}

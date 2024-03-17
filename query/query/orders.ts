@@ -7,6 +7,7 @@ import {
   putToPickOrderItem,
   putToUnPickOrderItem,
 } from '../api/orders';
+import { CreateOrderItemDTO } from '@/types/createOrderItemDTO';
 
 export function useGetAllPickedOrderByUsersEmail(usersEmail: string) {
   return useQuery({
@@ -67,7 +68,8 @@ export function useCreateOrderItemsInCart() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (userId: number | null) => createOrderItemsInCart(userId),
+    mutationFn: (payload: CreateOrderItemDTO) =>
+      createOrderItemsInCart(payload),
 
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cartitems'] }),
   });

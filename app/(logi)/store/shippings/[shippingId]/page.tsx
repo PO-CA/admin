@@ -15,67 +15,6 @@ export default function ShippingDetail({
     isSuccess: isShippingSuccess,
   } = useGetAllShippingsByShippingId(shippingId);
 
-  console.log('shippingData', shippingData);
-
-  // const {
-  //   value: ShippingInputData,
-  //   setValue,
-  //   onChange,
-  // } = useInput<UpdateProductData>({
-  //   id: 0,
-  //   category: '',
-  //   sku: '',
-  //   title: '',
-  //   thumbNailUrl: '',
-  //   descriptionUrl: '',
-  //   artist: '',
-  //   ent: '',
-  //   company: '',
-  //   stock: 0,
-  //   price: 0,
-  //   purchase: 0,
-  //   weight: 0,
-  //   x: 0,
-  //   y: 0,
-  //   z: 0,
-  //   barcode: '',
-  //   releaseDate: '',
-  //   deadlineDate: '',
-  // });
-
-  // useEffect(() => {
-  //   if (productData !== undefined)
-  //     setValue({
-  //       id: productData.id || 0,
-  //       category: productData.category || '',
-  //       sku: productData.sku || '',
-  //       title: productData.title || '',
-  //       thumbNailUrl: productData.thumbNailUrl || '',
-  //       descriptionUrl: productData.descriptionUrl || '',
-  //       artist: productData.artist || '',
-  //       ent: productData.ent || '',
-  //       company: productData.company || '',
-  //       stock: productData.stock || 0,
-  //       price: productData.price || 0,
-  //       purchase: productData.purchase || 0,
-  //       weight: productData.weight || 0,
-  //       x: productData.x || 0,
-  //       y: productData.y || 0,
-  //       z: productData.z || 0,
-  //       barcode: productData.barcode || '',
-  //       releaseDate: productData.releaseDate || '',
-  //       deadlineDate: productData.deadlineDate || '',
-  //     });
-  // }, [productData, setValue]);
-
-  // console.log('productInputData', productInputData);
-  // console.log('productData', productData);
-
-  // const onSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   console.log('sub', productInputData);
-  // };
-
   if (isShippingLoading) return <div>loading</div>;
 
   if (!isShippingSuccess) return <div>fail</div>;

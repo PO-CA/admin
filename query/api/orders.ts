@@ -1,6 +1,7 @@
 import { API_URL } from '@/constants/apis';
 import { useQuery } from '@tanstack/react-query';
 import { requests } from '../request';
+import { CreateOrderItemDTO } from '@/types/createOrderItemDTO';
 
 export const getAllPickedOrderByUsersEmail = async (usersEmail: string) => {
   const { data } = await requests({
@@ -106,9 +107,9 @@ export function useGetAllOrderByusersEmail(usersEmail: string) {
   });
 }
 
-export const createOrderItemsInCart = async (userId: number | null) => {
+export const createOrderItemsInCart = async (payload: CreateOrderItemDTO) => {
   const { data } = await requests(
-    `${API_URL}/logi/orderitemsincart/${userId}`,
+    `${API_URL}/logi/orderitemsincart/${payload.userId}/${payload.addressId}`,
     {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },

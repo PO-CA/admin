@@ -11,6 +11,11 @@ const addProductColumns = [
   },
   {
     inputType: 'text',
+    labelName: '바코드',
+    keyName: 'barcode',
+  },
+  {
+    inputType: 'text',
     labelName: '상품 이름',
     keyName: 'title',
   },
@@ -74,11 +79,7 @@ const addProductColumns = [
     labelName: '높이',
     keyName: 'z',
   },
-  {
-    inputType: 'text',
-    labelName: '바코드',
-    keyName: 'barcode',
-  },
+
   {
     inputType: 'date',
     labelName: '출시일',

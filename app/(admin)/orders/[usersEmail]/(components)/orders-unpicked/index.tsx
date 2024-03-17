@@ -107,6 +107,7 @@ export default function OrdersUnpicked({ usersEmail }: any) {
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
         styles={tableStyles}
+        sort
         search
         filter
         pagenation
