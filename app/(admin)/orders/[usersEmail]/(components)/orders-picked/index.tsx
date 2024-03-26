@@ -109,7 +109,6 @@ export default function OrdersPicked({ usersEmail }: any) {
       return alert('올바른 배송비를 작성해 주세요.');
     data.usersEmail = userEmail;
     data.orderItemsIds = selectedRowIds;
-    console.log('data', data);
 
     createShipping(data);
     reset({

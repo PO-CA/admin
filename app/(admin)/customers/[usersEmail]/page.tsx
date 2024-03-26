@@ -23,9 +23,9 @@ export default function CustomerDetail({
 
       {!isUsersLoading && isUsersSuccess && (
         <div className={styles.userDataContainer}>
-          <div>아이디</div> <div>{usersData.nickname}</div> <div>아이디</div>{' '}
-          <div>{usersData.nickname}</div> <div>아이디</div>{' '}
-          <div>{usersData.nickname}</div>{' '}
+          <div>회사이름 : {usersData.nickname}</div>
+          <div>유저 아이디 : {usersData.userEmail}</div>
+          <div>유저 권한 : {usersData.userLevel}</div>
         </div>
       )}
 

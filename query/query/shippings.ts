@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createAShipping,
+  deleteAShipping,
   getAllShippings,
   getAllShippingsByShippingId,
   getAllShippingsByStatus,
@@ -56,6 +57,18 @@ export const useCreateShipping = () => {
 
   return useMutation({
     mutationFn: (payload: CreateShippingDTO) => createAShipping(payload),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+    },
+  });
+};
+
+export const useDeleteShipping = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (shippingId: number) => deleteAShipping(shippingId),
 
     onSuccess: () => {
       queryClient.invalidateQueries();

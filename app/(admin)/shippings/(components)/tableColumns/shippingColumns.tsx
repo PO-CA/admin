@@ -2,6 +2,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import React from 'react';
 import Link from 'next/link';
+import DeleteShippingButton from '../deleteShippingButton';
 
 export const shippingColumns: ColumnDef<any, any>[] = [
   {
@@ -50,9 +51,9 @@ export const shippingColumns: ColumnDef<any, any>[] = [
   },
   {
     // accessorFn: (row) => row.memo,
-    id: '인보이스버튼',
-    cell: (info) => <button>인보이스</button>,
-    header: () => <span>인보이스</span>,
+    id: 'buttons',
+    cell: (info) => <DeleteShippingButton info={info} />,
+    header: () => <span></span>,
     footer: (props) => props.column.id,
   },
 ];

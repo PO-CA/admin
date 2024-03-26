@@ -110,7 +110,7 @@ export default function TanTable({
                           {{
                             asc: ' 👆',
                             desc: ' 👇',
-                          }[header.column.getIsSorted() as string] ?? '👉'}
+                          }[header.column.getIsSorted() as string] ?? ''}
                         </div>
                         {filter && header.column.getCanFilter() ? (
                           <div>
@@ -254,8 +254,8 @@ function Filter({
   ) : (
     <>
       <datalist id={column.id + 'list'}>
-        {sortedUniqueValues.slice(0, 5000).map((value: any) => (
-          <option value={value} key={value} />
+        {sortedUniqueValues.slice(0, 5000).map((value: any, i) => (
+          <option value={value} key={`${value}-${i}`} />
         ))}
       </datalist>
       <DebouncedInput

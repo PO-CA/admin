@@ -13,6 +13,13 @@ export const addOrderProductColumns: ColumnDef<any, any>[] = [
     },
   },
   {
+    accessorFn: (row) => row.coordinateNames,
+    id: 'coordinateNames',
+    cell: (info) => info.getValue(),
+    header: () => <span>위치</span>,
+    footer: (props) => props.column.id,
+  },
+  {
     accessorFn: (row) => row.barcode,
     id: 'barcode',
     cell: (info) => (
@@ -52,7 +59,16 @@ export const addOrderProductColumns: ColumnDef<any, any>[] = [
   {
     accessorFn: (row) => row.price,
     id: 'price',
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      return (
+        <div>
+          <div style={{ textDecoration: 'line-through' }}>
+            {info.getValue()}
+          </div>
+          <div>{info.row.original.dcPrice}</div>
+        </div>
+      );
+    },
     header: () => <span>가격</span>,
     footer: (props) => props.column.id,
   },

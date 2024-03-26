@@ -1,12 +1,14 @@
 'use client';
 import styles from './page.module.css';
-import AddCategory from './(components)/AddCategory';
+import AddCategory from './(components)/addCategory/AddCategory';
 import useInput from '@/hooks/useInput';
-import CategorySelect from './(components)/CategorySelect';
+import CategorySelect from './(components)/addCategory/CategorySelect';
 import { ProductData } from '@/types/productData';
 import ProductInput from '@/components/productInput';
 import { useCreateAProduct } from '@/query/query/products';
-import { log } from 'console';
+import AddCoordinate from './(components)/addCoordinate/AddCoordinate';
+import CoordinateSelect from './(components)/addCoordinate/CoordinateSelect';
+import { useState } from 'react';
 
 export default function AddProduct() {
   const {
@@ -32,15 +34,20 @@ export default function AddProduct() {
     barcode: '',
     releaseDate: 0,
     deadlineDate: 0,
+    coordinateIds: [],
   });
+  const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
 
   const { mutateAsync: createAProduct } = useCreateAProduct();
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    addProductData.coordinateIds = selectedRowIds;
 
     if (addProductData.categoryId === '')
       return alert('카테고리를 선택해주세요.');
+    if (addProductData.coordinateIds.length < 1)
+      return alert('좌표를 선택해주세요.');
     if (addProductData.title === '') return alert('상품명을 작성해주세요.');
 
     addProductData.releaseDate = new Date(
@@ -52,6 +59,9 @@ export default function AddProduct() {
 
     createAProduct(addProductData).then(() => reset());
   };
+
+  console.log('addProductData', addProductData);
+
   return (
     <main className={styles.addProductContainer}>
       <div className={styles.addProductTitle}>상품-등록</div>
@@ -60,6 +70,9 @@ export default function AddProduct() {
           <ProductInput addProductData={addProductData} onChange={onChange} />
           <CategorySelect onChange={onChange} />
           <AddCategory />
+
+          <CoordinateSelect setSelectedRowIds={setSelectedRowIds} />
+          <AddCoordinate />
           <button type="submit">상품추가</button>
         </form>
       </section>

@@ -1,51 +1,34 @@
 'use client';
 import { ColumnDef } from '@tanstack/react-table';
 import React from 'react';
-import Link from 'next/link';
 
 export const shippingItemColumns: ColumnDef<any, any>[] = [
   {
-    accessorFn: (row) => row.id,
-    id: 'id',
-    cell: (info) => (
-      <Link href={`/shippings/${info.getValue()}`}>{info.getValue()}</Link>
-    ),
-    header: () => <span>ID</span>,
+    accessorFn: (row) => row.title,
+    id: 'title',
+    cell: (info) => info.row.original.logiProduct.title,
+    header: () => <span>상품명</span>,
     footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.userNickname,
-    id: 'userNickname',
-    cell: (info) => info.getValue(),
-    header: () => <span>닉네임</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    accessorFn: (row) => row.totalQty,
-    id: 'totalQty',
+    accessorFn: (row) => row.qty,
+    id: 'qty',
     cell: (info) => info.getValue(),
     header: () => <span>수량</span>,
     footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.totalProductPrice,
-    id: 'totalProductPrice',
+    accessorFn: (row) => row.price,
+    id: 'price',
     cell: (info) => info.getValue(),
-    header: () => <span>상품가격</span>,
+    header: () => <span>개당가격</span>,
     footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.shippingFee,
-    id: 'shippingFee',
+    accessorFn: (row) => row.totalPrice,
+    id: 'totalPrice',
     cell: (info) => info.getValue(),
-    header: () => <span>배송비</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    accessorFn: (row) => row.memo,
-    id: 'memo',
-    cell: (info) => info.getValue(),
-    header: () => <span>배송메모</span>,
+    header: () => <span>총 상품가격</span>,
     footer: (props) => props.column.id,
   },
 ];
