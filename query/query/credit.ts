@@ -8,5 +8,6 @@ export function useGetCreditsByUsersEmail(usersEmail: string) {
       const data = await getCreditsByUsersEmail(usersEmail);
       return data;
     },
+    enabled: !!usersEmail,
   });
 }
