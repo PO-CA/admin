@@ -44,6 +44,7 @@ export default function ProductDetail({
     barcode: '',
     releaseDate: '',
     deadlineDate: '',
+    coordinateIds: [],
   });
 
   useEffect(() => {
@@ -68,6 +69,7 @@ export default function ProductDetail({
         barcode: productData.barcode || '',
         releaseDate: productData.releaseDate || '',
         deadlineDate: productData.deadlineDate || '',
+        coordinateIds: productData.coordinateIds || [],
       });
   }, [productData, setValue]);
 
