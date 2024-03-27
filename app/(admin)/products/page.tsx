@@ -16,6 +16,7 @@ import {
 } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
 import tableStyles from './table.module.css';
+import ExcelUpload from './(components)/excelUpload';
 
 export default function Products() {
   const {
@@ -69,6 +70,7 @@ export default function Products() {
   return (
     <main className={styles.productsContainer}>
       <div className={styles.subTitle}>상품-목록</div>
+      <ExcelUpload />
       {!isProductsLoading && isProductsSuccess && (
         <TanTable
           table={table}
