@@ -9,6 +9,8 @@ import { useCreateAProduct } from '@/query/query/products';
 import AddCoordinate from './(components)/addCoordinate/AddCoordinate';
 import CoordinateSelect from './(components)/addCoordinate/CoordinateSelect';
 import { useState } from 'react';
+import DeleteCategory from './(components)/addCategory/DeleteCategory';
+import { coordinatesColumns } from './(components)/addCoordinate/coordinatesColumns';
 
 export default function AddProduct() {
   const {
@@ -57,10 +59,11 @@ export default function AddProduct() {
       addProductData.deadlineDate,
     ).toISOString();
 
-    createAProduct(addProductData).then(() => reset());
+    createAProduct(addProductData).then(() => {
+      setSelectedRowIds([]);
+      reset();
+    });
   };
-
-  console.log('addProductData', addProductData);
 
   return (
     <main className={styles.addProductContainer}>
@@ -69,9 +72,13 @@ export default function AddProduct() {
         <form onSubmit={onSubmit}>
           <ProductInput addProductData={addProductData} onChange={onChange} />
           <CategorySelect onChange={onChange} />
+          <DeleteCategory categoryId={Number(addProductData.categoryId)} />
           <AddCategory />
 
-          <CoordinateSelect setSelectedRowIds={setSelectedRowIds} />
+          <CoordinateSelect
+            coordinatesColumns={coordinatesColumns}
+            setSelectedRowIds={setSelectedRowIds}
+          />
           <AddCoordinate />
           <button type="submit">상품추가</button>
         </form>

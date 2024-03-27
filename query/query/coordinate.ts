@@ -1,6 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createACategory, getAllCategory } from '../api/category';
-import { createACoordinate, getAllCoordinate } from '../api/coordinate';
+import {
+  createACoordinate,
+  deleteACoordinate,
+  getAllCoordinate,
+} from '../api/coordinate';
 
 export function useGetAllCoordinate() {
   return useQuery({
@@ -21,6 +24,18 @@ export function useCreateACoordinate() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['coordinate'] });
       alert('좌표 생성을 성공했습니다');
+    },
+  });
+}
+
+export function useDeleteACoordinate() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (coordinateId: number) => deleteACoordinate(coordinateId),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['coordinate'] });
     },
   });
 }

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styles from '../../page.module.css';
 import { useGetAllCoordinate } from '@/query/query/coordinate';
 import TanTable, { fuzzyFilter } from '@/components/table';
 import {
+  ColumnDef,
   ColumnFiltersState,
   getCoreRowModel,
   getFacetedMinMaxValues,
@@ -13,12 +14,15 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { coordinatesColumns } from './coordinatesColumns';
 import tableStyles from './table.module.css';
 
 export default function CoordinateSelect({
+  productData,
+  coordinatesColumns,
   setSelectedRowIds,
 }: {
+  productData?: any;
+  coordinatesColumns: ColumnDef<any, any>[];
   setSelectedRowIds: (selectedRowIds: number[]) => void;
 }) {
   const {
@@ -30,8 +34,30 @@ export default function CoordinateSelect({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
 
+  console.log('productData', productData);
+  console.log('coordinateData', coordinateData);
+
+  const seletedData = useMemo(() => {
+    if (productData && coordinateData) {
+      return coordinateData.map((coordinate: any, i: number) => {
+        if (productData.selectedCoordinateIds.includes(coordinate.id)) {
+          coordinate.isChecked = true;
+        } else {
+          coordinate.isChecked = false;
+        }
+        coordinate.productId = productData.id;
+        return coordinate;
+      });
+    } else {
+      return coordinateData || [];
+    }
+  }, [productData, coordinateData]);
+
+  console.log('coordinateData', coordinateData);
+  console.log('seletedData', seletedData);
+
   const table = useReactTable({
-    data: coordinateData,
+    data: seletedData,
     columns: coordinatesColumns,
     filterFns: {
       fuzzy: fuzzyFilter,

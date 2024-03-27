@@ -1,7 +1,7 @@
 'use client';
 import { ColumnDef } from '@tanstack/react-table';
-import Image from 'next/image';
 import React from 'react';
+import DeleteCoordinateButton from './DeleteCoordinateButton';
 
 export const coordinatesColumns: ColumnDef<any, any>[] = [
   {
@@ -13,14 +13,16 @@ export const coordinatesColumns: ColumnDef<any, any>[] = [
         onChange={table.getToggleAllRowsSelectedHandler()}
       />
     ),
-    cell: ({ row }) => (
-      <input
-        type="checkbox"
-        checked={row.getIsSelected()}
-        disabled={!row.getCanSelect()}
-        onChange={row.getToggleSelectedHandler()}
-      />
-    ),
+    cell: ({ row }) => {
+      return (
+        <input
+          type="checkbox"
+          checked={row.getIsSelected()}
+          disabled={!row.getCanSelect()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      );
+    },
   },
 
   {
@@ -28,6 +30,12 @@ export const coordinatesColumns: ColumnDef<any, any>[] = [
     id: 'name',
     cell: (info) => info.getValue(),
     header: () => <span>좌표</span>,
+    footer: (props) => props.column.id,
+  },
+  {
+    id: 'delete',
+    cell: ({ row }) => <DeleteCoordinateButton row={row} />,
+    header: () => '',
     footer: (props) => props.column.id,
   },
 ];

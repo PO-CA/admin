@@ -1,5 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createACategory, getAllCategory } from '../api/category';
+import {
+  createACategory,
+  deleteACategory,
+  getAllCategory,
+} from '../api/category';
 
 export function useGetAllCategory() {
   return useQuery({
@@ -19,7 +23,18 @@ export function useCreateACategory() {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['category'] });
-      alert('카테고리 생성을 성공했습니다');
+    },
+  });
+}
+
+export function useDeleteACategory() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (categoryId: number) => deleteACategory(categoryId),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['category'] });
     },
   });
 }

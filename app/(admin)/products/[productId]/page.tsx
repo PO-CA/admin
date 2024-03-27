@@ -3,9 +3,16 @@ import { useGetAProduct } from '@/query/query/products';
 import styles from './page.module.css';
 import useInput from '@/hooks/useInput';
 import { ProductData } from '@/types/productData';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ProductInput from '@/components/productInput';
 import { UpdateProductData } from '@/types/updateProductData';
+import CategorySelect from '../../addproduct/(components)/addCategory/CategorySelect';
+import DeleteCategory from '../../addproduct/(components)/addCategory/DeleteCategory';
+import AddCategory from '../../addproduct/(components)/addCategory/AddCategory';
+import CoordinateSelect from '../../addproduct/(components)/addCoordinate/CoordinateSelect';
+import AddCoordinate from '../../addproduct/(components)/addCoordinate/AddCoordinate';
+import { coordinatesColumns } from '../../addproduct/(components)/addCoordinate/coordinatesColumns';
+import { updateCoordinatesColumns } from '../(components)/tableColumns/updateCoordinatesColumns';
 
 export default function ProductDetail({
   params,
@@ -73,6 +80,8 @@ export default function ProductDetail({
       });
   }, [productData, setValue]);
 
+  const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
+
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
   };
@@ -90,6 +99,17 @@ export default function ProductDetail({
           <input value={productInputData?.id} disabled />
         </div>
         <ProductInput addProductData={productInputData} onChange={onChange} />
+
+        <CategorySelect onChange={onChange} />
+        <DeleteCategory categoryId={Number(productData.categoryId)} />
+        <AddCategory />
+
+        <CoordinateSelect
+          productData={productData}
+          coordinatesColumns={updateCoordinatesColumns}
+          setSelectedRowIds={setSelectedRowIds}
+        />
+        <AddCoordinate />
         <button type="submit">상품수정</button>
       </form>
     </main>
