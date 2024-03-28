@@ -2,6 +2,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import React from 'react';
 import Link from 'next/link';
+import CellButtons from '../CellButtons';
 
 export const productColumns: ColumnDef<any, any>[] = [
   // {
@@ -30,6 +31,11 @@ export const productColumns: ColumnDef<any, any>[] = [
     ),
     header: () => <span>ID</span>,
     // footer: (props) => props.column.id,
+  },
+  {
+    id: 'buttons',
+    cell: (info) => <CellButtons info={info} />,
+    header: () => <span>기능</span>,
   },
   {
     accessorFn: (row) => row.coordinateNames,

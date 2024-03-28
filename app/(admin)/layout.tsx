@@ -6,6 +6,7 @@ import Sidebar from '@/components/sidebar';
 import { useAuth } from '@/hooks/useAuth';
 import { useSignOut } from '@/query/query/users';
 import { useIsAdmin } from '@/hooks/useIAdmin';
+import Header from '@/components/header';
 
 export default function RootLayout({
   children,
@@ -21,21 +22,21 @@ export default function RootLayout({
     !myInfoLoading &&
     isAuthenticated && (
       <>
-        <Sidebar>
-          <Sidebar.MenusConatiner>
-            {menus.map((menu) => (
-              <Sidebar.Menus
-                key={menu.href}
-                href={menu.href}
-                text={menu.text}
-              />
-            ))}
-          </Sidebar.MenusConatiner>
-          <Sidebar.MenusConatiner>
-            <Sidebar.Menus text="로그아웃" onClick={() => signOut()} />
-          </Sidebar.MenusConatiner>
-        </Sidebar>
-        <div className={styles.contentContainer}>{children}</div>
+        <Header />
+        <div className={styles.contentContainer}>
+          <Sidebar>
+            <Sidebar.MenusConatiner>
+              {menus.map((menu) => (
+                <Sidebar.Menus
+                  key={menu.href}
+                  href={menu.href}
+                  text={menu.text}
+                />
+              ))}
+            </Sidebar.MenusConatiner>
+          </Sidebar>
+          {children}
+        </div>
       </>
     )
   );

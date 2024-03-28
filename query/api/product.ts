@@ -66,3 +66,19 @@ export const creatAProduct = async (payload: ProductData) => {
   }
   return data;
 };
+
+export const deleteAProduct = async (productId: number) => {
+  const { data } = await requests(`${API_URL}/logi/products/${productId}`, {
+    method: 'delete',
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  return data;
+};

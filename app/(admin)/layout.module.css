@@ -1,7 +1,3 @@
-.rootLayoutContainer {
-  display: flex;
-}
-
 .contentContainer {
-  padding-left: 140px;
+  display: flex;
 }

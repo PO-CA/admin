@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   creatAProduct,
+  deleteAProduct,
   getAProduct,
   getAllProducts,
   getUsersAllProducts,
@@ -44,6 +45,16 @@ export function useCreateAProduct() {
 
   return useMutation({
     mutationFn: (payload: ProductData) => creatAProduct(payload),
+
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['products'] }),
+  });
+}
+
+export function useDeleteAProduct() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (productId: number) => deleteAProduct(productId),
 
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['products'] }),
   });
