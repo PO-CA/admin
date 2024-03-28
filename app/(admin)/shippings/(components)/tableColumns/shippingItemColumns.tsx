@@ -4,9 +4,9 @@ import React from 'react';
 
 export const shippingItemColumns: ColumnDef<any, any>[] = [
   {
-    accessorFn: (row) => row.title,
-    id: 'title',
-    cell: (info) => info.row.original.productName,
+    accessorFn: (row) => row.productName,
+    id: 'productName',
+    cell: (info) => info.getValue(),
     header: () => <span>상품명</span>,
     footer: (props) => props.column.id,
   },
