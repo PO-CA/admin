@@ -6,7 +6,7 @@ export const shippingItemColumns: ColumnDef<any, any>[] = [
   {
     accessorFn: (row) => row.title,
     id: 'title',
-    cell: (info) => info.row.original.logiProduct.title,
+    cell: (info) => info.row.original.productName,
     header: () => <span>상품명</span>,
     footer: (props) => props.column.id,
   },
