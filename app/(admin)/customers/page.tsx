@@ -62,6 +62,7 @@ export default function Customers() {
           styles={tableStyles}
           search
           pagenation
+          filter
         />
       )}
     </main>
