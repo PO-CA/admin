@@ -1,7 +1,8 @@
 import React from 'react';
 import styles from './index.module.css';
 import MenusContainer from './MenusContainer';
-import Menus from './Menus';
+import MainMenus from './MainMenus';
+import SubMenus from './SubMenus';
 
 export default function Sidebar({
   children,
@@ -12,4 +13,5 @@ export default function Sidebar({
 }
 
 Sidebar.MenusConatiner = MenusContainer;
-Sidebar.Menus = Menus;
+Sidebar.MainMenus = MainMenus;
+Sidebar.SubManues = SubMenus;

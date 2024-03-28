@@ -3,7 +3,7 @@ import styles from './index.module.css';
 import Link from 'next/link';
 import { MenusPropsInterface } from './index.types';
 
-export default function Menus({ href, text, onClick }: MenusPropsInterface) {
+export default function SubMenus({ href, text, onClick }: MenusPropsInterface) {
   return (
     <>
       {href && href.length > 0 ? (

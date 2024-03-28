@@ -27,10 +27,11 @@ export default function RootLayout({
           <Sidebar>
             <Sidebar.MenusConatiner>
               {menus.map((menu) => (
-                <Sidebar.Menus
+                <Sidebar.MainMenus
                   key={menu.href}
                   href={menu.href}
                   text={menu.text}
+                  subMenus={menu.subMenus}
                 />
               ))}
             </Sidebar.MenusConatiner>

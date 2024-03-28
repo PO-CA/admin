@@ -4,20 +4,19 @@ export const menus = [
     text: '대시보드',
   },
   {
-    href: '/orders',
     text: '주문',
+    subMenus: [{ href: '/orders', text: '유저별 주문' }],
   },
   {
-    href: '/shippings',
     text: '배송',
+    subMenus: [{ href: '/shippings', text: '유저별 배송' }],
   },
   {
-    href: '/products',
-    text: '상품-목록',
-  },
-  {
-    href: '/addproduct',
-    text: '상품-추가',
+    text: '상품',
+    subMenus: [
+      { href: '/products', text: '상품목록' },
+      { href: '/addproduct', text: '상품추가' },
+    ],
   },
   {
     href: '/customers',

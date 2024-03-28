@@ -1,7 +1,7 @@
 .sidebarContainer {
   background-color: rgb(108, 108, 175);
-  width: 110px;
-  min-width: 110px;
+  width: 140px;
+  min-width: 140px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -12,12 +12,32 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 50px 0 0 0;
+  margin: 20px 0 0 0;
 }
 
 .menusItem {
-  color: #ffffff;
-  font-size: 18px;
-  font-weight: 700;
-  margin: 0 0 20px 0;
+  color: #efefef;
+  font-size: 15px;
+  font-weight: 500;
+  width: 100%;
+  padding: 0 0 0 20px;
+  margin: 10px 0;
+}
+
+.subMenusItemContainer {
+  width: 100%;
+  background-color: rgb(81, 81, 135);
+  border-bottom: rgb(123, 123, 208) 1px solid;
+  margin: 0 0 25px 0;
+  padding: 5px 0 5px 20px;
+}
+.subMenusItem {
+  color: #dfdfdf;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 0;
+}
+
+.subMenusItem:hover {
+  color: rgb(54, 54, 91);
 }
