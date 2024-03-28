@@ -68,10 +68,13 @@ export const creatAProduct = async (payload: ProductData) => {
 };
 
 export const deleteAProduct = async (productId: number) => {
-  const { data } = await requests(`${API_URL}/logi/products/${productId}`, {
-    method: 'delete',
-    headers: { 'Content-Type': 'application/json' },
-  });
+  const { data } = await requests(
+    `${API_URL}/logi/products/delete/${productId}`,
+    {
+      method: 'delete',
+      headers: { 'Content-Type': 'application/json' },
+    },
+  );
 
   const { errorMessage, errorCode, customMessage } = data;
 
@@ -80,5 +83,7 @@ export const deleteAProduct = async (productId: number) => {
   } else if (errorMessage) {
     return alert(`${errorMessage}\n${errorCode}`);
   }
+  alert('상품 삭제를 성공했습니다');
+
   return data;
 };
