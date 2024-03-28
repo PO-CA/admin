@@ -11,7 +11,7 @@ export default function DeleteShippingButton({ info }: any) {
         type="button"
         style={{ width: '40px' }}
         onClick={() => {
-          // alert('기능 수정중입니다');
+          alert('이미 삭제된 상품은 주문으로 복구되지 않습니다.');
           deleteShippingItem(info.row.original.id);
         }}
       >
