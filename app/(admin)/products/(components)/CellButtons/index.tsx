@@ -1,5 +1,7 @@
 import { useDeleteAProduct } from '@/query/query/products';
 import React from 'react';
+import styles from './index.module.css';
+import Link from 'next/link';
 
 export default function CellButtons({ info }: any) {
   console.log('info', info);
@@ -8,8 +10,18 @@ export default function CellButtons({ info }: any) {
 
   return (
     <div>
-      <button onClick={() => deleteProduct(info.row.original.id)}>삭제</button>
-      <button>수정</button>
+      <button
+        className={styles.cellButton}
+        type="button"
+        onClick={() => deleteProduct(info.row.original.id)}
+      >
+        삭제
+      </button>
+      <Link href={`/products/${info.row.original.id}`}>
+        <button className={styles.cellButton} type="button">
+          수정
+        </button>
+      </Link>
     </div>
   );
 }

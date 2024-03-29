@@ -9,7 +9,7 @@ export const menus = [
   },
   {
     text: '배송',
-    subMenus: [{ href: '/shippings', text: '유저별 배송' }],
+    subMenus: [{ href: '/shippings', text: '전체 배송' }],
   },
   {
     text: '상품',

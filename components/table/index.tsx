@@ -51,29 +51,33 @@ export default function TanTable({
     <div className={styles.tableContainer}>
       {search && (
         <div className={styles.topPanal}>
-          <DebouncedInput
-            value={globalFilter ?? ''}
-            onChange={(value) => setGlobalFilter(String(value))}
-            className={styles.searchInput}
-            placeholder="전체 검색"
-          />
-          <select
-            value={table.getState().pagination.pageSize}
-            className={styles.selactInput}
-            onChange={(e) => {
-              table.setPageSize(Number(e.target.value));
-            }}
-          >
-            {[10, 20, 30, 40, 50].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                {pageSize}
-              </option>
-            ))}
-          </select>
-          개 씩 보기
-          <div className={styles.totalRowcount}>
-            {' '}
-            총 {table.getPrePaginationRowModel().rows.length} 개
+          <div className={styles.leftTopPanal}>
+            <DebouncedInput
+              value={globalFilter ?? ''}
+              onChange={(value) => setGlobalFilter(String(value))}
+              className={styles.searchInput}
+              placeholder="전체 검색"
+            />
+            <div className={styles.totalRowcount}>
+              총 {table.getPrePaginationRowModel().rows.length} 개
+            </div>
+          </div>
+
+          <div className={styles.rightTopPanal}>
+            <select
+              value={table.getState().pagination.pageSize}
+              className={styles.selactInput}
+              onChange={(e) => {
+                table.setPageSize(Number(e.target.value));
+              }}
+            >
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  {pageSize}
+                </option>
+              ))}
+            </select>
+            개 씩 보기
           </div>
         </div>
       )}

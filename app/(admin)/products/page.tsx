@@ -14,7 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import tableStyles from './table.module.css';
 import ExcelUpload from './(components)/excelUpload';
 
@@ -52,37 +52,34 @@ export default function Products() {
     debugColumns: false,
   });
 
-  const [selectedRowIds, setSelectedRowIds] = useState([]);
-
-  let selectedRows: any = null;
-  if (!isProductsLoading && isProductsSuccess) {
-    selectedRows = table.getSelectedRowModel().rows;
-  }
-
-  useEffect(() => {
-    if (selectedRows !== null) {
-      if (!isProductsLoading && isProductsSuccess) {
-        setSelectedRowIds(selectedRows.map((row: any) => row.original.id));
-      }
-    }
-  }, [table, isProductsLoading, isProductsSuccess, selectedRows]);
-
   return (
     <main className={styles.productsContainer}>
-      <div className={styles.subTitle}>상품-목록</div>
-      <ExcelUpload />
-      {!isProductsLoading && isProductsSuccess && (
-        <TanTable
-          table={table}
-          globalFilter={globalFilter}
-          setGlobalFilter={setGlobalFilter}
-          styles={tableStyles}
-          search
-          sort
-          pagenation
-          filter
-        />
-      )}
+      <div className={styles.titleContainer}>상품-목록</div>
+      <div className={styles.titleContainer}>
+        대량등록
+        <div style={{ display: 'flex' }}>
+          엑셀 업로드
+          <ExcelUpload />
+        </div>
+        <div>
+          <button>양식 받기</button>
+        </div>
+      </div>
+
+      <div className={styles.tableContainer}>
+        {!isProductsLoading && isProductsSuccess && (
+          <TanTable
+            table={table}
+            globalFilter={globalFilter}
+            setGlobalFilter={setGlobalFilter}
+            styles={tableStyles}
+            search
+            sort
+            pagenation
+            filter
+          />
+        )}
+      </div>
     </main>
   );
 }

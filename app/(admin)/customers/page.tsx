@@ -53,18 +53,20 @@ export default function Customers() {
   });
   return (
     <main className={styles.customersContainer}>
-      <div className={styles.subTitle}>유저-목록</div>
-      {!isUsersLoading && isUsersSuccess && (
-        <TanTable
-          table={table}
-          globalFilter={globalFilter}
-          setGlobalFilter={setGlobalFilter}
-          styles={tableStyles}
-          search
-          pagenation
-          filter
-        />
-      )}
+      <div className={styles.titleContainer}>유저-목록</div>
+      <div className={styles.tableContainer}>
+        {!isUsersLoading && isUsersSuccess && (
+          <TanTable
+            table={table}
+            globalFilter={globalFilter}
+            setGlobalFilter={setGlobalFilter}
+            styles={tableStyles}
+            search
+            pagenation
+            filter
+          />
+        )}
+      </div>
     </main>
   );
 }

@@ -14,28 +14,38 @@ export default function OrdersByUsersId({
   return (
     <main className={styles.ordersDetailContainer}>
       <div>
-        <div className={styles.subTitle}>유저-크레딧</div>
-        <Credits usersEmail={usersEmail} />
+        <div className={styles.titleContainer}>유저-크레딧</div>
+        <div className={styles.tableContainer}>
+          <Credits usersEmail={usersEmail} />
+        </div>
       </div>
 
       <div>
-        <div className={styles.subTitle}>주문-포장 전</div>
-        <OrdersUnpicked usersEmail={usersEmail} />
+        <div className={styles.titleContainer}>주문-포장 전</div>
+        <div className={styles.tableContainer}>
+          <OrdersUnpicked usersEmail={usersEmail} />
+        </div>
       </div>
 
       <div>
-        <div className={styles.subTitle}>주문-포장 중</div>
-        <OrdersPicked usersEmail={usersEmail} />
+        <div className={styles.titleContainer}>주문-포장 중</div>
+        <div className={styles.tableContainer}>
+          <OrdersPicked usersEmail={usersEmail} />
+        </div>
       </div>
 
       <div>
-        <div className={styles.subTitle}>추가주문</div>
-        <AddOrderProduct />
+        <div className={styles.titleContainer}>추가주문</div>
+        <div className={styles.tableContainer}>
+          <AddOrderProduct />
+        </div>
       </div>
 
       <div>
-        <div className={styles.subTitle}>배송</div>
-        <UserShippings usersEmail={usersEmail} />
+        <div className={styles.titleContainer}>배송</div>
+        <div className={styles.tableContainer}>
+          <UserShippings usersEmail={usersEmail} />
+        </div>
       </div>
     </main>
   );

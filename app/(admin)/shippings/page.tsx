@@ -63,16 +63,18 @@ export default function Shippings() {
 
   return (
     <main className={styles.shippingsContainer}>
-      <div className={styles.subTitle}>배송-목록</div>
-      <TanTable
-        table={table}
-        globalFilter={globalFilter}
-        setGlobalFilter={setGlobalFilter}
-        styles={tableStyles}
-        search
-        filter
-        pagenation
-      />
+      <div className={styles.titleContainer}>배송-목록</div>
+      <div className={styles.titleContainer}>
+        <TanTable
+          table={table}
+          globalFilter={globalFilter}
+          setGlobalFilter={setGlobalFilter}
+          styles={tableStyles}
+          search
+          filter
+          pagenation
+        />
+      </div>
     </main>
   );
 }

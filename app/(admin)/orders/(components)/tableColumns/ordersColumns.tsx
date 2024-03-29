@@ -4,15 +4,15 @@ import Link from 'next/link';
 import React from 'react';
 
 export const ordersColumns: ColumnDef<any, any>[] = [
-  // {
-  //   accessorFn: (row) => row.userNickname,
-  //   id: 'userNickname',
-  //   cell: (info) => (
-  //     <Link href={`/orders/${info.getValue()}`}>{info.getValue()}</Link>
-  //   ),
-  //   header: () => <span>닉네임</span>,
-  //   footer: (props) => props.column.id,
-  // },
+  {
+    accessorFn: (row) => row.nickname,
+    id: 'nickname',
+    cell: (info) => (
+      <Link href={`/orders/${info.row.original.id}`}>{info.getValue()}</Link>
+    ),
+    header: () => <span>회사명</span>,
+    footer: (props) => props.column.id,
+  },
   {
     accessorFn: (row) => row.userEmail,
     id: 'userEmail',

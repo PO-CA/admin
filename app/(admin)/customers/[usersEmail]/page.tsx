@@ -19,29 +19,37 @@ export default function CustomerDetail({
 
   return (
     <main className={styles.customersDetailContainer}>
-      <div className={styles.subTitle}>고객-상세</div>
+      <div className={styles.titleContainer}>고객-상세</div>
 
-      {!isUsersLoading && isUsersSuccess && (
-        <div className={styles.userDataContainer}>
-          <div>회사이름 : {usersData.nickname}</div>
-          <div>유저 아이디 : {usersData.userEmail}</div>
-          <div>유저 권한 : {usersData.userLevel}</div>
-        </div>
-      )}
+      <div className={styles.titleContainer}>
+        {!isUsersLoading && isUsersSuccess && (
+          <div className={styles.userDataContainer}>
+            <div>회사이름 : {usersData.nickname}</div>
+            <div>유저 아이디 : {usersData.userEmail}</div>
+            <div>유저 권한 : {usersData.userLevel}</div>
+          </div>
+        )}
+      </div>
 
       <div style={{ display: 'flex' }}>
         <div>
-          <div className={styles.subTitle}>유저-할인률</div>
-          <UserDcAmount usersEmail={usersEmail} />
+          <div className={styles.titleContainer}>유저-할인률</div>
+          <div className={styles.tableContainer}>
+            <UserDcAmount usersEmail={usersEmail} />
+          </div>
         </div>
         <div>
-          <div className={styles.subTitle}>유저-할인액</div>
-          <UserDcRate usersEmail={usersEmail} />
+          <div className={styles.titleContainer}>유저-할인액</div>
+          <div className={styles.tableContainer}>
+            <UserDcRate usersEmail={usersEmail} />
+          </div>
         </div>
       </div>
 
-      <div className={styles.subTitle}>배송지</div>
-      <UserAddress usersEmail={usersEmail} />
+      <div className={styles.titleContainer}>배송지</div>
+      <div className={styles.tableContainer}>
+        <UserAddress usersEmail={usersEmail} />
+      </div>
     </main>
   );
 }
