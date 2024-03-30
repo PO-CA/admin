@@ -15,6 +15,7 @@ import {
 import TanTable, { fuzzyFilter } from '@/components/table';
 import tableStyles from './table.module.css';
 import { useGetCreditsByUsersEmail } from '@/query/query/credit';
+import TableLoader from '@/components/tableLoader';
 export default function Credits({ usersEmail }: { usersEmail: string }) {
   const {
     data: creditData,
@@ -51,7 +52,7 @@ export default function Credits({ usersEmail }: { usersEmail: string }) {
   });
 
   if (isCreditLoading) {
-    return <div>Loading...</div>;
+    return <TableLoader />;
   }
 
   if (!isCreditSuccess) {

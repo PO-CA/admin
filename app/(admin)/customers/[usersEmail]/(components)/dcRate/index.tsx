@@ -14,6 +14,7 @@ import TanTable, { fuzzyFilter } from '@/components/table';
 import { dcRateColumns } from '../../tableColumns/dcRateColumns';
 import tableStyles from './table.module.css';
 import { useGetDCRateByUsersEmail } from '@/query/query/dc';
+import TableLoader from '@/components/tableLoader';
 
 export default function UserDcRate({ usersEmail }: { usersEmail: string }) {
   const {
@@ -51,7 +52,7 @@ export default function UserDcRate({ usersEmail }: { usersEmail: string }) {
   });
 
   if (isDcRateLoading) {
-    return <div>Loading...</div>;
+    return <TableLoader />;
   }
 
   if (!isDcRateSuccess) {

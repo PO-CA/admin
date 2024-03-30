@@ -14,6 +14,7 @@ import TanTable, { fuzzyFilter } from '@/components/table';
 import { dcAmountColumns } from '../../tableColumns/dcAmountColumns';
 import tableStyles from './table.module.css';
 import { useGetDCAmountByUsersEmail } from '@/query/query/dc';
+import TableLoader from '@/components/tableLoader';
 
 export default function UserDcAmount({ usersEmail }: { usersEmail: string }) {
   const {
@@ -51,7 +52,7 @@ export default function UserDcAmount({ usersEmail }: { usersEmail: string }) {
   });
 
   if (isDcAmountLoading) {
-    return <div>Loading...</div>;
+    return <TableLoader />;
   }
 
   if (!isDcAmountSuccess) {

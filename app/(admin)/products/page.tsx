@@ -17,6 +17,7 @@ import {
 import { useState } from 'react';
 import tableStyles from './table.module.css';
 import ExcelUpload from './(components)/excelUpload';
+import TableLoader from '@/components/tableLoader';
 
 export default function Products() {
   const {
@@ -62,11 +63,14 @@ export default function Products() {
           <ExcelUpload />
         </div>
         <div>
-          <button>양식 받기</button>
+          <button type="button" className={styles.cellButton}>
+            양식 받기
+          </button>
         </div>
       </div>
 
       <div className={styles.tableContainer}>
+        {isProductsLoading && <TableLoader />}
         {!isProductsLoading && isProductsSuccess && (
           <TanTable
             table={table}

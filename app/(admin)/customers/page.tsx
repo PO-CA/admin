@@ -16,6 +16,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import tableStyles from './table.module.css';
+import TableLoader from '@/components/tableLoader';
 
 export default function Customers() {
   const {
@@ -55,6 +56,7 @@ export default function Customers() {
     <main className={styles.customersContainer}>
       <div className={styles.titleContainer}>유저-목록</div>
       <div className={styles.tableContainer}>
+        {isUsersLoading && <TableLoader />}
         {!isUsersLoading && isUsersSuccess && (
           <TanTable
             table={table}

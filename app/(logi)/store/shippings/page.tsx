@@ -17,6 +17,7 @@ import styles from './page.module.css';
 import { shippingColumns } from './(components)/tableColumns/shippingColumns';
 import tableStyles from './table.module.css';
 import TanTable, { fuzzyFilter } from '@/components/table';
+import TableLoader from '@/components/tableLoader';
 export default function Shippings() {
   const {
     data: shippingData,
@@ -53,7 +54,7 @@ export default function Shippings() {
   });
 
   if (isShippingLoading) {
-    return <div>Loading...</div>;
+    return <TableLoader />;
   }
 
   if (!isShippingSuccess) {

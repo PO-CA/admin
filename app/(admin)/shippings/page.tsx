@@ -17,6 +17,7 @@ import { useGetAllShippings } from '@/query/query/shippings';
 import { shippingColumns } from '@/app/(admin)/shippings/(components)/tableColumns/shippingColumns';
 import styles from './page.module.css';
 import tableStyles from './table.module.css';
+import TableLoader from '@/components/tableLoader';
 
 export default function Shippings() {
   const {
@@ -53,10 +54,6 @@ export default function Shippings() {
     debugColumns: false,
   });
 
-  if (isShippingLoading) {
-    return <div>Loading...</div>;
-  }
-
   if (!isShippingSuccess) {
     return <div>Failed to load</div>;
   }
@@ -64,7 +61,8 @@ export default function Shippings() {
   return (
     <main className={styles.shippingsContainer}>
       <div className={styles.titleContainer}>배송-목록</div>
-      <div className={styles.titleContainer}>
+      <div className={styles.tableContainer}>
+        {isShippingLoading && <TableLoader />}
         <TanTable
           table={table}
           globalFilter={globalFilter}

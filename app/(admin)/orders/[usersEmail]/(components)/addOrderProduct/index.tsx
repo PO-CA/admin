@@ -20,6 +20,7 @@ import {
 import { addOrderProductColumns } from './addOrderProductColumns';
 import tableStyles from './table.module.css';
 import { useAuth } from '@/hooks/useAuth';
+import TableLoader from '@/components/tableLoader';
 
 export default function AddOrderProduct() {
   const { userId } = useAuth();
@@ -57,7 +58,7 @@ export default function AddOrderProduct() {
   });
 
   if (isProductLoading) {
-    return <div>Loading...</div>;
+    return <TableLoader />;
   }
 
   if (!isProductSuccess) {

@@ -1,0 +1,9 @@
+.loaderContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-weight: 600;
+  font-size: 50px;
+  color: rgb(255, 247, 0);
+}

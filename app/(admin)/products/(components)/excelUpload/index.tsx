@@ -1,6 +1,7 @@
 'use client';
 import React, { useCallback, useState } from 'react';
 import * as XLSX from 'xlsx';
+import styles from './index.module.css';
 
 export default function ExcelUpload() {
   //   const [file, setFile] = useState(null);

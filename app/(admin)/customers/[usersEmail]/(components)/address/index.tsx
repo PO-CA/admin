@@ -14,6 +14,7 @@ import { addressColumns } from '../../tableColumns/addressColumns';
 import TanTable, { fuzzyFilter } from '@/components/table';
 import tableStyles from './table.module.css';
 import { useGetAddressByUsersEmail } from '@/query/query/address';
+import TableLoader from '@/components/tableLoader';
 export default function UserAddress({ usersEmail }: { usersEmail: string }) {
   const {
     data: addressData,
@@ -50,7 +51,7 @@ export default function UserAddress({ usersEmail }: { usersEmail: string }) {
   });
 
   if (isAddressLoading) {
-    return <div>Loading...</div>;
+    return <TableLoader />;
   }
 
   if (!isAddressSuccess) {

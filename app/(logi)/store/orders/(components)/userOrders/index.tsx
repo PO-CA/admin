@@ -16,6 +16,7 @@ import { useState } from 'react';
 import TanTable, { fuzzyFilter } from '@/components/table';
 import tableStyles from './table.module.css';
 import { useGetAllOrderByusersEmail } from '@/query/api/orders';
+import TableLoader from '@/components/tableLoader';
 
 export default function UserOrders({ usersEmail }: any) {
   const {
@@ -52,7 +53,7 @@ export default function UserOrders({ usersEmail }: any) {
   });
 
   if (isOrderItemsLoading) {
-    return <div>Loading...</div>;
+    return <TableLoader />;
   }
 
   if (!isOrderItemsSuccess) {

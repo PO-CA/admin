@@ -16,6 +16,7 @@ import { shippingColumns } from '../../../shippings/(components)/tableColumns/sh
 import TanTable, { fuzzyFilter } from '@/components/table';
 import tableStyles from './table.module.css';
 import { useGetAllShippingsByUsersEmail } from '@/query/query/shippings';
+import TableLoader from '@/components/tableLoader';
 export default function UserShippings({ usersEmail }: { usersEmail: string }) {
   const {
     data: shippingData,
@@ -52,7 +53,7 @@ export default function UserShippings({ usersEmail }: { usersEmail: string }) {
   });
 
   if (isShippingLoading) {
-    return <div>Loading...</div>;
+    return <TableLoader />;
   }
 
   if (!isShippingSuccess) {

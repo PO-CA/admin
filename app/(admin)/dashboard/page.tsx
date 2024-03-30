@@ -7,8 +7,8 @@ import StatsByUsers from './(components)/byUsers';
 export default function DashBoard() {
   return (
     <main className={styles.addProductContainer}>
-      <div className={styles.addProductTitle}>대시보드</div>
-      <section>
+      <div className={styles.titleContainer}>대시보드</div>
+      <section className={styles.statsContainer}>
         <StatsTotal />
         <StatsByUsers />
       </section>

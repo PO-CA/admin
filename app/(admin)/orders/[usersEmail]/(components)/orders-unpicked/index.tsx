@@ -20,6 +20,7 @@ import { useState } from 'react';
 import TanTable, { fuzzyFilter } from '@/components/table';
 import tableStyles from './table.module.css';
 import styles from './index.module.css';
+import TableLoader from '@/components/tableLoader';
 
 export default function OrdersUnpicked({ usersEmail }: any) {
   const {
@@ -78,7 +79,7 @@ export default function OrdersUnpicked({ usersEmail }: any) {
   const { mutateAsync: putToPickOrderItem } = usePutToPickOrderItem();
 
   if (isUnpickedOrderItemsLoading) {
-    return <div>Loading...</div>;
+    return <TableLoader />;
   }
 
   if (!isUnpickedOrderItemsSuccess) {

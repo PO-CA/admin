@@ -1,3 +1,4 @@
+import TableLoader from '@/components/tableLoader';
 import React, { useEffect, useState } from 'react';
 
 export default function Addresses({
@@ -14,10 +15,9 @@ export default function Addresses({
         data.find((address: any) => address.id === selectedOption),
       );
   }, [selectedOption, data]);
-  console.log('selectedAddress', selectedAddress);
 
   if (!data) {
-    return <div>loading...</div>;
+    return <TableLoader />;
   }
 
   return (

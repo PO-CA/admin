@@ -15,6 +15,7 @@ import {
 } from '@tanstack/react-table';
 import { useState } from 'react';
 import tableStyles from './table.module.css';
+import TableLoader from '@/components/tableLoader';
 export default function UserListWithOrderQty() {
   const {
     data: usersOrdersata,
@@ -49,7 +50,7 @@ export default function UserListWithOrderQty() {
   });
 
   if (isUsersLoading) {
-    return <div>Loading...</div>;
+    return <TableLoader />;
   }
 
   if (!isUsersSuccess) {

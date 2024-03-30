@@ -15,6 +15,7 @@ import {
 } from '@tanstack/react-table';
 import tableStyles from './table.module.css';
 import { useGetCreditsByUsersEmail } from '@/query/query/credit';
+import TableLoader from '@/components/tableLoader';
 
 export default function Credits({ usersEmail }: { usersEmail: string }) {
   const {
@@ -52,7 +53,7 @@ export default function Credits({ usersEmail }: { usersEmail: string }) {
   });
 
   if (isCreditLoading) {
-    return <div>Loading...</div>;
+    return <TableLoader />;
   }
 
   if (!isCreditSuccess) {
