@@ -1,5 +1,4 @@
 'use client';
-import { useGetTotalSell } from '@/query/query/stats';
 import styles from './page.module.css';
 import StatsTotal from './(components)/total';
 import StatsByUsers from './(components)/byUsers';

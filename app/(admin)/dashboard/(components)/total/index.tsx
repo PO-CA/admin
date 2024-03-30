@@ -4,8 +4,12 @@ import {
   useGetTotalSell,
 } from '@/query/query/stats';
 import React from 'react';
-import Plot from 'react-plotly.js';
 import styles from './index.module.css';
+import dynamic from 'next/dynamic';
+const Plot = dynamic(() => import('react-plotly.js'), {
+  ssr: false,
+  loading: () => null, // 로딩 중에 보여줄 컴포넌트
+});
 
 export default function StatsTotal() {
   const {
