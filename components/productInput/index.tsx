@@ -2,6 +2,7 @@
 import React from 'react';
 import styles from './index.module.css';
 import { ProductData } from '@/types/productData';
+import { UpdateProductData } from '@/types/updateProductData';
 
 const addProductColumns = [
   {
@@ -95,7 +96,7 @@ export default function ProductInput({
   addProductData,
   onChange,
 }: {
-  addProductData: ProductData;
+  addProductData: ProductData | UpdateProductData | any;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   return (

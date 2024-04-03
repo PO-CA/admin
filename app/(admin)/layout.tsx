@@ -4,7 +4,6 @@ import '../globals.css';
 import { menus } from '@/constants/menus';
 import Sidebar from '@/components/sidebar';
 import { useAuth } from '@/hooks/useAuth';
-import { useSignOut } from '@/query/query/users';
 import { useIsAdmin } from '@/hooks/useIAdmin';
 import Header from '@/components/header';
 
@@ -14,7 +13,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const { isAuthenticated, myInfoLoading } = useAuth();
-  const { mutateAsync: signOut } = useSignOut();
 
   useIsAdmin();
 
@@ -26,9 +24,9 @@ export default function RootLayout({
         <div className={styles.contentContainer}>
           <Sidebar>
             <Sidebar.MenusConatiner>
-              {menus.map((menu) => (
+              {menus.map((menu, i) => (
                 <Sidebar.MainMenus
-                  key={menu.href}
+                  key={`${menu.href}${i}`}
                   href={menu.href}
                   text={menu.text}
                   subMenus={menu.subMenus}

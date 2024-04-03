@@ -23,7 +23,6 @@ export function useCreateACoordinate() {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['coordinate'] });
-      alert('좌표 생성을 성공했습니다');
     },
   });
 }

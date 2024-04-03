@@ -1,18 +1,16 @@
 'use client';
-import { useGetAProduct } from '@/query/query/products';
+import { useGetAProduct, useUpdateAProduct } from '@/query/query/products';
 import styles from './page.module.css';
 import useInput from '@/hooks/useInput';
-import { ProductData } from '@/types/productData';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import ProductInput from '@/components/productInput';
-import { UpdateProductData } from '@/types/updateProductData';
 import CategorySelect from '../../addproduct/(components)/addCategory/CategorySelect';
 import DeleteCategory from '../../addproduct/(components)/addCategory/DeleteCategory';
 import AddCategory from '../../addproduct/(components)/addCategory/AddCategory';
 import CoordinateSelect from '../../addproduct/(components)/addCoordinate/CoordinateSelect';
 import AddCoordinate from '../../addproduct/(components)/addCoordinate/AddCoordinate';
-import { coordinatesColumns } from '../../addproduct/(components)/addCoordinate/coordinatesColumns';
 import { updateCoordinatesColumns } from '../(components)/tableColumns/updateCoordinatesColumns';
+import { UpdateProductData } from '@/types/updateProductData';
 
 export default function ProductDetail({
   params,
@@ -27,13 +25,16 @@ export default function ProductDetail({
     isSuccess: isProductSuccess,
   } = useGetAProduct(productId);
 
+  const { mutateAsync: updateProduct } = useUpdateAProduct();
+
   const {
     value: productInputData,
     setValue,
     onChange,
+    reset,
   } = useInput<UpdateProductData>({
-    id: 0,
-    categoryId: '',
+    productId: 0,
+    logiCategoryId: '',
     sku: '',
     title: '',
     thumbNailUrl: '',
@@ -51,14 +52,13 @@ export default function ProductDetail({
     barcode: '',
     releaseDate: '',
     deadlineDate: '',
-    coordinateIds: [],
   });
 
   useEffect(() => {
     if (productData !== undefined)
       setValue({
-        id: productData.id || 0,
-        categoryId: productData.category || '',
+        productId: productData.id || 0,
+        logiCategoryId: productData.logiCategory.id || '',
         sku: productData.sku || '',
         title: productData.title || '',
         thumbNailUrl: productData.thumbNailUrl || '',
@@ -76,14 +76,30 @@ export default function ProductDetail({
         barcode: productData.barcode || '',
         releaseDate: productData.releaseDate || '',
         deadlineDate: productData.deadlineDate || '',
-        coordinateIds: productData.coordinateIds || [],
       });
   }, [productData, setValue]);
 
-  const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
-
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (productInputData.logiCategoryId === '')
+      return alert('카테고리를 선택해주세요.');
+
+    if (productInputData.title === '') return alert('상품명을 작성해주세요.');
+    if (productInputData.sku === '') return alert('sku를 작성해주세요.');
+    if (productInputData.barcode === '')
+      return alert('Barcode를 작성해주세요.');
+
+    productInputData.releaseDate = new Date(
+      productInputData.releaseDate,
+    ).toISOString();
+    productInputData.deadlineDate = new Date(
+      productInputData.deadlineDate,
+    ).toISOString();
+
+    updateProduct(productInputData).then(() => {
+      reset();
+    });
   };
 
   if (isProductLoading) return <div>loading</div>;
@@ -96,7 +112,7 @@ export default function ProductDetail({
       <form onSubmit={onSubmit}>
         <div>
           <label>상품번호</label>
-          <input value={productInputData?.id} disabled />
+          <input value={productInputData?.productId} disabled />
         </div>
         <ProductInput addProductData={productInputData} onChange={onChange} />
 
@@ -107,7 +123,6 @@ export default function ProductDetail({
         <CoordinateSelect
           productData={productData}
           coordinatesColumns={updateCoordinatesColumns}
-          setSelectedRowIds={setSelectedRowIds}
         />
         <AddCoordinate />
         <button type="submit">상품수정</button>

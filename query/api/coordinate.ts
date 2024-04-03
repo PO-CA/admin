@@ -30,6 +30,7 @@ export const createACoordinate = async (coordinateName: string) => {
   } else if (errorMessage) {
     return alert(`${errorMessage}\n${errorCode}`);
   }
+  alert('좌표 생성을 성공했습니다');
   return data;
 };
 

@@ -5,8 +5,10 @@ import {
   getAProduct,
   getAllProducts,
   getUsersAllProducts,
+  updateAProduct,
 } from '../api/product';
 import { ProductData } from '@/types/productData';
+import { UpdateProductData } from '@/types/updateProductData';
 
 export function useGetAllproducts() {
   return useQuery({
@@ -45,6 +47,16 @@ export function useCreateAProduct() {
 
   return useMutation({
     mutationFn: (payload: ProductData) => creatAProduct(payload),
+
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['products'] }),
+  });
+}
+
+export function useUpdateAProduct() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: UpdateProductData) => updateAProduct(payload),
 
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['products'] }),
   });

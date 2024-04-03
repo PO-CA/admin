@@ -1,6 +1,7 @@
 import { API_URL } from '@/constants/apis';
 import { requests } from '../request';
 import { ProductData } from '@/types/productData';
+import { UpdateProductData } from '@/types/updateProductData';
 
 export const getAllProducts = async () => {
   const { data } = await requests(`${API_URL}/logi/products`, {
@@ -64,6 +65,29 @@ export const creatAProduct = async (payload: ProductData) => {
   } else if (errorMessage) {
     return alert(`${errorMessage}\n${errorCode}`);
   }
+  alert('상품 생성을 성공했습니다');
+
+  return data;
+};
+
+export const updateAProduct = async (payload: UpdateProductData) => {
+  console.log('payload', payload);
+
+  const { data } = await requests(`${API_URL}/logi/products`, {
+    method: 'patch',
+    headers: { 'Content-Type': 'application/json' },
+    data: payload,
+  });
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  alert('상품 수정을 성공했습니다');
+
   return data;
 };
 

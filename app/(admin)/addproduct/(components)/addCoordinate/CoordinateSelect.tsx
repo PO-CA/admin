@@ -23,7 +23,7 @@ export default function CoordinateSelect({
 }: {
   productData?: any;
   coordinatesColumns: ColumnDef<any, any>[];
-  setSelectedRowIds: (selectedRowIds: number[]) => void;
+  setSelectedRowIds?: (selectedRowIds: number[]) => void;
 }) {
   const {
     data: coordinateData,
@@ -82,7 +82,7 @@ export default function CoordinateSelect({
 
   useEffect(() => {
     if (selectedRows !== null) {
-      if (!isCoordinateLoading && isCoordinateSuccess) {
+      if (!isCoordinateLoading && isCoordinateSuccess && setSelectedRowIds) {
         setSelectedRowIds(selectedRows.map((row: any) => row.original.id));
       }
     }
