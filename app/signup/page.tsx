@@ -29,8 +29,9 @@ export default function SignUp() {
   const onSubmit: SubmitHandler<SignUp> = (data) =>
     signUp(data).then((data) => {
       if (data && data.errorMessage) {
-        setText(data.errorMessage);
-        alertOpen();
+        // setText(data.errorMessage);
+        // alertOpen();
+        alert(data.errorMessage);
       } else {
         window.location.href = '/';
       }
