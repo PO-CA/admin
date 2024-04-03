@@ -11,12 +11,12 @@ const addProductColumns = [
   },
   {
     inputType: 'text',
-    labelName: '바코드',
+    labelName: '바코드❗️',
     keyName: 'barcode',
   },
   {
     inputType: 'text',
-    labelName: '상품 이름',
+    labelName: '상품 이름❗️',
     keyName: 'title',
   },
   {

@@ -4,9 +4,13 @@
 }
 
 .addProductTitle {
-  text-align: center;
-  font-size: 30px;
-  font-weight: 600;
+  background-color: white;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: 500;
+  border: 1px solid rgb(219, 219, 219);
+  margin: 10px;
+  display: flex;
 }
 
 .inputContainer {
@@ -24,6 +28,12 @@
   font-size: 24px;
 }
 
-.inputLabel {
-  width: 200px;
+.categoryContainer {
+  background-color: white;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: 500;
+  border: 1px solid rgb(219, 219, 219);
+  margin: 10px;
+  display: flex;
 }

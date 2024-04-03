@@ -51,6 +51,7 @@ export default function AddProduct() {
     if (addProductData.coordinateIds.length < 1)
       return alert('좌표를 선택해주세요.');
     if (addProductData.title === '') return alert('상품명을 작성해주세요.');
+    if (addProductData.barcode === '') return alert('Barcode를 작성해주세요.');
 
     addProductData.releaseDate = new Date(
       addProductData.releaseDate,
@@ -71,9 +72,11 @@ export default function AddProduct() {
       <section>
         <form onSubmit={onSubmit}>
           <ProductInput addProductData={addProductData} onChange={onChange} />
-          <CategorySelect onChange={onChange} />
-          <DeleteCategory categoryId={Number(addProductData.categoryId)} />
-          <AddCategory />
+          <div className={styles.categoryContainer}>
+            <CategorySelect onChange={onChange} />
+            <DeleteCategory categoryId={Number(addProductData.categoryId)} />
+            <AddCategory />
+          </div>
 
           <CoordinateSelect
             coordinatesColumns={coordinatesColumns}

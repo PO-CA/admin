@@ -54,4 +54,10 @@ export const productColumns: ColumnDef<any, any>[] = [
     cell: (info) => info.getValue(),
     header: () => <span>가격</span>,
   },
+  {
+    accessorFn: (row) => row.stock,
+    id: 'stock',
+    cell: (info) => info.getValue(),
+    header: () => <span>수량</span>,
+  },
 ];

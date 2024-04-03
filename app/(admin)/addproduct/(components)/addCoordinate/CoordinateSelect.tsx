@@ -34,9 +34,6 @@ export default function CoordinateSelect({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
 
-  console.log('productData', productData);
-  console.log('coordinateData', coordinateData);
-
   const seletedData = useMemo(() => {
     if (productData && coordinateData) {
       return coordinateData.map((coordinate: any, i: number) => {
@@ -52,9 +49,6 @@ export default function CoordinateSelect({
       return coordinateData || [];
     }
   }, [productData, coordinateData]);
-
-  console.log('coordinateData', coordinateData);
-  console.log('seletedData', seletedData);
 
   const table = useReactTable({
     data: seletedData,
@@ -106,7 +100,7 @@ export default function CoordinateSelect({
 
   return (
     <div className={styles.inputContainer}>
-      <label className={styles.inputLabel}>좌표</label>
+      <label className={styles.inputLabel}>좌표❗️</label>
       <TanTable
         table={table}
         globalFilter={globalFilter}
