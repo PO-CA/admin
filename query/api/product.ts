@@ -71,8 +71,6 @@ export const creatAProduct = async (payload: ProductData) => {
 };
 
 export const updateAProduct = async (payload: UpdateProductData) => {
-  console.log('payload', payload);
-
   const { data } = await requests(`${API_URL}/logi/products`, {
     method: 'patch',
     headers: { 'Content-Type': 'application/json' },

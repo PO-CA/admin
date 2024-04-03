@@ -11,6 +11,7 @@ import CoordinateSelect from '../../addproduct/(components)/addCoordinate/Coordi
 import AddCoordinate from '../../addproduct/(components)/addCoordinate/AddCoordinate';
 import { updateCoordinatesColumns } from '../(components)/tableColumns/updateCoordinatesColumns';
 import { UpdateProductData } from '@/types/updateProductData';
+import { useRouter } from 'next/navigation';
 
 export default function ProductDetail({
   params,
@@ -26,6 +27,8 @@ export default function ProductDetail({
   } = useGetAProduct(productId);
 
   const { mutateAsync: updateProduct } = useUpdateAProduct();
+
+  const router = useRouter();
 
   const {
     value: productInputData,
@@ -98,7 +101,7 @@ export default function ProductDetail({
     ).toISOString();
 
     updateProduct(productInputData).then(() => {
-      reset();
+      router.refresh();
     });
   };
 
