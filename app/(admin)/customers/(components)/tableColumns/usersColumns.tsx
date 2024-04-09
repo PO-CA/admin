@@ -30,10 +30,10 @@ export const usersColumns: ColumnDef<any, any>[] = [
     footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.phoneNumber,
-    id: 'phoneNumber',
+    accessorFn: (row) => row.userLevel,
+    id: 'userLevel',
     cell: (info) => info.getValue(),
-    header: () => <span>연락처</span>,
+    header: () => <span>권한</span>,
     footer: (props) => props.column.id,
   },
   {
