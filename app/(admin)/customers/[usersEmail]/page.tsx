@@ -5,6 +5,7 @@ import UserDcAmount from './(components)/dcAmount';
 import UserDcRate from './(components)/dcRate';
 import { useGetUsersDetailByUsersEmail } from '@/query/query/users';
 import UserPermission from './(components)/userPermission';
+import UserNickname from './(components)/userNickname';
 
 export default function CustomerDetail({
   params,
@@ -25,8 +26,8 @@ export default function CustomerDetail({
       <div className={styles.titleContainer}>
         {!isUsersLoading && isUsersSuccess && (
           <div className={styles.userDataContainer}>
-            <div>회사이름 : {usersData.nickname}</div>
             <div>유저 아이디 : {usersData.userEmail}</div>
+            <UserNickname usersData={usersData} />
             <UserPermission usersData={usersData} />
           </div>
         )}
@@ -34,15 +35,15 @@ export default function CustomerDetail({
 
       <div style={{ display: 'flex' }}>
         <div>
-          <div className={styles.titleContainer}>유저-할인률</div>
+          <div className={styles.titleContainer}>유저-할인율</div>
           <div className={styles.tableContainer}>
-            <UserDcAmount usersEmail={usersEmail} />
+            <UserDcRate usersEmail={usersEmail} />
           </div>
         </div>
         <div>
           <div className={styles.titleContainer}>유저-할인액</div>
           <div className={styles.tableContainer}>
-            <UserDcRate usersEmail={usersEmail} />
+            <UserDcAmount usersEmail={usersEmail} />
           </div>
         </div>
       </div>

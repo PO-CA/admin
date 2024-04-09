@@ -85,12 +85,12 @@ export default function TanTable({
       <div />
       <table>
         <thead>
-          {table.getHeaderGroups().map((headerGroup: any) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header: any) => {
+          {table.getHeaderGroups().map((headerGroup: any, i: number) => (
+            <tr key={`${headerGroup.id}-${i}`}>
+              {headerGroup.headers.map((header: any, ii: number) => {
                 return (
                   <th
-                    key={header.id}
+                    key={`${header.id}-${ii}`}
                     colSpan={header.colSpan}
                     className={styles.tableHeader}
                   >
@@ -130,12 +130,12 @@ export default function TanTable({
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map((row: any) => {
+          {table.getRowModel().rows.map((row: any, i: number) => {
             return (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell: any) => {
+              <tr key={`${row.id}-${i}`}>
+                {row.getVisibleCells().map((cell: any, ii: number) => {
                   return (
-                    <td key={cell.id} className={styles.tableRow}>
+                    <td key={`${cell.id}-${ii}`} className={styles.tableRow}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),

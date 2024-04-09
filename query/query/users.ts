@@ -2,12 +2,16 @@
 import {
   getAllUsersWithOrderItemsQty,
   getUserDetailByUsersEmail,
+  updateUsersNickname,
+  updateUsersPermission,
 } from '../api/users';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { myInfo, signIn, signOut, signUp } from '../api/users';
 import { SignIn } from '@/types/signIn';
 import { SignUp } from '@/types/signUp';
 import useUserStore from '@/store/users';
+import { UpdateUsersPermissionDTO } from '@/types/updateUsersPermissionDTO';
+import { UpdateUsersNicknameDTO } from '@/types/updateUsersNicknameDTO';
 
 export function useSignIn() {
   const queryClient = useQueryClient();
@@ -28,6 +32,29 @@ export function useSignUp() {
 
   return useMutation({
     mutationFn: (payload: SignUp) => signUp(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+  });
+}
+
+export function useUpodateUsersPermission() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: UpdateUsersPermissionDTO) =>
+      updateUsersPermission(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+  });
+}
+export function useUpodateUsersNickname() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: UpdateUsersNicknameDTO) =>
+      updateUsersNickname(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
     },

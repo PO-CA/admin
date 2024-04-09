@@ -1,6 +1,7 @@
 'use client';
 import { ColumnDef } from '@tanstack/react-table';
 import React from 'react';
+import UpdateDcAmount from '../(components)/updateDcAmount';
 
 export const dcAmountColumns: ColumnDef<any, any>[] = [
   {
@@ -16,5 +17,12 @@ export const dcAmountColumns: ColumnDef<any, any>[] = [
     cell: (info) => `${info.getValue()} 원`,
     header: () => <span>할인액</span>,
     footer: (props) => props.column.id,
+  },
+  {
+    accessorFn: (row) => row.amount,
+    id: 'amount',
+    cell: (info) => <UpdateDcAmount info={info} />,
+    enableColumnFilter: false,
+    header: () => '',
   },
 ];

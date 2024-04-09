@@ -24,6 +24,7 @@ export default function UserListWithOrderQty() {
   } = useGetAllUsersWithOrderItemsQty();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
+
   const table = useReactTable({
     data: usersOrdersata,
     columns: ordersColumns,
