@@ -18,6 +18,8 @@ import tableStyles from './cartListTable.module.css';
 import { useAuth } from '@/hooks/useAuth';
 import Addresses from './addresses';
 import { useGetAddressByUsersEmail } from '@/query/query/address';
+import styles from './page.module.css';
+
 export default function CartList() {
   const { userId, userEmail } = useAuth();
   const {
@@ -69,34 +71,36 @@ export default function CartList() {
 
   return (
     <div>
-      <div>장바구니</div>
-      {!isCartsLoading && isCartsSuccess && (
-        <TanTable
-          table={table}
-          globalFilter={globalFilter}
-          setGlobalFilter={setGlobalFilter}
-          styles={tableStyles}
-          search
-          pagenation
-        />
-      )}
-      <div>
-        {!isAddressLoading && isAddressSuccess && (
-          <Addresses
-            data={addressData}
-            handleSelectChange={handleSelectChange}
-            selectedOption={selectedOption}
+      <div className={styles.titleContainer}>장바구니</div>
+      <div className={styles.tableContainer}>
+        {!isCartsLoading && isCartsSuccess && (
+          <TanTable
+            table={table}
+            globalFilter={globalFilter}
+            setGlobalFilter={setGlobalFilter}
+            styles={tableStyles}
+            search
+            pagenation
           />
         )}
+        <div>
+          {!isAddressLoading && isAddressSuccess && (
+            <Addresses
+              data={addressData}
+              handleSelectChange={handleSelectChange}
+              selectedOption={selectedOption}
+            />
+          )}
 
-        <button
-          onClick={() => {
-            if (!selectedOption) return alert('배송지를 선택해 주세요.');
-            createOrderItem({ userId, addressId: selectedOption });
-          }}
-        >
-          주문하기
-        </button>
+          <button
+            onClick={() => {
+              if (!selectedOption) return alert('배송지를 선택해 주세요.');
+              createOrderItem({ userId, addressId: selectedOption });
+            }}
+          >
+            주문하기
+          </button>
+        </div>
       </div>
     </div>
   );

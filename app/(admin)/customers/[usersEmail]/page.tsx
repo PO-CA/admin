@@ -4,6 +4,7 @@ import UserAddress from './(components)/address';
 import UserDcAmount from './(components)/dcAmount';
 import UserDcRate from './(components)/dcRate';
 import { useGetUsersDetailByUsersEmail } from '@/query/query/users';
+import UserPermission from './(components)/userPermission';
 
 export default function CustomerDetail({
   params,
@@ -26,7 +27,7 @@ export default function CustomerDetail({
           <div className={styles.userDataContainer}>
             <div>회사이름 : {usersData.nickname}</div>
             <div>유저 아이디 : {usersData.userEmail}</div>
-            <div>유저 권한 : {usersData.userLevel}</div>
+            <UserPermission usersData={usersData} />
           </div>
         )}
       </div>

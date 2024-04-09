@@ -1,6 +1,7 @@
 'use client';
 import { useCreateAProductCoordinate } from '@/query/query/productcoordinate';
 import React from 'react';
+import styles from '../../page.module.css';
 
 export default function CreateProductCoordinateButton({ row }: any) {
   const payload = {
@@ -14,7 +15,7 @@ export default function CreateProductCoordinateButton({ row }: any) {
     <div style={{ display: 'flex', width: '100px' }}>
       <button
         type="button"
-        style={{ width: '40px' }}
+        className={styles.cellButton}
         onClick={() => {
           if (row.original.isChecked) {
             return alert('이미 선택된 좌표입니다');

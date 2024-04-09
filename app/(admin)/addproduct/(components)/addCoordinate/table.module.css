@@ -1,8 +1,6 @@
 .tableContainer {
-  margin-bottom: 50px;
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid black;
   padding: 20px;
 }
 

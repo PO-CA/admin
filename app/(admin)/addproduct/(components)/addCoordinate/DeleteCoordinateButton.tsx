@@ -1,6 +1,7 @@
 'use client';
 import { useDeleteACoordinate } from '@/query/query/coordinate';
 import React from 'react';
+import styles from '../../page.module.css';
 
 export default function DeleteCoordinateButton({ row }: any) {
   const { mutate: deleteACoordinate } = useDeleteACoordinate();
@@ -8,7 +9,7 @@ export default function DeleteCoordinateButton({ row }: any) {
     <div style={{ display: 'flex', width: '100px' }}>
       <button
         type="button"
-        style={{ width: '40px' }}
+        className={styles.addCategoryBtn}
         onClick={() => {
           deleteACoordinate(row.original.id);
         }}

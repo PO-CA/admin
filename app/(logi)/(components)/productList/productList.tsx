@@ -15,6 +15,8 @@ import { productColumns } from '../tableColumns/productColumns';
 import { useGetUsersAllproducts } from '@/query/query/products';
 import tableStyles from './productListTable.module.css';
 import { useAuth } from '@/hooks/useAuth';
+import styles from './page.module.css';
+
 export default function ProductList() {
   const { userId } = useAuth();
   const {
@@ -51,17 +53,19 @@ export default function ProductList() {
   });
   return (
     <div>
-      <div>상품-목록</div>
-      {!isProductsLoading && isProductsSuccess && (
-        <TanTable
-          table={table}
-          globalFilter={globalFilter}
-          setGlobalFilter={setGlobalFilter}
-          styles={tableStyles}
-          search
-          pagenation
-        />
-      )}
+      <div className={styles.titleContainer}>상품-목록</div>
+      <div className={styles.tableContainer}>
+        {!isProductsLoading && isProductsSuccess && (
+          <TanTable
+            table={table}
+            globalFilter={globalFilter}
+            setGlobalFilter={setGlobalFilter}
+            styles={tableStyles}
+            search
+            pagenation
+          />
+        )}
+      </div>
     </div>
   );
 }

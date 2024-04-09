@@ -37,6 +37,11 @@ const addProductColumns = [
   },
   {
     inputType: 'text',
+    labelName: '버전',
+    keyName: 'member',
+  },
+  {
+    inputType: 'text',
     labelName: '소속사 이름',
     keyName: 'ent',
   },

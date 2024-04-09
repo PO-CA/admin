@@ -1,2 +1,4 @@
 .contentContainer {
+  background-color: rgb(233, 239, 243);
+  min-height: 100vh;
 }

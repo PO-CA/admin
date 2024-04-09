@@ -26,6 +26,7 @@ export default function AddProduct() {
     artist: '',
     ent: '',
     company: '',
+    member: '',
     stock: 0,
     price: 0,
     purchase: 0,
@@ -71,19 +72,25 @@ export default function AddProduct() {
       <div className={styles.addProductTitle}>상품-등록</div>
       <section>
         <form onSubmit={onSubmit}>
-          <ProductInput addProductData={addProductData} onChange={onChange} />
+          <button type="submit" className={styles.addProductBtn}>
+            상품추가
+          </button>
           <div className={styles.categoryContainer}>
-            <CategorySelect onChange={onChange} />
-            <DeleteCategory categoryId={Number(addProductData.categoryId)} />
+            <div style={{ display: 'flex' }}>
+              <CategorySelect onChange={onChange} />
+              <DeleteCategory categoryId={Number(addProductData.categoryId)} />
+            </div>
             <AddCategory />
           </div>
 
-          <CoordinateSelect
-            coordinatesColumns={coordinatesColumns}
-            setSelectedRowIds={setSelectedRowIds}
-          />
-          <AddCoordinate />
-          <button type="submit">상품추가</button>
+          <div className={styles.tableContainer}>
+            <CoordinateSelect
+              coordinatesColumns={coordinatesColumns}
+              setSelectedRowIds={setSelectedRowIds}
+            />
+            <AddCoordinate />
+          </div>
+          <ProductInput addProductData={addProductData} onChange={onChange} />
         </form>
       </section>
     </main>

@@ -1,7 +1,7 @@
 'use client';
-import { useDeleteACoordinate } from '@/query/query/coordinate';
 import { useDeleteAProductCoordinate } from '@/query/query/productcoordinate';
 import React from 'react';
+import styles from '../../page.module.css';
 
 export default function DeleteProductCoordinateButton({ row }: any) {
   const payload = {
@@ -15,7 +15,7 @@ export default function DeleteProductCoordinateButton({ row }: any) {
     <div style={{ display: 'flex', width: '100px' }}>
       <button
         type="button"
-        style={{ width: '40px' }}
+        className={styles.cellButton}
         onClick={() => {
           if (!row.original.isChecked) {
             return alert('선택된 좌표가 없습니다');

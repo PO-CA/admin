@@ -1,17 +1,16 @@
 'use client';
-import { useGetAProduct, useUpdateAProduct } from '@/query/query/products';
+import { useCreateAProduct, useGetAProduct } from '@/query/query/products';
 import styles from './page.module.css';
 import useInput from '@/hooks/useInput';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ProductInput from '@/components/productInput';
-import CategorySelect from '../../addproduct/(components)/addCategory/CategorySelect';
-import DeleteCategory from '../../addproduct/(components)/addCategory/DeleteCategory';
-import AddCategory from '../../addproduct/(components)/addCategory/AddCategory';
-import CoordinateSelect from '../../addproduct/(components)/addCoordinate/CoordinateSelect';
-import AddCoordinate from '../../addproduct/(components)/addCoordinate/AddCoordinate';
-import { updateCoordinatesColumns } from '../(components)/tableColumns/updateCoordinatesColumns';
-import { UpdateProductData } from '@/types/updateProductData';
-import { useRouter } from 'next/navigation';
+import CategorySelect from '../../../addproduct/(components)/addCategory/CategorySelect';
+import DeleteCategory from '../../../addproduct/(components)/addCategory/DeleteCategory';
+import AddCategory from '../../../addproduct/(components)/addCategory/AddCategory';
+import CoordinateSelect from '../../../addproduct/(components)/addCoordinate/CoordinateSelect';
+import AddCoordinate from '../../../addproduct/(components)/addCoordinate/AddCoordinate';
+import { ProductData } from '@/types/productData';
+import { coordinatesColumns } from '@/app/(admin)/addproduct/(components)/addCoordinate/coordinatesColumns';
 
 export default function ProductDetail({
   params,
@@ -26,17 +25,17 @@ export default function ProductDetail({
     isSuccess: isProductSuccess,
   } = useGetAProduct(productId);
 
-  const { mutateAsync: updateProduct } = useUpdateAProduct();
+  const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
 
-  const router = useRouter();
+  const { mutateAsync: createAProduct } = useCreateAProduct();
 
   const {
     value: productInputData,
     setValue,
     onChange,
-  } = useInput<UpdateProductData>({
-    productId: 0,
-    logiCategoryId: '',
+    reset,
+  } = useInput<ProductData>({
+    categoryId: '',
     sku: '',
     title: '',
     thumbNailUrl: '',
@@ -44,6 +43,7 @@ export default function ProductDetail({
     artist: '',
     ent: '',
     company: '',
+    member: '',
     stock: 0,
     price: 0,
     purchase: 0,
@@ -52,21 +52,22 @@ export default function ProductDetail({
     y: 0,
     z: 0,
     barcode: '',
-    releaseDate: '',
-    deadlineDate: '',
+    releaseDate: 0,
+    deadlineDate: 0,
+    coordinateIds: [],
   });
 
   useEffect(() => {
     if (productData !== undefined)
       setValue({
-        productId: productData.id || 0,
-        logiCategoryId: productData.logiCategory.id || '',
+        categoryId: productData.logiCategory.id || '',
         sku: productData.sku || '',
         title: productData.title || '',
         thumbNailUrl: productData.thumbNailUrl || '',
         descriptionUrl: productData.descriptionUrl || '',
         artist: productData.artist || '',
         ent: productData.ent || '',
+        member: productData.member || '',
         company: productData.company || '',
         stock: productData.stock || 0,
         price: productData.price || 0,
@@ -78,13 +79,15 @@ export default function ProductDetail({
         barcode: productData.barcode || '',
         releaseDate: productData.releaseDate || '',
         deadlineDate: productData.deadlineDate || '',
+        coordinateIds: [],
       });
   }, [productData, setValue]);
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    productInputData.coordinateIds = selectedRowIds;
 
-    if (productInputData.logiCategoryId === '')
+    if (productInputData.categoryId === '')
       return alert('카테고리를 선택해주세요.');
 
     if (productInputData.title === '') return alert('상품명을 작성해주세요.');
@@ -99,8 +102,9 @@ export default function ProductDetail({
       productInputData.deadlineDate,
     ).toISOString();
 
-    updateProduct(productInputData).then(() => {
-      router.refresh();
+    createAProduct(productInputData).then(() => {
+      setSelectedRowIds([]);
+      reset();
     });
   };
 
@@ -110,19 +114,18 @@ export default function ProductDetail({
 
   return (
     <main className={styles.productDetailContainer}>
-      <div className={styles.addProductTitle}>상품-상세</div>
+      <div className={styles.addProductTitle}>상품-복사 등록</div>
       <form onSubmit={onSubmit}>
         <button type="submit" className={styles.addProductBtn}>
-          상품수정
+          상품 복사
         </button>
-
         <div style={{ marginTop: '10px' }}>
           <label style={{ marginLeft: '20px', fontSize: '25px' }}>
             상품번호
           </label>
           <input
             style={{ marginLeft: '20px', fontSize: '25px' }}
-            value={productInputData?.productId}
+            value={productId}
             disabled
           />
         </div>
@@ -136,8 +139,8 @@ export default function ProductDetail({
 
         <div className={styles.tableContainer}>
           <CoordinateSelect
-            productData={productData}
-            coordinatesColumns={updateCoordinatesColumns}
+            coordinatesColumns={coordinatesColumns}
+            setSelectedRowIds={setSelectedRowIds}
           />
           <AddCoordinate />
         </div>

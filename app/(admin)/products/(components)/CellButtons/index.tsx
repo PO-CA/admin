@@ -22,6 +22,11 @@ export default function CellButtons({ info }: any) {
           수정
         </button>
       </Link>
+      <Link href={`/products/copy/${info.row.original.id}`}>
+        <button className={styles.cellButton} type="button">
+          복사
+        </button>
+      </Link>
     </div>
   );
 }

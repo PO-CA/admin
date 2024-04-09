@@ -19,8 +19,8 @@ export default function CategorySelect({
 
   return (
     <div className={styles.inputContainer}>
-      <label className={styles.inputLabel}>카테고리</label>
-      <select id="categoryId" onChange={onChange}>
+      <label className={styles.inputLabel}>카테고리❗️</label>
+      <select id="categoryId" onChange={onChange} className={styles.inputCell}>
         <option value="">카테고리 선택(필수)</option>
         {categoryData.map((category: any, i: number) => (
           <option key={`category.title${i}`} value={category.id}>

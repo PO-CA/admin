@@ -5,9 +5,9 @@ import styles from './page.module.css';
 
 export default function Store() {
   return (
-    <main className={styles.addProductContainer}>
-      <div className={styles.addProductTitle}>스토어</div>
-      <div className={styles.addProductContents}>
+    <main className={styles.productsContainer}>
+      <div className={styles.titleContainer}>스토어</div>
+      <div className={styles.productContents}>
         <ProductList />
         <CartList />
       </div>

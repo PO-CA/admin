@@ -6,6 +6,7 @@ export interface ProductData {
   descriptionUrl: string;
   artist: string;
   ent: string;
+  member: string;
   company: string;
   stock: number;
   price: number;
