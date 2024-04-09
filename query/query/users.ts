@@ -2,6 +2,7 @@
 import {
   getAllUsersWithOrderItemsQty,
   getUserDetailByUsersEmail,
+  updateUsersInCharge,
   updateUsersNickname,
   updateUsersPermission,
 } from '../api/users';
@@ -12,6 +13,7 @@ import { SignUp } from '@/types/signUp';
 import useUserStore from '@/store/users';
 import { UpdateUsersPermissionDTO } from '@/types/updateUsersPermissionDTO';
 import { UpdateUsersNicknameDTO } from '@/types/updateUsersNicknameDTO';
+import { UpdateUsersInChargeDTO } from '@/types/updateUsersInChargeDTO';
 
 export function useSignIn() {
   const queryClient = useQueryClient();
@@ -55,6 +57,18 @@ export function useUpodateUsersNickname() {
   return useMutation({
     mutationFn: (payload: UpdateUsersNicknameDTO) =>
       updateUsersNickname(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+  });
+}
+
+export function useUpodateUsersInCharge() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: UpdateUsersInChargeDTO) =>
+      updateUsersInCharge(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
     },

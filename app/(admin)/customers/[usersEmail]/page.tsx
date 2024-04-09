@@ -6,6 +6,7 @@ import UserDcRate from './(components)/dcRate';
 import { useGetUsersDetailByUsersEmail } from '@/query/query/users';
 import UserPermission from './(components)/userPermission';
 import UserNickname from './(components)/userNickname';
+import UpdateInCharge from './(components)/updateInCharge';
 
 export default function CustomerDetail({
   params,
@@ -29,6 +30,7 @@ export default function CustomerDetail({
             <div>유저 아이디 : {usersData.userEmail}</div>
             <UserNickname usersData={usersData} />
             <UserPermission usersData={usersData} />
+            <UpdateInCharge usersData={usersData} />
           </div>
         )}
       </div>

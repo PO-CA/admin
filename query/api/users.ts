@@ -5,6 +5,7 @@ import { requests } from '../request';
 import { SignUp } from '@/types/signUp';
 import { UpdateUsersPermissionDTO } from '@/types/updateUsersPermissionDTO';
 import { UpdateUsersNicknameDTO } from '@/types/updateUsersNicknameDTO';
+import { UpdateUsersInChargeDTO } from '@/types/updateUsersInChargeDTO';
 
 export const myInfo = async () => {
   const { data } = await requests({
@@ -117,5 +118,25 @@ export const updateUsersNickname = async (payload: UpdateUsersNicknameDTO) => {
     return alert(`${errorMessage}\n${errorCode}`);
   }
   alert('회사명 수정을 성공했습니다');
+  return data;
+};
+
+export const updateUsersInCharge = async (payload: UpdateUsersInChargeDTO) => {
+  console.log('payload', payload);
+
+  const { data } = await requests(`${API_URL}/users/incharge`, {
+    method: 'put',
+    headers: { 'Content-Type': 'application/json' },
+    data: payload,
+  });
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  alert('담당자 수정을 성공했습니다');
   return data;
 };
