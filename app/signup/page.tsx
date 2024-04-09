@@ -26,7 +26,10 @@ export default function SignUp() {
 
   const [text, setText] = useState('');
 
-  const onSubmit: SubmitHandler<SignUp> = (data) =>
+  const [asd, setAsd] = useState(false);
+
+  const onSubmit: SubmitHandler<SignUp> = (data) => {
+    setAsd(true);
     signUp(data).then((data) => {
       if (data && data.errorMessage) {
         // setText(data.errorMessage);
@@ -36,6 +39,7 @@ export default function SignUp() {
         window.location.href = '/';
       }
     });
+  };
 
   useIsAdmin();
 
@@ -106,7 +110,7 @@ export default function SignUp() {
           ) : null}
         </div>
         <div className={styles.buttonContainer}>
-          <button className={styles.bigButton} type="submit">
+          <button className={styles.bigButton} type="submit" disabled={asd}>
             회원가입
           </button>
         </div>
