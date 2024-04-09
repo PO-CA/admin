@@ -22,13 +22,19 @@ import tableStyles from './table.module.css';
 import { useAuth } from '@/hooks/useAuth';
 import TableLoader from '@/components/tableLoader';
 
-export default function AddOrderProduct() {
+export default function AddOrderProduct({
+  usersEmail,
+}: {
+  usersEmail: string;
+}) {
   const { userId } = useAuth();
+  console.log('userEmail', usersEmail);
+
   const {
     data: productData,
     isLoading: isProductLoading,
     isSuccess: isProductSuccess,
-  } = useGetUsersAllproducts(userId);
+  } = useGetUsersAllproducts(Number(usersEmail));
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
 

@@ -37,7 +37,7 @@ export default function OrdersByUsersId({
       <div>
         <div className={styles.titleContainer}>추가주문</div>
         <div className={styles.tableContainer}>
-          <AddOrderProduct />
+          <AddOrderProduct usersEmail={usersEmail} />
         </div>
       </div>
 
