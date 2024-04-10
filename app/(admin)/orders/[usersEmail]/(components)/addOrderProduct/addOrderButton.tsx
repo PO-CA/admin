@@ -1,23 +1,22 @@
 'use client';
-import { useAuth } from '@/hooks/useAuth';
 import { useCreateAOrderItem } from '@/query/query/orders';
+import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 export default function AddOrderButton({ info }: any) {
   const { mutate: createOrderItem } = useCreateAOrderItem();
-
-  const { userEmail } = useAuth();
+  const pathName = usePathname();
 
   const [addOrderPayload, setAddOrderPayload] = useState({
     productId: info.getValue(),
     orderQty: 0,
-    usersEmail: userEmail,
+    usersEmail: pathName.replace('/orders/', ''),
   });
 
   useEffect(() => {
     setAddOrderPayload({
       ...addOrderPayload,
-      usersEmail: userEmail,
+      usersEmail: pathName.replace('/orders/', ''),
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
