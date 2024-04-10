@@ -59,17 +59,10 @@ export const productColumns: ColumnDef<any, any>[] = [
   },
 
   {
-    accessorFn: (row) => row.price,
-    id: 'price',
+    accessorFn: (row) => row.dcPrice,
+    id: 'dcPrice',
     cell: (info) => {
-      return (
-        <div>
-          <div style={{ textDecoration: 'line-through' }}>
-            {info.getValue()}
-          </div>
-          <div>{info.row.original.dcPrice}</div>
-        </div>
-      );
+      return info.getValue();
     },
     header: () => <span>가격</span>,
     footer: (props) => props.column.id,
