@@ -37,7 +37,7 @@ export const addOrderProductColumns: ColumnDef<any, any>[] = [
     cell: (info) => (
       <div>
         <Image
-          alt="asd"
+          alt="썸네일"
           unoptimized={true}
           src={info.getValue()}
           width={100}
@@ -57,17 +57,10 @@ export const addOrderProductColumns: ColumnDef<any, any>[] = [
     footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.price,
-    id: 'price',
+    accessorFn: (row) => row.dcPrice,
+    id: 'dcPrice',
     cell: (info) => {
-      return (
-        <div>
-          <div style={{ textDecoration: 'line-through' }}>
-            {info.getValue()}
-          </div>
-          <div>{info.row.original.dcPrice}</div>
-        </div>
-      );
+      return info.getValue();
     },
     header: () => <span>가격</span>,
     footer: (props) => props.column.id,
@@ -82,7 +75,7 @@ export const addOrderProductColumns: ColumnDef<any, any>[] = [
   {
     accessorFn: (row) => row.releaseDate,
     id: 'releaseDate',
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue()?.slice(0, 10),
     header: () => <span>출시일</span>,
     footer: (props) => props.column.id,
   },
