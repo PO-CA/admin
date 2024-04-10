@@ -46,14 +46,14 @@ export const productColumns: ColumnDef<any, any>[] = [
   {
     accessorFn: (row) => row.deadlineDate,
     id: 'deadlineDate',
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue()?.slice(0, 10),
     header: () => <span>주문마감일</span>,
     footer: (props) => props.column.id,
   },
   {
     accessorFn: (row) => row.releaseDate,
     id: 'releaseDate',
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue()?.slice(0, 10),
     header: () => <span>출시일</span>,
     footer: (props) => props.column.id,
   },
