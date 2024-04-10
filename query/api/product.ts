@@ -51,6 +51,26 @@ export const getUsersAllProducts = async (userId: number | null) => {
   return data;
 };
 
+export const getUsersAllProductsForAddOrder = async (
+  usersEmail: string | null,
+) => {
+  const { data } = await requests(
+    `${API_URL}/logi/products/addorder/${usersEmail}`,
+    {
+      method: 'get',
+    },
+  );
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  return data;
+};
+
 export const creatAProduct = async (payload: ProductData) => {
   const { data } = await requests(`${API_URL}/logi/products`, {
     method: 'post',

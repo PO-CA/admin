@@ -5,6 +5,7 @@ import {
   getAProduct,
   getAllProducts,
   getUsersAllProducts,
+  getUsersAllProductsForAddOrder,
   updateAProduct,
 } from '../api/product';
 import { ProductData } from '@/types/productData';
@@ -39,6 +40,17 @@ export function useGetUsersAllproducts(userId: number | null) {
       return data;
     },
     enabled: !!userId,
+  });
+}
+
+export function useGetUsersAllproductsForAddOrder(usersEmail: string | null) {
+  return useQuery({
+    queryKey: ['products', `${usersEmail}`],
+    queryFn: async () => {
+      const data = await getUsersAllProductsForAddOrder(usersEmail);
+      return data;
+    },
+    enabled: !!usersEmail,
   });
 }
 

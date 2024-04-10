@@ -4,8 +4,6 @@ import styles from './index.module.css';
 import Link from 'next/link';
 
 export default function CellButtons({ info }: any) {
-  console.log('info', info);
-
   const { mutate: deleteProduct } = useDeleteAProduct();
 
   return (

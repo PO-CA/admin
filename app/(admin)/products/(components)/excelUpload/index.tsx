@@ -32,19 +32,32 @@ export default function ExcelUpload() {
       const reader = new FileReader();
       reader.onload = async (e: any) => {
         const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array', bookVBA: true });
+        const workbook = XLSX.read(data, { type: 'array' });
 
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         console.log('sheet', sheet);
 
-        const jsonData = XLSX.utils.sheet_to_json(sheet);
+        const jsonData = XLSX.utils.sheet_to_json(sheet, { defval: null });
 
         // 밸리데이션
         console.log('jsonData', jsonData);
         jsonData.forEach((row: any, i: number) => {
           console.log('row', row['바코드']);
 
+          if (!row['바코드(필수)']) {
+            return alert(`${i + 1}번째 행의 바코드가 없습니다`);
+          }
+          if (!row['상품이름(필수)']) {
+            return alert(`${i + 1}번째 행의 상품이름이 없습니다`);
+          }
+          if (!row['카테고리(필수)']) {
+            return alert(`${i + 1}번째 행의 카테고리가 없습니다`);
+          }
+          if (!row['좌표(필수, 콤마(,)로 구분)']) {
+            return alert(`${i + 1}번째 행의 좌표가 없습니다`);
+          }
+          //
           if (row['바코드(필수)'].length < 1) {
             return alert(`${i + 1}번째 행의 바코드가 없습니다`);
           }
@@ -74,6 +87,7 @@ export default function ExcelUpload() {
         accept=".xlsx, .xls, .csv"
         onChange={(e) => handleDrop(e.target.files)}
       />
+      <button>업로드</button>
     </form>
   );
 }

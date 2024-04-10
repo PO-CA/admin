@@ -8,7 +8,9 @@ export const ordersColumns: ColumnDef<any, any>[] = [
     accessorFn: (row) => row.nickname,
     id: 'nickname',
     cell: (info) => (
-      <Link href={`/orders/${info.row.original.id}`}>{info.getValue()}</Link>
+      <Link href={`/orders/${info.row.original.userEmail}`}>
+        {info.getValue()}
+      </Link>
     ),
     header: () => <span>회사명</span>,
     footer: (props) => props.column.id,

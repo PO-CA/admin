@@ -6,7 +6,6 @@ export default function Addresses({
   handleSelectChange,
   selectedOption,
 }: any) {
-  console.log('data', data);
   const [selectedAddress, setSelectedAddress] = useState<any>();
 
   useEffect(() => {

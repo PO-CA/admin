@@ -13,7 +13,7 @@ import {
 } from '@tanstack/react-table';
 import { useState } from 'react';
 import TanTable, { fuzzyFilter } from '@/components/table';
-import { useGetUsersAllproducts } from '@/query/query/products';
+import { useGetUsersAllproductsForAddOrder } from '@/query/query/products';
 import { addOrderProductColumns } from './addOrderProductColumns';
 import tableStyles from './table.module.css';
 import TableLoader from '@/components/tableLoader';
@@ -27,7 +27,7 @@ export default function AddOrderProduct({
     data: productData,
     isLoading: isProductLoading,
     isSuccess: isProductSuccess,
-  } = useGetUsersAllproducts(Number(usersEmail));
+  } = useGetUsersAllproductsForAddOrder(usersEmail);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
 

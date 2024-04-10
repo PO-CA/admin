@@ -3,13 +3,10 @@ import { useSignUp } from '@/query/query/users';
 import styles from './page.module.css';
 import { SignUp } from '@/types/signUp';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useModal } from '@/hooks/useModal';
-import { AlertModal } from '@/components/modal/alertModal';
-import { useState } from 'react';
 import { useIsAdmin } from '@/hooks/useIAdmin';
 
 export default function SignUp() {
-  const { mutateAsync: signUp } = useSignUp();
+  const { mutateAsync: signUp, isPending } = useSignUp();
   const {
     register,
     handleSubmit,
@@ -17,23 +14,9 @@ export default function SignUp() {
     formState: { errors },
   } = useForm<SignUp>({ mode: 'onChange' });
 
-  const {
-    Modal: ModalAlert,
-    isOpen: alertIsOpen,
-    openModal: alertOpen,
-    closeModal: alertClose,
-  } = useModal();
-
-  const [text, setText] = useState('');
-
-  const [asd, setAsd] = useState(false);
-
   const onSubmit: SubmitHandler<SignUp> = (data) => {
-    setAsd(true);
     signUp(data).then((data) => {
       if (data && data.errorMessage) {
-        // setText(data.errorMessage);
-        // alertOpen();
         alert(data.errorMessage);
       } else {
         window.location.href = '/';
@@ -45,9 +28,6 @@ export default function SignUp() {
 
   return (
     <main className={styles.mainContainer}>
-      <ModalAlert isOpen={alertIsOpen} closeModal={alertClose}>
-        <AlertModal content={text} closeModal={alertClose} />
-      </ModalAlert>
       <div className={styles.subTitle}>회원가입</div>
       <form className={styles.signUpBox} onSubmit={handleSubmit(onSubmit)}>
         <div className={styles.logoContainer}></div>
@@ -110,7 +90,11 @@ export default function SignUp() {
           ) : null}
         </div>
         <div className={styles.buttonContainer}>
-          <button className={styles.bigButton} type="submit" disabled={asd}>
+          <button
+            className={styles.bigButton}
+            type="submit"
+            disabled={isPending}
+          >
             회원가입
           </button>
         </div>

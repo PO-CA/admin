@@ -28,7 +28,6 @@ export default function UpdateInCharge({ usersData }: any) {
             <option value="">변경할 담당자선택</option>
             {usersList.map((item: any, i: number) => (
               <option key={i} value={item.id}>
-                {console.log(item)}
                 {item.nickname}
               </option>
             ))}

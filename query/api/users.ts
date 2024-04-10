@@ -122,8 +122,6 @@ export const updateUsersNickname = async (payload: UpdateUsersNicknameDTO) => {
 };
 
 export const updateUsersInCharge = async (payload: UpdateUsersInChargeDTO) => {
-  console.log('payload', payload);
-
   const { data } = await requests(`${API_URL}/users/incharge`, {
     method: 'put',
     headers: { 'Content-Type': 'application/json' },

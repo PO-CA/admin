@@ -61,7 +61,6 @@ export default function ShippingDetail({
     debugHeaders: true,
     debugColumns: false,
   });
-  console.log('shippingData', shippingData);
 
   const componentRef = useRef<ComponentToPrint>(null);
 
