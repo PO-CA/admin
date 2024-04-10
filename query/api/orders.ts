@@ -87,6 +87,25 @@ export const putToUnPickOrderItem = async (orderIds: number[]) => {
   return data;
 };
 
+export const putToCancelOrderItem = async (orderIds: number[]) => {
+  const { data } = await requests(`${API_URL}/logi/orderitems/cancel`, {
+    method: 'put',
+    headers: { 'Content-Type': 'application/json' },
+    data: JSON.stringify({ ids: orderIds }),
+  });
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  alert('주문 취소를 성공했습니다');
+
+  return data;
+};
+
 export const getAllOrderByUsersEmail = async (usersEmail: string) => {
   const { data } = await requests({
     method: 'get',

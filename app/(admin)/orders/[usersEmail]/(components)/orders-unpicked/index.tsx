@@ -1,6 +1,7 @@
 'use client';
 import {
   useGetAllUnpickedOrderByusersEmail,
+  usePutToCancelOrderItem,
   usePutToPickOrderItem,
 } from '@/query/query/orders';
 import React, { useEffect } from 'react';
@@ -77,6 +78,7 @@ export default function OrdersUnpicked({ usersEmail }: any) {
   ]);
 
   const { mutateAsync: putToPickOrderItem } = usePutToPickOrderItem();
+  const { mutateAsync: cancelOrderItem } = usePutToCancelOrderItem();
 
   if (isUnpickedOrderItemsLoading) {
     return <TableLoader />;
@@ -101,7 +103,18 @@ export default function OrdersUnpicked({ usersEmail }: any) {
         >
           포장 처리
         </button>
-        <button>주문 삭제</button>
+        <button
+          type="button"
+          onClick={() => {
+            if (selectedRowIds.length > 0) {
+              cancelOrderItem(selectedRowIds);
+            } else {
+              alert('취소할 주문을 선택해 주세요');
+            }
+          }}
+        >
+          주문 삭제
+        </button>
       </div>
       <TanTable
         table={table}

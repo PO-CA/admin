@@ -4,6 +4,7 @@ import {
   createOrderItemsInCart,
   getAllPickedOrderByUsersEmail,
   getAllUnpickedOrderByUsersEmail,
+  putToCancelOrderItem,
   putToPickOrderItem,
   putToUnPickOrderItem,
 } from '../api/orders';
@@ -58,6 +59,17 @@ export function usePutToUnPickOrderItem() {
 
   return useMutation({
     mutationFn: (orderIds: number[]) => putToUnPickOrderItem(orderIds),
+
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['orderItems'] }),
+  });
+}
+
+export function usePutToCancelOrderItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (orderIds: number[]) => putToCancelOrderItem(orderIds),
 
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ['orderItems'] }),

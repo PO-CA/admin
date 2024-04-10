@@ -3,6 +3,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import React from 'react';
 import Link from 'next/link';
 import DeleteShippingButton from '../deleteShippingButton';
+import PayShippingButton from '../payShippingButton';
 
 export const shippingColumns: ColumnDef<any, any>[] = [
   {
@@ -17,7 +18,7 @@ export const shippingColumns: ColumnDef<any, any>[] = [
   {
     accessorFn: (row) => row.createdAt,
     id: 'createdAt',
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue()?.slice(0, 10),
     header: () => <span>발송일</span>,
     footer: (props) => props.column.id,
   },
@@ -52,7 +53,12 @@ export const shippingColumns: ColumnDef<any, any>[] = [
   {
     // accessorFn: (row) => row.memo,
     id: 'buttons',
-    cell: (info) => <DeleteShippingButton info={info} />,
+    cell: (info) => (
+      <div style={{ display: 'flex' }}>
+        <DeleteShippingButton info={info} />
+        <PayShippingButton info={info} />
+      </div>
+    ),
     header: () => <span></span>,
     footer: (props) => props.column.id,
   },

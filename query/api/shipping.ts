@@ -100,3 +100,21 @@ export const deleteAShipping = async (shippingId: number) => {
   }
   return data;
 };
+
+export const updateAShipping = async (shippingId: number) => {
+  const { data } = await requests(`${API_URL}/logi/shipping/${shippingId}`, {
+    method: 'put',
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  alert('결제 완료를 성공했습니다');
+
+  return data;
+};

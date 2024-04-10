@@ -6,6 +6,7 @@ import {
   getAllShippingsByShippingId,
   getAllShippingsByStatus,
   getAllShippingsByUsersEmail,
+  updateAShipping,
 } from '../api/shipping';
 import { CreateShippingDTO } from '@/types/createShippingDTO';
 
@@ -69,6 +70,18 @@ export const useDeleteShipping = () => {
 
   return useMutation({
     mutationFn: (shippingId: number) => deleteAShipping(shippingId),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+    },
+  });
+};
+
+export const useUpdateShipping = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (shippingId: number) => updateAShipping(shippingId),
 
     onSuccess: () => {
       queryClient.invalidateQueries();

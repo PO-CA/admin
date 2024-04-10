@@ -18,6 +18,7 @@ import styles from './index.module.css';
 import tableStyles from './table.module.css';
 import {
   useGetAllPickedOrderByUsersEmail,
+  usePutToCancelOrderItem,
   usePutToUnPickOrderItem,
 } from '@/query/query/orders';
 import { useGetAddressByUsersEmail } from '@/query/query/address';
@@ -26,8 +27,6 @@ import { CreateShippingDTO } from '@/types/createShippingDTO';
 import { useCreateShipping } from '@/query/query/shippings';
 
 export default function OrdersPicked({ usersEmail }: any) {
-  console.log('usersEmail in pick', usersEmail);
-
   const {
     data: pickedOrderItemsData,
     isLoading: isPickedOrderItemsLoading,
@@ -82,6 +81,8 @@ export default function OrdersPicked({ usersEmail }: any) {
   ]);
 
   const { mutateAsync: putToUnPickOrderItem } = usePutToUnPickOrderItem();
+  const { mutateAsync: cancelOrderItem } = usePutToCancelOrderItem();
+
   const {
     data: addressData,
     isLoading: isAddressLoading,
@@ -133,7 +134,18 @@ export default function OrdersPicked({ usersEmail }: any) {
         >
           포장 해제
         </button>
-        <button>주문 삭제</button>
+        <button
+          type="button"
+          onClick={() => {
+            if (selectedRowIds.length > 0) {
+              cancelOrderItem(selectedRowIds);
+            } else {
+              alert('취소할 주문을 선택해 주세요');
+            }
+          }}
+        >
+          주문 삭제
+        </button>{' '}
       </div>
       {!isPickedOrderItemsLoading && isPickedOrderItemsSuccess && (
         <TanTable
