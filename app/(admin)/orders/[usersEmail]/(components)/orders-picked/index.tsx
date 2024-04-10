@@ -21,13 +21,13 @@ import {
   usePutToUnPickOrderItem,
 } from '@/query/query/orders';
 import { useGetAddressByUsersEmail } from '@/query/query/address';
-import { useAuth } from '@/hooks/useAuth';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { CreateShippingDTO } from '@/types/createShippingDTO';
 import { useCreateShipping } from '@/query/query/shippings';
 
 export default function OrdersPicked({ usersEmail }: any) {
-  const { userEmail } = useAuth();
+  console.log('usersEmail in pick', usersEmail);
+
   const {
     data: pickedOrderItemsData,
     isLoading: isPickedOrderItemsLoading,
@@ -86,7 +86,7 @@ export default function OrdersPicked({ usersEmail }: any) {
     data: addressData,
     isLoading: isAddressLoading,
     isSuccess: isAddressSuccess,
-  } = useGetAddressByUsersEmail(userEmail);
+  } = useGetAddressByUsersEmail(usersEmail);
 
   const {
     register,
@@ -107,7 +107,7 @@ export default function OrdersPicked({ usersEmail }: any) {
       return alert('배송처리할 주문을 선택해 주세요');
     if (Number(data.shippingFee) < 0)
       return alert('올바른 배송비를 작성해 주세요.');
-    data.usersEmail = userEmail;
+    data.usersEmail = usersEmail.replace('%40', '@');
     data.orderItemsIds = selectedRowIds;
 
     createShipping(data);
