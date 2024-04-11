@@ -16,6 +16,7 @@ import {
 import tableStyles from './table.module.css';
 import { useGetCreditsByUsersEmail } from '@/query/query/credit';
 import TableLoader from '@/components/tableLoader';
+import AddCredit from '../addCredit';
 
 export default function Credits({ usersEmail }: { usersEmail: string }) {
   const {
@@ -61,14 +62,17 @@ export default function Credits({ usersEmail }: { usersEmail: string }) {
   }
 
   return (
-    <TanTable
-      table={table}
-      globalFilter={globalFilter}
-      setGlobalFilter={setGlobalFilter}
-      styles={tableStyles}
-      search
-      filter
-      pagenation
-    />
+    <>
+      <TanTable
+        table={table}
+        globalFilter={globalFilter}
+        setGlobalFilter={setGlobalFilter}
+        styles={tableStyles}
+        search
+        filter
+        pagenation
+      />
+      <AddCredit />
+    </>
   );
 }

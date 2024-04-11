@@ -1,5 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
-import { getCreditsByUsersEmail } from '../api/credit';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  createCreditsByUsersEmail,
+  getCreditsByUsersEmail,
+} from '../api/credit';
+import { CreateCreditByUsersEmailDTO } from '@/types/createCreditByUsersEmailDTO';
 
 export function useGetCreditsByUsersEmail(usersEmail: string) {
   return useQuery({
@@ -9,5 +13,15 @@ export function useGetCreditsByUsersEmail(usersEmail: string) {
       return data;
     },
     enabled: !!usersEmail,
+  });
+}
+
+export function useCreateCreditByUsersEmail() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: CreateCreditByUsersEmailDTO) =>
+      createCreditsByUsersEmail(payload),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['credits'] }),
   });
 }
