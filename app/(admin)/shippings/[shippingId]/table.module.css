@@ -1,8 +1,7 @@
 .tableContainer {
-  margin-bottom: 50px;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 20px 20px 0px 20px;
 }
 
 .topPanal {
