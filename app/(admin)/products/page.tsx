@@ -19,6 +19,7 @@ import tableStyles from './table.module.css';
 import ExcelUpload from './(components)/excelUpload';
 import TableLoader from '@/components/tableLoader';
 import ExcelDownload from './(components)/excelDownload';
+import ProductListDownload from './(components)/productListlDownload';
 
 export default function Products() {
   const {
@@ -56,7 +57,9 @@ export default function Products() {
 
   return (
     <main className={styles.productsContainer}>
-      <div className={styles.titleContainer}>상품-목록</div>
+      <div className={styles.titleContainer}>
+        상품-목록 <ProductListDownload productsData={productsData} />
+      </div>
       <div className={styles.titleContainer}>
         대량등록
         <div style={{ display: 'flex' }}>
