@@ -67,6 +67,7 @@ export default function ShippingDetail({
     state: {
       columnFilters,
       globalFilter,
+      pagination: { pageIndex: 0, pageSize: 20 },
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,

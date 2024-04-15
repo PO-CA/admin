@@ -35,6 +35,7 @@ export default function UserDcRate({ usersEmail }: { usersEmail: string }) {
     state: {
       columnFilters,
       globalFilter,
+      pagination: { pageIndex: 0, pageSize: 20 },
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
