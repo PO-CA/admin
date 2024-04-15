@@ -1,0 +1,107 @@
+.tableContainer {
+  margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.topPanal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.rightTopPanal {
+  display: flex;
+  align-items: center;
+  margin-right: 5px;
+  font-size: 14px;
+}
+
+.leftTopPanal {
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  width: 200px;
+  height: 30px;
+  margin-right: 10px;
+  padding-left: 5px;
+}
+
+.selactInput {
+  width: 45px;
+  height: 23px;
+  margin-right: 5px;
+  font-size: 14px;
+}
+
+.totalRowcount {
+  margin-left: 10px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.tableHeader {
+  background-color: rgb(206, 206, 243);
+  border: 1px solid lightgray;
+  border-collapse: collapse;
+  padding: 3px 8px;
+  font-size: 13px;
+}
+
+/* .tableHeader:nth-child(1) {
+  width: 50px;
+} */
+
+.tableHeader > div:nth-child(2) > input {
+  width: 100px;
+  border: none;
+  outline: none;
+}
+
+.tableRow {
+  border: 1px solid lightgray;
+  border-collapse: collapse;
+  padding: 5px 12px;
+  text-align: center;
+  font-size: 11px;
+}
+
+.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.paginationPanel {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paginationButton {
+  width: 20px;
+  height: 20px;
+  margin: 2px;
+}
+
+.paginationText {
+  margin: 0px 10px;
+  font-size: 15px;
+}
+
+.paginationInputContainer {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+.paginationInput {
+  width: 40px;
+  height: 20px;
+  margin: 2px;
+  font-size: 15px;
+  text-align: center;
+}

@@ -25,6 +25,7 @@ import { useGetAddressByUsersEmail } from '@/query/query/address';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { CreateShippingDTO } from '@/types/createShippingDTO';
 import { useCreateShipping } from '@/query/query/shippings';
+import PrintPickingList from './(components)/printPickingList';
 
 export default function OrdersPicked({ usersEmail }: any) {
   const {
@@ -122,6 +123,9 @@ export default function OrdersPicked({ usersEmail }: any) {
   return (
     <>
       <div className={styles.buttons}>
+        {!isPickedOrderItemsLoading && isPickedOrderItemsSuccess && (
+          <PrintPickingList table={table} />
+        )}
         <button
           type="button"
           onClick={() => {
