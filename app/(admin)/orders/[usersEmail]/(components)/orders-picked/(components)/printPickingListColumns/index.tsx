@@ -13,8 +13,8 @@ export const printPickingListColumns: ColumnDef<any, any>[] = [
           alt="asd"
           unoptimized={true}
           src={row.original.original.thumbNailUrl}
-          width={100}
-          height={100}
+          width={50}
+          height={50}
         />
       </div>
     ),
