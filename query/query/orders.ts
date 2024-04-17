@@ -38,8 +38,7 @@ export function useCreateAOrderItem() {
   return useMutation({
     mutationFn: (payload: object) => createAOrderItem(payload),
 
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ['orderItems'] }),
+    onSuccess: () => queryClient.invalidateQueries(),
   });
 }
 
