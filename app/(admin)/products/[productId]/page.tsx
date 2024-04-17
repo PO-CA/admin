@@ -26,7 +26,7 @@ export default function ProductDetail({
     isSuccess: isProductSuccess,
   } = useGetAProduct(productId);
 
-  const { mutateAsync: updateProduct } = useUpdateAProduct();
+  const { mutateAsync: updateProduct, isPending } = useUpdateAProduct();
 
   const router = useRouter();
 
@@ -42,6 +42,7 @@ export default function ProductDetail({
     thumbNailUrl: '',
     descriptionUrl: '',
     artist: '',
+    member: '',
     ent: '',
     company: '',
     stock: 0,
@@ -68,6 +69,7 @@ export default function ProductDetail({
         artist: productData.artist || '',
         ent: productData.ent || '',
         company: productData.company || '',
+        member: productData.member || '',
         stock: productData.stock || 0,
         price: productData.price || 0,
         purchase: productData.purchase || 0,
@@ -112,7 +114,11 @@ export default function ProductDetail({
     <main className={styles.productDetailContainer}>
       <div className={styles.addProductTitle}>상품-상세</div>
       <form onSubmit={onSubmit}>
-        <button type="submit" className={styles.addProductBtn}>
+        <button
+          type="submit"
+          className={styles.addProductBtn}
+          disabled={isPending}
+        >
           상품수정
         </button>
 

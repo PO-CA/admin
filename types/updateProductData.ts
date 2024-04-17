@@ -8,6 +8,7 @@ export interface UpdateProductData {
   artist: string;
   ent: string;
   company: string;
+  member: string;
   stock: number;
   price: number;
   purchase: number;
