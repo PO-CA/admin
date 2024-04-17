@@ -33,10 +33,12 @@ export default function UserShippings({ usersEmail }: { usersEmail: string }) {
     filterFns: {
       fuzzy: fuzzyFilter,
     },
+    initialState: {
+      pagination: { pageSize: 20, pageIndex: 0 },
+    },
     state: {
       columnFilters,
       globalFilter,
-      pagination: { pageIndex: 0, pageSize: 20 },
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,

@@ -38,10 +38,12 @@ export default function OrdersUnpicked({ usersEmail }: any) {
     filterFns: {
       fuzzy: fuzzyFilter,
     },
+    initialState: {
+      pagination: { pageSize: 20, pageIndex: 0 },
+    },
     state: {
       columnFilters,
       globalFilter,
-      pagination: { pageIndex: 0, pageSize: 20 },
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
