@@ -111,6 +111,7 @@ export default function CoordinateSelect({
         styles={tableStyles}
         search
         pagenation
+        sort
       />
     </div>
   );
