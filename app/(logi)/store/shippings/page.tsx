@@ -12,18 +12,21 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useState } from 'react';
-import { useGetAllShippings } from '@/query/query/shippings';
+import { useGetAllShippingsByUsersEmail } from '@/query/query/shippings';
 import styles from './page.module.css';
 import { shippingColumns } from './(components)/tableColumns/shippingColumns';
 import tableStyles from './table.module.css';
 import TanTable, { fuzzyFilter } from '@/components/table';
 import TableLoader from '@/components/tableLoader';
+import { useGetMyInfo } from '@/query/query/users';
 export default function Shippings() {
+  const { data } = useGetMyInfo();
+
   const {
     data: shippingData,
     isLoading: isShippingLoading,
     isSuccess: isShippingSuccess,
-  } = useGetAllShippings();
+  } = useGetAllShippingsByUsersEmail(data?.userEmail);
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
