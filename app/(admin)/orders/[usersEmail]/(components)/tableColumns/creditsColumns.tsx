@@ -5,6 +5,13 @@ import React from 'react';
 
 export const creditsColumns: ColumnDef<any, any>[] = [
   {
+    accessorFn: (row) => row.createdAt,
+    id: 'createdAt',
+    cell: (info) => info.getValue()?.slice(0, 10),
+    header: () => <span>날짜</span>,
+    footer: (props) => props.column.id,
+  },
+  {
     accessorFn: (row) => row.content,
     id: 'content',
     cell: (info) => info.getValue(),
