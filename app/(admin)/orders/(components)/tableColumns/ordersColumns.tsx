@@ -25,6 +25,13 @@ export const ordersColumns: ColumnDef<any, any>[] = [
     footer: (props) => props.column.id,
   },
   {
+    accessorFn: (row) => row.unpaidShippingQty,
+    id: 'unpaidShippingQty',
+    cell: (info) => info.getValue(),
+    header: () => <span>미결제</span>,
+    footer: (props) => props.column.id,
+  },
+  {
     accessorFn: (row) => row.logiOrderItemsQty,
     id: 'logiOrderItemsQty',
     cell: (info) => info.getValue(),
