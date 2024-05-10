@@ -14,7 +14,7 @@ export default function StatsByUsers() {
 
   useEffect(() => {
     if (!isUsersLoading && isUsersSuccess) {
-      setUserData(usersData.find((item: any) => item.email === selectedUser));
+      setUserData(usersData.filter((item: any) => item.email === selectedUser));
     }
   }, [isUsersLoading, isUsersSuccess, selectedUser, usersData]);
 
@@ -34,9 +34,11 @@ export default function StatsByUsers() {
           </select>
           {userData && (
             <div>
-              <div>이메일 : {userData.email}</div>
-              <div>매출액: {userData.totalSell}</div>
-              <div>판매수량: {userData.totalQty}</div>
+              <div>
+                <div>이메일 : {userData.email}</div>
+                <div>매출액: {userData.totalSell}</div>
+                <div>판매수량: {userData.totalQty}</div>
+              </div>
             </div>
           )}
         </div>

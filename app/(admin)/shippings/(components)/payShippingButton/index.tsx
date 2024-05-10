@@ -4,6 +4,7 @@ import React from 'react';
 
 export default function PayShippingButton({ info }: any) {
   const { mutate: updateShippingItem } = useUpdateShipping();
+  if (info.row.original.shippingStatus === '결제완료') return null;
 
   return (
     <button
