@@ -21,7 +21,7 @@ export default function StatsByUsers() {
 
   useEffect(() => {
     setSelectedData(
-      usersData.filter((item: any) => item.nickname === selectedUser),
+      usersData?.filter((item: any) => item.nickname === selectedUser),
     );
   }, [usersData, selectedUser]);
 
