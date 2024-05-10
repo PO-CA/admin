@@ -9,7 +9,7 @@ export default function DashBoard() {
       <div className={styles.titleContainer}>대시보드</div>
       <section className={styles.statsContainer}>
         <StatsTotal />
-        {/* <StatsByUsers /> */}
+        <StatsByUsers />
       </section>
     </main>
   );
