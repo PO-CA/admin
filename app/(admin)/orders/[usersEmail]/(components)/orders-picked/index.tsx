@@ -97,6 +97,8 @@ export default function OrdersPicked({ usersEmail }: any) {
     register,
     handleSubmit,
     reset,
+    getFieldState,
+    getValues,
     formState: { errors },
   } = useForm<CreateShippingDTO>({
     mode: 'onChange',
@@ -107,6 +109,12 @@ export default function OrdersPicked({ usersEmail }: any) {
 
   const { mutateAsync: createShipping } = useCreateShipping();
 
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedOption(Number(event.target.value));
+  };
+
   const onSubmit: SubmitHandler<CreateShippingDTO> = (data) => {
     if (selectedRowIds.length < 1)
       return alert('배송처리할 주문을 선택해 주세요');
@@ -114,6 +122,7 @@ export default function OrdersPicked({ usersEmail }: any) {
       return alert('올바른 배송비를 작성해 주세요.');
     data.usersEmail = usersEmail.replace('%40', '@');
     data.orderItemsIds = selectedRowIds;
+    data.addressId = selectedOption;
 
     createShipping(data);
     reset({
@@ -123,6 +132,23 @@ export default function OrdersPicked({ usersEmail }: any) {
     });
     setSelectedRowIds([]);
   };
+
+  const [selectedAddress, setSelectedAddress] = useState<any>({
+    addressName: '',
+    city: '',
+    state: '',
+    zipcode: '',
+    receiverName: '',
+    receiverPhoneNumber: '',
+  });
+  console.log('selectedAddress', selectedAddress);
+
+  useEffect(() => {
+    if (addressData)
+      setSelectedAddress(
+        addressData.find((address: any) => address.id === selectedOption),
+      );
+  }, [selectedOption, addressData]);
   return (
     <>
       <div className={styles.buttons}>
@@ -191,14 +217,41 @@ export default function OrdersPicked({ usersEmail }: any) {
               isAddressSuccess &&
               addressData &&
               addressData.length > 0 && (
-                <select {...register('addressId')}>
+                <select id="address" onChange={handleSelectChange}>
+                  <option defaultChecked>배송지를 선택해주세요</option>
                   {addressData.map((address: any) => (
-                    <option defaultChecked key={address.id} value={address.id}>
+                    <option key={address.id} value={address.id}>
                       {address.addressName}
                     </option>
                   ))}
                 </select>
               )}
+          </div>
+          <div>
+            <div style={{ display: 'flex' }}>
+              <div>배송지 : </div>
+              <div>{selectedAddress?.addressName}</div>
+            </div>
+            <div style={{ display: 'flex' }}>
+              <div>주소 : </div>
+              <div>{selectedAddress?.city}</div>
+            </div>
+            <div style={{ display: 'flex' }}>
+              <div>상세주소 : </div>
+              <div>{selectedAddress?.state}</div>
+            </div>
+            <div style={{ display: 'flex' }}>
+              <div>우편번호 : </div>
+              <div>{selectedAddress?.zipcode}</div>
+            </div>
+            <div style={{ display: 'flex' }}>
+              <div>수령인 : </div>
+              <div>{selectedAddress?.receiverName}</div>
+            </div>
+            <div style={{ display: 'flex' }}>
+              <div>번호 : </div>
+              <div>{selectedAddress?.receiverPhoneNumber}</div>
+            </div>
           </div>
           <div>
             <div>배송비</div>{' '}
