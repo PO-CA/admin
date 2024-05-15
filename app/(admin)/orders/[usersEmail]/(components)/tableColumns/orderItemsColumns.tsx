@@ -2,6 +2,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import Image from 'next/image';
 import React from 'react';
+import UpdatePriceOrderItem from '../../../(components)/updatePriceOrderItem';
 
 export const orderItemsColumns: ColumnDef<any, any>[] = [
   {
@@ -62,7 +63,7 @@ export const orderItemsColumns: ColumnDef<any, any>[] = [
   {
     accessorFn: (row) => row.price,
     id: 'price',
-    cell: (info) => info.getValue(),
+    cell: (info) => <UpdatePriceOrderItem info={info} />,
     header: () => <span>판매가</span>,
     footer: (props) => props.column.id,
   },

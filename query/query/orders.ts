@@ -4,11 +4,13 @@ import {
   createOrderItemsInCart,
   getAllPickedOrderByUsersEmail,
   getAllUnpickedOrderByUsersEmail,
+  putFixedPriceOrderItem,
   putToCancelOrderItem,
   putToPickOrderItem,
   putToUnPickOrderItem,
 } from '../api/orders';
 import { CreateOrderItemDTO } from '@/types/createOrderItemDTO';
+import { updateOrderItemsPriceDTO } from '@/types/updateOrderItemsPriceDTO';
 
 export function useGetAllPickedOrderByUsersEmail(usersEmail: string) {
   return useQuery({
@@ -42,6 +44,17 @@ export function useCreateAOrderItem() {
   });
 }
 
+export function usePutFixedPriceOrderItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: updateOrderItemsPriceDTO) =>
+      putFixedPriceOrderItem(payload),
+
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['orderItems'] }),
+  });
+}
 export function usePutToPickOrderItem() {
   const queryClient = useQueryClient();
 
