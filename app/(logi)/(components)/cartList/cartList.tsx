@@ -87,14 +87,6 @@ export default function CartList() {
           />
         )}
         <div>
-          {!isAddressLoading && isAddressSuccess && (
-            <Addresses
-              data={addressData}
-              handleSelectChange={handleSelectChange}
-              selectedOption={selectedOption}
-            />
-          )}
-
           <button
             onClick={() => {
               if (!selectedOption) return alert('배송지를 선택해 주세요.');
@@ -103,6 +95,14 @@ export default function CartList() {
           >
             주문하기
           </button>
+          {!isAddressLoading && isAddressSuccess && (
+            <Addresses
+              data={addressData}
+              handleSelectChange={handleSelectChange}
+              selectedOption={selectedOption}
+              userEmail={userEmail}
+            />
+          )}
         </div>
       </div>
     </div>
