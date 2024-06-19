@@ -25,6 +25,7 @@ requests.interceptors.request.use(
     if (config.url === '/users/reissue' && config.headers) {
       config.headers.Authorization = '';
     }
+
     return Promise.resolve({ ...config } as InternalAxiosRequestConfig);
   },
 

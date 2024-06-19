@@ -65,7 +65,7 @@ export default function ShippingDetail({
       fuzzy: fuzzyFilter,
     },
     initialState: {
-      pagination: { pageSize: 20, pageIndex: 0 },
+      pagination: { pageSize: 500, pageIndex: 0 },
     },
     state: {
       columnFilters,
