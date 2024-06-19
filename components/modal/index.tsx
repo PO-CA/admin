@@ -1,6 +1,6 @@
-import ReactDOM from "react-dom";
-import Overlay from "./Overlay";
-import Wrapper from "./Wrapper";
+import ReactDOM from 'react-dom';
+import Overlay from './Overlay';
+import Wrapper from './Wrapper';
 
 interface ModalProps {
   children: React.ReactNode;
@@ -19,6 +19,6 @@ export function Modal({ children, isOpen, closeModal }: ModalProps) {
     <Overlay onClick={closeHandler}>
       <Wrapper>{children}</Wrapper>
     </Overlay>,
-    document.getElementById("modal-root") as HTMLElement
+    document.getElementById('modal-root') as HTMLElement,
   );
 }

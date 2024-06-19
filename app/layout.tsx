@@ -14,7 +14,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <ReactQueryProvider>
+          {children}
+          <div id="modal-root"></div>
+        </ReactQueryProvider>
       </body>
     </html>
   );

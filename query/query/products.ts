@@ -1,8 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   creatAProduct,
+  creatAProductAveragePrice,
   deleteAProduct,
   getAProduct,
+  getAllProductAveragePriceByProductId,
   getAllProducts,
   getUsersAllProducts,
   getUsersAllProductsForAddOrder,
@@ -10,12 +12,23 @@ import {
 } from '../api/product';
 import { ProductData } from '@/types/productData';
 import { UpdateProductData } from '@/types/updateProductData';
+import { CreateProductAveragePriceDTO } from '@/types/createProductAveragePriceDTO';
 
 export function useGetAllproducts() {
   return useQuery({
     queryKey: ['products'],
     queryFn: async () => {
       const data = await getAllProducts();
+      return data;
+    },
+  });
+}
+
+export function useGetAllproductAveragePrice(productId: number) {
+  return useQuery({
+    queryKey: ['productAveragePrice', `${productId}`],
+    queryFn: async () => {
+      const data = await getAllProductAveragePriceByProductId(productId);
       return data;
     },
   });
@@ -61,6 +74,18 @@ export function useCreateAProduct() {
     mutationFn: (payload: ProductData) => creatAProduct(payload),
 
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['products'] }),
+  });
+}
+
+export function useCreateAProductAveragePrice() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: CreateProductAveragePriceDTO) =>
+      creatAProductAveragePrice(payload),
+
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['productAveragePrice'] }),
   });
 }
 

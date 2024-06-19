@@ -2,11 +2,32 @@ import { API_URL } from '@/constants/apis';
 import { requests } from '../request';
 import { ProductData } from '@/types/productData';
 import { UpdateProductData } from '@/types/updateProductData';
+import { CreateProductAveragePriceDTO } from '@/types/createProductAveragePriceDTO';
 
 export const getAllProducts = async () => {
   const { data } = await requests(`${API_URL}/logi/products`, {
     method: 'get',
   });
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  return data;
+};
+
+export const getAllProductAveragePriceByProductId = async (
+  productId: number,
+) => {
+  const { data } = await requests(
+    `${API_URL}/logi/products/averageprice/${productId}`,
+    {
+      method: 'get',
+    },
+  );
 
   const { errorMessage, errorCode, customMessage } = data;
 
@@ -86,6 +107,26 @@ export const creatAProduct = async (payload: ProductData) => {
     return alert(`${errorMessage}\n${errorCode}`);
   }
   alert('상품 생성을 성공했습니다');
+
+  return data;
+};
+
+export const creatAProductAveragePrice = async (
+  payload: CreateProductAveragePriceDTO,
+) => {
+  const { data } = await requests(`${API_URL}/logi/products/averageprice`, {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    data: payload,
+  });
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
 
   return data;
 };
