@@ -15,7 +15,14 @@ export const useIsAdmin = () => {
       if (isAuthenticated) {
         if (!userLevel?.includes('ADMIN')) {
           if (userLevel?.includes('STAFF_1')) {
-            router.push('/store');
+            if (
+              pathname !== '/store' &&
+              pathname !== '/store/orders' &&
+              pathname !== '/store/shippings' &&
+              pathname !== '/store/notice'
+            ) {
+              router.push('/store');
+            }
           } else if (userLevel?.includes('STAFF_2')) {
             router.push('/poca');
           } else {
