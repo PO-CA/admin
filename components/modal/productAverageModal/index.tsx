@@ -100,10 +100,11 @@ export function ProductAverageModal({
       <button
         className={styles.modalButton}
         onClick={() => {
-          mutateAsync({ productId, qty, price });
-          setQty(0);
-          setPrice(0);
-          alert('매입 내역을 추가했습니다.');
+          mutateAsync({ productId, qty, price }).then(() => {
+            setQty(0);
+            setPrice(0);
+            alert('매입 내역을 추가했습니다.');
+          });
         }}
       >
         추가
