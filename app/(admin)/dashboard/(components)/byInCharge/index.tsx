@@ -63,6 +63,7 @@ export default function StatsByInCharge() {
           {!isSellsByInChargeLoading &&
             isSellsByInChargeSuccess &&
             inChargesData &&
+            selectedInCharge &&
             selectedData && (
               <div style={{ display: 'flex', marginTop: '20px' }}>
                 {selectedData.map((item: any, i: number) => (
