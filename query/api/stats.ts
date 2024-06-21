@@ -37,6 +37,15 @@ export const getSellsByUsers = async () => {
   return data;
 };
 
+export const getSellsByInCharge = async () => {
+  const { data } = await requests({
+    method: 'get',
+    url: `${API_URL}/logi/stats/byincharge`,
+  });
+
+  return data;
+};
+
 export const getSellsWithMonth = async () => {
   const { data } = await requests({
     method: 'get',

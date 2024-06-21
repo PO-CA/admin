@@ -1,5 +1,9 @@
-import { useGetInCharge, useGetInCharges } from '@/query/query/stats';
-import React, { useState } from 'react';
+import {
+  useGetInCharge,
+  useGetInCharges,
+  useGetSellsByInCharge,
+} from '@/query/query/stats';
+import React, { useEffect, useState } from 'react';
 import styles from './index.module.css';
 
 export default function StatsByInCharge() {
@@ -16,6 +20,21 @@ export default function StatsByInCharge() {
     isLoading: isInChargeLoading,
     isSuccess: isInChargeSuccess,
   } = useGetInCharge(selectedInCharge);
+  //
+  const {
+    data: sellsByInChargeData,
+    isLoading: isSellsByInChargeLoading,
+    isSuccess: isSellsByInChargeSuccess,
+  } = useGetSellsByInCharge();
+  const [selectedData, setSelectedData] = React.useState([]);
+
+  useEffect(() => {
+    setSelectedData(
+      sellsByInChargeData?.filter(
+        (item: any) => item.inCharge === selectedInCharge,
+      ),
+    );
+  }, [sellsByInChargeData, selectedInCharge]);
 
   return (
     <div className={styles.statsContainer}>
@@ -39,6 +58,20 @@ export default function StatsByInCharge() {
                 <div>{selectedInCharge}</div>
                 <div>매출액: {inChargeData.totalSell}</div>
                 <div>판매수량: {inChargeData.totalQty}</div>
+              </div>
+            )}
+          {!isSellsByInChargeLoading &&
+            isSellsByInChargeSuccess &&
+            inChargesData &&
+            selectedData && (
+              <div style={{ display: 'flex', marginTop: '20px' }}>
+                {selectedData.map((item: any, i: number) => (
+                  <div key={i} style={{ marginRight: '20px' }}>
+                    <div>{item.month} 월</div>
+                    <div>매출액: {item.totalSell}</div>
+                    <div>판매수량: {item.totalQty}</div>
+                  </div>
+                ))}
               </div>
             )}
         </div>

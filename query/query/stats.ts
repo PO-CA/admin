@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
   getInCharge,
   getInCharges,
+  getSellsByInCharge,
   getSellsByUsers,
   getSellsWithMonth,
   getTop5,
@@ -44,6 +45,16 @@ export function useGetSellsByUsers() {
     queryKey: ['stats', 'sells', 'users'],
     queryFn: async () => {
       const data = await getSellsByUsers();
+      return data;
+    },
+  });
+}
+
+export function useGetSellsByInCharge() {
+  return useQuery({
+    queryKey: ['stats', 'sells', 'incharge'],
+    queryFn: async () => {
+      const data = await getSellsByInCharge();
       return data;
     },
   });

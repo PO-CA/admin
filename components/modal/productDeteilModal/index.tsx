@@ -10,7 +10,7 @@ export function ProductDetailModal({
   return (
     <div className={styles.confirmModalContainer}>
       <div className={styles.modalButtonContainer}>
-        <button onClick={closeModal}>취소</button>
+        <button onClick={closeModal}>닫기</button>
         <Image src={content} alt="asd" width={1000} />
       </div>
     </div>
