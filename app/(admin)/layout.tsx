@@ -6,13 +6,15 @@ import Sidebar from '@/components/sidebar';
 import { useAuth } from '@/hooks/useAuth';
 import { useIsAdmin } from '@/hooks/useIAdmin';
 import Header from '@/components/header';
+import { pocaMenus } from '@/constants/poca-menus';
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { isAuthenticated, myInfoLoading } = useAuth();
+  const { isAuthenticated, myInfoLoading, userEmail } = useAuth();
+  console.log('userEmail', userEmail);
 
   useIsAdmin();
 
@@ -32,6 +34,15 @@ export default function RootLayout({
                   subMenus={menu.subMenus}
                 />
               ))}
+              {userEmail &&
+                userEmail === 'rudghksldl@gmail.com' &&
+                pocaMenus.map((menu, i) => (
+                  <Sidebar.MainMenus
+                    key={`${i}poca`}
+                    text={menu.text}
+                    subMenus={menu.subMenus}
+                  />
+                ))}
             </Sidebar.MenusConatiner>
           </Sidebar>
           {children}

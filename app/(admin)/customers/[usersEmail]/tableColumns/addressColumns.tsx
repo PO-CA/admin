@@ -1,6 +1,7 @@
 'use client';
 import { ColumnDef } from '@tanstack/react-table';
 import React from 'react';
+import CustomerCellButtons from '../../(components)/tableColumns/CustomerCellButtons';
 
 export const addressColumns: ColumnDef<any, any>[] = [
   {
@@ -9,6 +10,11 @@ export const addressColumns: ColumnDef<any, any>[] = [
     cell: (info) => info.getValue(),
     header: () => <span>배송지 이름</span>,
     footer: (props) => props.column.id,
+  },
+  {
+    id: 'buttons',
+    cell: (info) => <CustomerCellButtons info={info} />,
+    header: () => <span>기능</span>,
   },
   {
     accessorFn: (row) => row.city,
@@ -29,13 +35,6 @@ export const addressColumns: ColumnDef<any, any>[] = [
     id: 'street',
     cell: (info) => info.getValue(),
     header: () => <span>상세주소</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    accessorFn: (row) => row.userEmail,
-    id: 'userEmail',
-    cell: (info) => info.getValue(),
-    header: () => <span>이메일</span>,
     footer: (props) => props.column.id,
   },
   {

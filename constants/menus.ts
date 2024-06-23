@@ -19,7 +19,8 @@ export const menus = [
     ],
   },
   {
-    href: '/customers',
     text: '고객',
+    subMenus: [{ href: '/customers', text: '고객 목록' }],
+    // href: '/customers',
   },
 ];

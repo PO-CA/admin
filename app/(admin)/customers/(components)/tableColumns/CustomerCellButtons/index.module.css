@@ -1,0 +1,9 @@
+.cellButton {
+  border: none;
+  background-color: rgb(77, 24, 127);
+  padding: 4px 8px;
+  border-radius: 6px;
+  margin: 0 5px 0 0;
+  color: white;
+  cursor: pointer;
+}

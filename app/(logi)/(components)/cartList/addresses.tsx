@@ -15,6 +15,7 @@ export default function Addresses({
     addressName: '',
     city: '',
     state: '',
+    street: '',
     zipcode: '',
     receiverName: '',
     receiverPhoneNumber: '',
@@ -25,6 +26,7 @@ export default function Addresses({
     addressName: '',
     city: '',
     state: '',
+    street: '',
     zipcode: '',
     receiverName: '',
     receiverPhoneNumber: '',
@@ -46,6 +48,7 @@ export default function Addresses({
       addressName: selectedAddress?.addressName || '',
       city: selectedAddress?.city || '',
       state: selectedAddress?.state || '',
+      street: selectedAddress?.street || '',
       zipcode: selectedAddress?.zipcode || '',
       receiverName: selectedAddress?.receiverName || '',
       receiverPhoneNumber: selectedAddress?.receiverPhoneNumber || '',
@@ -122,7 +125,7 @@ export default function Addresses({
             </div>
           </div>
           <div style={{ display: 'flex' }}>
-            <div style={{ width: '100px' }}>상세 주소 : </div>
+            <div style={{ width: '100px' }}>군구 : </div>
             <div>
               <input
                 type="text"
@@ -131,6 +134,21 @@ export default function Addresses({
                   setPayload({
                     ...payload,
                     state: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </div>
+          <div style={{ display: 'flex' }}>
+            <div style={{ width: '100px' }}>상세 주소 : </div>
+            <div>
+              <input
+                type="text"
+                value={payload?.street || ''}
+                onChange={(e) =>
+                  setPayload({
+                    ...payload,
+                    street: e.target.value,
                   })
                 }
               />

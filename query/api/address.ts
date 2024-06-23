@@ -45,3 +45,20 @@ export const updateAAddressByUsersEmail = async (payload: updateAddressDTO) => {
   }
   return data;
 };
+
+export const updateAAddressByAddressId = async (payload: updateAddressDTO) => {
+  const { data } = await requests(`${API_URL}/logi/address`, {
+    method: 'put',
+    headers: { 'Content-Type': 'application/json' },
+    data: JSON.stringify(payload),
+  });
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  return data;
+};
