@@ -35,7 +35,8 @@ export default function RootLayout({
                 />
               ))}
               {userEmail &&
-                userEmail === 'rudghksldl@gmail.com' &&
+                (userEmail === 'rudghksldl@gmail.com' ||
+                  userEmail === 'kurare@naver.com') &&
                 pocaMenus.map((menu, i) => (
                   <Sidebar.MainMenus
                     key={`${i}poca`}
