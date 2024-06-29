@@ -29,16 +29,34 @@ export default function AddPocaToCart({ info }: any) {
     setQty(0);
   };
   return (
-    <div>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
       <div>판매가 : {info.row.original.price}</div>
       <div>재고 : {info.row.original.stock}</div>
       <input
-        style={{ fontSize: '16px' }}
+        style={{ fontSize: '16px', width: '80px' }}
         value={qty}
         type="number"
         onChange={qtyHandler}
       />
-      <button type="button" onClick={handleSubmit}>
+      <button
+        style={{
+          border: 'none',
+          fontSize: '16px',
+          backgroundColor: 'rgb(77, 24, 127)',
+          padding: ' 4px',
+          color: 'white',
+          marginTop: '10px',
+          width: '80px',
+        }}
+        type="button"
+        onClick={handleSubmit}
+      >
         추가
       </button>
     </div>
