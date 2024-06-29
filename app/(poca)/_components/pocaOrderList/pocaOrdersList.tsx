@@ -181,6 +181,7 @@ export default function PocaOrdersList() {
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <label>판매채널</label>
                 <select
+                  style={{ fontSize: '16px' }}
                   name="channelType"
                   value={inputValues.channelType}
                   onChange={handleInputChange}
@@ -193,6 +194,7 @@ export default function PocaOrdersList() {
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <label>배송방법</label>
                 <select
+                  style={{ fontSize: '16px' }}
                   name="shippingType"
                   value={inputValues.shippingType}
                   onChange={handleInputChange}
@@ -205,6 +207,7 @@ export default function PocaOrdersList() {
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <label>인증아이디</label>
                 <input
+                  style={{ fontSize: '16px' }}
                   type="text"
                   name="nickname"
                   placeholder="인증아이디(필수)"
@@ -216,6 +219,7 @@ export default function PocaOrdersList() {
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <label>주소1</label>
                 <input
+                  style={{ fontSize: '16px' }}
                   type="text"
                   name="address1"
                   placeholder="주소1"
@@ -226,6 +230,7 @@ export default function PocaOrdersList() {
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <label>주소2</label>
                 <input
+                  style={{ fontSize: '16px' }}
                   type="text"
                   name="address2"
                   placeholder="주소2"
@@ -236,6 +241,7 @@ export default function PocaOrdersList() {
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <label>받는사람</label>
                 <input
+                  style={{ fontSize: '16px' }}
                   type="text"
                   name="receiver"
                   placeholder="받는사람"
@@ -246,6 +252,7 @@ export default function PocaOrdersList() {
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <label>전화번호</label>
                 <input
+                  style={{ fontSize: '16px' }}
                   type="text"
                   name="receiverPhone"
                   placeholder="전화번호"
@@ -256,6 +263,7 @@ export default function PocaOrdersList() {
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <label>우편번호</label>
                 <input
+                  style={{ fontSize: '16px' }}
                   type="text"
                   name="zipcode"
                   placeholder="우편번호"
@@ -266,6 +274,7 @@ export default function PocaOrdersList() {
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <label>메모</label>
                 <input
+                  style={{ fontSize: '16px' }}
                   type="text"
                   name="shippingMemo"
                   placeholder="요청 메모"

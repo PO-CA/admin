@@ -13,7 +13,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import tableStyles from './pocaStoreListTable.module.css';
-import { useAuth } from '@/hooks/useAuth';
 import styles from './page.module.css';
 import { pocaStoreListColumns } from '../tableColumns/pocaStoreListColumns';
 import { useGetAvailablePocas } from '@/query/query/poca/poca';

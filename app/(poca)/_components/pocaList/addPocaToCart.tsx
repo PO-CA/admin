@@ -32,7 +32,12 @@ export default function AddPocaToCart({ info }: any) {
     <div>
       <div>판매가 : {info.row.original.price}</div>
       <div>재고 : {info.row.original.stock}</div>
-      <input value={qty} type="number" onChange={qtyHandler} />
+      <input
+        style={{ fontSize: '16px' }}
+        value={qty}
+        type="number"
+        onChange={qtyHandler}
+      />
       <button type="button" onClick={handleSubmit}>
         추가
       </button>
