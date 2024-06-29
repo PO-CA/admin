@@ -7,7 +7,7 @@ export default function PocaStore() {
   return (
     <main className={styles.productsContainer}>
       <div className={styles.productContents}>
-        {/* <PocaCartList /> */}
+        <PocaCartList />
         <PocaStoreList />
       </div>
     </main>
