@@ -1,3 +1,4 @@
+'use client';
 import TanTable, { fuzzyFilter } from '@/components/table';
 import React, { useState } from 'react';
 import {
