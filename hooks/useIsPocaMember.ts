@@ -4,17 +4,17 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useSignOut } from '@/query/query/users';
 
 export const useIsPocaMember = () => {
-  const { isAuthenticated, myInfoLoading, userLevel, userId } = useAuth();
+  const { isAuthenticated, myInfoLoading, userLevel, userId, userEmail } =
+    useAuth();
   const router = useRouter();
   const pathname = usePathname();
-  console.log('asd');
 
   const { mutateAsync: signOut } = useSignOut();
 
   useEffect(() => {
     if (!myInfoLoading) {
       if (isAuthenticated) {
-        if (userId !== 1) {
+        if (userEmail !== 'rudghksldl@gmail.com') {
           router.push('/store');
         }
       } else {
@@ -32,6 +32,6 @@ export const useIsPocaMember = () => {
     router,
     isAuthenticated,
     userLevel,
-    userId,
+    userEmail,
   ]);
 };
