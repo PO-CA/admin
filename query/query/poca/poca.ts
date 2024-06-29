@@ -4,6 +4,7 @@ import {
   getAllPocaShipping,
   getAllPocas,
   getAllWithdrawal,
+  getAvailablePocas,
 } from '../../api/poca/poca';
 
 export function useGetAllCerts() {
@@ -41,6 +42,15 @@ export function useGetAllPocas() {
     queryKey: ['pocas'],
     queryFn: async () => {
       const data = await getAllPocas();
+      return data;
+    },
+  });
+}
+export function useGetAvailablePocas() {
+  return useQuery({
+    queryKey: ['pocas'],
+    queryFn: async () => {
+      const data = await getAvailablePocas();
       return data;
     },
   });

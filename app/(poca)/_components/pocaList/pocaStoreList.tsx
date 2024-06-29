@@ -16,16 +16,14 @@ import tableStyles from './pocaStoreListTable.module.css';
 import { useAuth } from '@/hooks/useAuth';
 import styles from './page.module.css';
 import { pocaStoreListColumns } from '../tableColumns/pocaStoreListColumns';
-import { useGetAllPocas } from '@/query/query/poca/poca';
+import { useGetAvailablePocas } from '@/query/query/poca/poca';
 
 export default function PocaStoreList() {
-  const { userId } = useAuth();
-
   const {
     data: pocasData,
     isLoading: isPocasLoading,
     isSuccess: isPocasSuccess,
-  } = useGetAllPocas();
+  } = useGetAvailablePocas();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
 

@@ -18,6 +18,23 @@ export const getAllCerts = async () => {
   return data;
 };
 
+export const getAvailablePocas = async () => {
+  const { data } = await requests({
+    method: 'get',
+    url: `${API_URL}/pocas-available`,
+  });
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+
+  return data;
+};
+
 export const getAllWithdrawal = async () => {
   const { data } = await requests({
     method: 'get',
