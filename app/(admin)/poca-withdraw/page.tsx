@@ -16,7 +16,7 @@ import TanTable, { fuzzyFilter } from '@/components/table';
 import styles from './page.module.css';
 import tableStyles from './table.module.css';
 import TableLoader from '@/components/tableLoader';
-import { useGetAllWithdrawal } from '@/query/query/poca';
+import { useGetAllWithdrawal } from '@/query/query/poca/poca';
 import { withdrawColumns } from './(components)/tableColumns/withdrawColumns';
 
 export default function POCAWithdraw() {

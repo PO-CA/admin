@@ -1,5 +1,5 @@
-'use client';
-import React from 'react';
+import TanTable, { fuzzyFilter } from '@/components/table';
+import React, { useState } from 'react';
 import {
   ColumnFiltersState,
   getCoreRowModel,
@@ -11,32 +11,31 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useState } from 'react';
-import TanTable, { fuzzyFilter } from '@/components/table';
+import tableStyles from './pocaStoreListTable.module.css';
+import { useAuth } from '@/hooks/useAuth';
 import styles from './page.module.css';
-import tableStyles from './table.module.css';
-import TableLoader from '@/components/tableLoader';
+import { pocaStoreListColumns } from '../tableColumns/pocaStoreListColumns';
 import { useGetAllPocas } from '@/query/query/poca/poca';
-import { pocaListColumns } from './(components)/tableColumns/pocaListColumns';
 
-export default function POCAList() {
+export default function PocaStoreList() {
+  const { userId } = useAuth();
+
   const {
     data: pocasData,
     isLoading: isPocasLoading,
     isSuccess: isPocasSuccess,
   } = useGetAllPocas();
-
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
 
   const table = useReactTable({
     data: pocasData,
-    columns: pocaListColumns,
+    columns: pocaStoreListColumns,
     filterFns: {
       fuzzy: fuzzyFilter,
     },
     initialState: {
-      pagination: { pageSize: 20, pageIndex: 0 },
+      pagination: { pageSize: 50, pageIndex: 0 },
     },
     state: {
       columnFilters,
@@ -56,26 +55,22 @@ export default function POCAList() {
     debugHeaders: true,
     debugColumns: false,
   });
-
-  if (!isPocasSuccess) {
-    return <div>Failed to load</div>;
-  }
-
   return (
-    <main className={styles.shippingsContainer}>
-      <div className={styles.titleContainer}>포카-목록</div>
+    <div>
+      <div className={styles.titleContainer}>포카</div>
+
       <div className={styles.tableContainer}>
-        {isPocasLoading && <TableLoader />}
-        <TanTable
-          table={table}
-          globalFilter={globalFilter}
-          setGlobalFilter={setGlobalFilter}
-          styles={tableStyles}
-          search
-          filter
-          pagenation
-        />
+        {!isPocasLoading && isPocasSuccess && (
+          <TanTable
+            table={table}
+            globalFilter={globalFilter}
+            setGlobalFilter={setGlobalFilter}
+            styles={tableStyles}
+            search
+            pagenation
+          />
+        )}
       </div>
-    </main>
+    </div>
   );
 }

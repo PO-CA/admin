@@ -4,7 +4,7 @@ import {
   getAllPocaShipping,
   getAllPocas,
   getAllWithdrawal,
-} from '../api/poca';
+} from '../../api/poca/poca';
 
 export function useGetAllCerts() {
   return useQuery({

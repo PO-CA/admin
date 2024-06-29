@@ -18,7 +18,7 @@ import { shippingColumns } from '@/app/(admin)/shippings/(components)/tableColum
 import styles from './page.module.css';
 import tableStyles from './table.module.css';
 import TableLoader from '@/components/tableLoader';
-import { useGetAllCerts } from '@/query/query/poca';
+import { useGetAllCerts } from '@/query/query/poca/poca';
 import { certsColumns } from './(components)/tableColumns/\bcertsColumns';
 
 export default function POCACerts() {

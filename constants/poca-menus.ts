@@ -6,6 +6,7 @@ export const pocaMenus = [
       { href: '/poca-certs', text: '인증요청' },
       { href: '/poca-withdraw', text: '입금완료' },
       { href: '/poca-shipping', text: '배송완료' },
+      { href: '/poca-store', text: 'STORE' },
     ],
   },
 ];

@@ -1,5 +1,5 @@
 import { API_URL } from '@/constants/apis';
-import { requests } from '../request';
+import { requests } from '@/query/request';
 
 export const getAllCerts = async () => {
   const { data } = await requests({
