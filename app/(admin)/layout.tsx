@@ -14,7 +14,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const { isAuthenticated, myInfoLoading, userEmail } = useAuth();
-  console.log('userEmail', userEmail);
 
   useIsAdmin();
 
