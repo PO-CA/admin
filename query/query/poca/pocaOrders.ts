@@ -52,7 +52,7 @@ export const useCreatePocaOrder = () => {
   });
 };
 
-export const useDeletePocaCart = () => {
+export const useDeletePocaOrder = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload: any) => deletePocaOrder(payload),
@@ -60,7 +60,7 @@ export const useDeletePocaCart = () => {
   });
 };
 
-export const useModifyPocaCart = () => {
+export const useModifyPocaOrder = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload: any) => updatePocaOrder(payload),
