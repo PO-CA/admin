@@ -6,8 +6,6 @@ export const getUsersCart = async (usersId: number) => {
     method: 'get',
     url: `${API_URL}/cartsitems/${usersId}`,
   });
-  console.log('asd');
-
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
