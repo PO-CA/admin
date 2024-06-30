@@ -1,6 +1,6 @@
 import React from 'react';
 import AWS from 'aws-sdk';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useModifyPocaOrder } from '@/query/query/poca/pocaOrders';
 
 export default function CertUpload() {
@@ -8,6 +8,7 @@ export default function CertUpload() {
   const bucket = 'poca-static';
 
   const { orderId } = useParams();
+  const router = useRouter();
 
   const { mutateAsync: patchOrders } = useModifyPocaOrder();
 
@@ -31,15 +32,10 @@ export default function CertUpload() {
     const promise = upload.promise();
     promise
       .then(
-        // eslint-disable-next-line func-names
         async () => {
-          // eslint-disable-next-line func-names
-          // window.setTimeout(function () {
-          // eslint-disable-next-line no-restricted-globals
-
-          // }, 2000);
           await patchOrders({ id: orderId, isCert: true });
           alert('업로드를 성공했습니다.');
+          location.reload();
         },
         function (err) {
           console.error('ee', err);

@@ -24,6 +24,7 @@ import { toDateString } from '@/utils/utils';
 import { pocaOrderListColumns } from '../tableColumns/pocaOrderList';
 import CertUpload from '@/app/(admin)/poca-certs/(components)/certUpload';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function PocaOrdersList() {
   const { orderId } = useParams();
@@ -345,14 +346,22 @@ export default function PocaOrdersList() {
         </div>
         <div className={styles.titleContainer}>인증사진</div>
         <div className={styles.tableContainer}>
-          <Image
-            unoptimized
-            quality={20}
-            src={`${process.env.NEXT_PUBLIC_S3_CERT_URL}${orderId}.JPG`}
-            alt="pocaImg"
-            width={300}
-            height={300}
-          />
+          {orderId && (
+            <Link
+              href={`${process.env.NEXT_PUBLIC_S3_CERT_URL}${orderId}.JPG`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                unoptimized
+                quality={20}
+                src={`${process.env.NEXT_PUBLIC_S3_CERT_URL}${orderId}.JPG`}
+                alt="pocaImg"
+                width={300}
+                height={300}
+              />
+            </Link>
+          )}
         </div>
         <div className={styles.titleContainer}>인증사진 업로드</div>
         <div className={styles.tableContainer}>
