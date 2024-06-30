@@ -13,6 +13,7 @@ export const pocaStoreListColumns: ColumnDef<any, any>[] = [
       <Image
         alt="asd"
         unoptimized
+        quality={20}
         src={`${process.env.NEXT_PUBLIC_S3_THUMBNAIL_URL}${info.row.original.id}.JPG`}
         width={50}
         height={100}
