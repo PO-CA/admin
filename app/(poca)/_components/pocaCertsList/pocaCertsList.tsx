@@ -16,6 +16,7 @@ import { useAuth } from '@/hooks/useAuth';
 import styles from './page.module.css';
 import { useGetPocaOrderByUsersIdAndStatus } from '@/query/query/poca/pocaOrders';
 import { certsColumns } from '../tableColumns/certsColumns';
+import { useGetAllCerts } from '@/query/query/poca/poca';
 
 export default function PocaCertsList() {
   const { userId } = useAuth();
@@ -25,11 +26,13 @@ export default function PocaCertsList() {
     isLoading: isPocasLoading,
     isSuccess: isPocasSuccess,
   } = useGetPocaOrderByUsersIdAndStatus(userId, '인증요청');
+
+  const { data: certsData } = useGetAllCerts();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
 
   const table = useReactTable({
-    data: pocasData,
+    data: userId === 1 ? certsData : pocasData,
     columns: certsColumns,
     filterFns: {
       fuzzy: fuzzyFilter,
