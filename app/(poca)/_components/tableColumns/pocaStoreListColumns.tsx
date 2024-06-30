@@ -7,13 +7,13 @@ import AddPocaToCart from '../pocaList/addPocaToCart';
 
 export const pocaStoreListColumns: ColumnDef<any, any>[] = [
   {
-    accessorFn: (row) => row.thumbNailUrl,
-    id: 'thumbNailUrl',
+    accessorFn: (row) => row.id,
+    id: 'id',
     cell: (info) => (
       <Image
         alt="asd"
         unoptimized
-        src={info.getValue()}
+        src={`${process.env.NEXT_PUBLIC_S3_THUMBNAIL_URL}${info.row.original.id}.JPG`}
         width={50}
         height={100}
       />

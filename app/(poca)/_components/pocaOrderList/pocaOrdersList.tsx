@@ -13,7 +13,6 @@ import {
 } from '@tanstack/react-table';
 import TanTable, { fuzzyFilter } from '@/components/table';
 import tableStyles from './pocaOrdersList.module.css';
-import { useAuth } from '@/hooks/useAuth';
 import styles from './page.module.css';
 import {
   useDeletePocaOrder,
@@ -23,11 +22,12 @@ import {
 import { useParams, useRouter } from 'next/navigation';
 import { toDateString } from '@/utils/utils';
 import { pocaOrderListColumns } from '../tableColumns/pocaOrderList';
+import CertUpload from '@/app/(admin)/poca-certs/(components)/certUpload';
+import Image from 'next/image';
 
 export default function PocaOrdersList() {
   const { orderId } = useParams();
 
-  const { userId } = useAuth();
   const router = useRouter();
 
   const {
@@ -104,7 +104,7 @@ export default function PocaOrdersList() {
         zipcode: pocaOrdersData.zipcode,
       });
   }, [isPocaOrdersSuccess, pocaOrdersData]);
-  const { mutate: patchOrders } = useModifyPocaOrder();
+  const { mutateAsync: patchOrders } = useModifyPocaOrder();
 
   const { mutate: deleteOrders } = useDeletePocaOrder();
   const onPatchIsCert = () => {
@@ -126,7 +126,7 @@ export default function PocaOrdersList() {
   return (
     !isPocaOrdersLoading &&
     isPocaOrdersSuccess && (
-      <div>
+      <div className={styles.container}>
         <div className={styles.titleContainer}>인증 상세</div>
         <div className={styles.tableContainer}>
           <div
@@ -293,9 +293,10 @@ export default function PocaOrdersList() {
                 color: 'white',
                 marginTop: '10px',
               }}
-              onClick={() => {
+              onClick={async () => {
                 if (window.confirm('정말 입금완료 처리를 하시겠습니까?')) {
-                  patchOrders(inputValues);
+                  const res = await patchOrders(inputValues);
+                  if (res && res.ok === 'ok') router.push('/poca-cert');
                 }
               }}
             >
@@ -331,7 +332,7 @@ export default function PocaOrdersList() {
             </button>
           </div>
         </div>
-        <div className={styles.titleContainer}>포카 목록</div>
+        <div className={styles.titleContainer}>주문한 포카 목록</div>
         <div className={styles.tableContainer}>
           {!isPocaOrdersLoading && isPocaOrdersSuccess && (
             <TanTable
@@ -341,6 +342,19 @@ export default function PocaOrdersList() {
               styles={tableStyles}
             />
           )}
+        </div>
+        <div className={styles.titleContainer}>인증사진</div>
+        <div className={styles.tableContainer}>
+          <Image
+            src={`${process.env.NEXT_PUBLIC_S3_CERT_URL}${orderId}.JPG`}
+            alt="pocaImg"
+            width={400}
+            height={400}
+          />
+        </div>
+        <div className={styles.titleContainer}>인증사진 업로드</div>
+        <div className={styles.tableContainer}>
+          <CertUpload />
         </div>
         <div className={styles.tableContainer}>
           <div

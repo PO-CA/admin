@@ -8,7 +8,7 @@ export const certsColumns: ColumnDef<any, any>[] = [
     accessorFn: (row) => row.id,
     id: 'id',
     cell: (info) => (
-      <Link href={`/shippings/${info.getValue()}`}>{info.getValue()}</Link>
+      <Link href={`/poca-certs/${info.getValue()}`}>{info.getValue()}</Link>
     ),
     header: () => <span>ID</span>,
     footer: (props) => props.column.id,

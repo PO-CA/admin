@@ -6,14 +6,14 @@ import React from 'react';
 
 export const pocaCartColumns: ColumnDef<any, any>[] = [
   {
-    accessorFn: (row) => row.artist,
-    id: 'artist',
+    accessorFn: (row) => row.id,
+    id: 'id',
     cell: (info) => (
       <Image
         alt="asd"
         unoptimized
         quality={20}
-        src={`/s3/${info.row.original.id}.png`}
+        src={`${process.env.NEXT_PUBLIC_S3_THUMBNAIL_URL}${info.row.original.poca_id}.JPG`}
         width={50}
         height={100}
       />

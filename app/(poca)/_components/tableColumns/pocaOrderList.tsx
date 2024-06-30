@@ -13,7 +13,7 @@ export const pocaOrderListColumns: ColumnDef<any, any>[] = [
         alt="asd"
         unoptimized
         quality={20}
-        src={`/s3/${info.row.original.id}.png`}
+        src={`${process.env.NEXT_PUBLIC_S3_THUMBNAIL_URL}${info.row.original.pocaId}.JPG`}
         width={50}
         height={100}
       />
@@ -30,17 +30,18 @@ export const pocaOrderListColumns: ColumnDef<any, any>[] = [
   {
     accessorFn: (row) => row.qty,
     id: 'qty',
-    cell: (info) => info.getValue(),
+    cell: (info) => (
+      <div>
+        <div style={{ display: 'flex' }}>
+          <div>재고 : </div>
+          <div>{info.row.original.presentStock}</div>
+        </div>
+        <div style={{ display: 'flex' }}>
+          <div>주문량 :</div>
+          <div>{info.getValue()}</div>
+        </div>
+      </div>
+    ),
     header: () => <span>수량</span>,
   },
-
-  // {
-  //   accessorFn: (row) => row.id,
-  //   id: 'id',
-  //   header: () => '',
-
-  //   cell: (info) => {
-  //     return <DeleteCartButton info={info} />;
-  //   },
-  // },
 ];

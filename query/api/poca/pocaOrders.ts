@@ -62,6 +62,7 @@ export const updatePocaOrder = async (payload: any) => {
     url: `${API_URL}/orders`,
     data: payload,
   });
+  console.log('data', data);
 
   const { errorMessage, errorCode, customMessage } = data;
 

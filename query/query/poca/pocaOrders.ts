@@ -56,7 +56,8 @@ export const useDeletePocaOrder = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload: any) => deletePocaOrder(payload),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['pocaOrder'] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['pocaorderdetails'] }),
   });
 };
 
@@ -64,6 +65,7 @@ export const useModifyPocaOrder = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload: any) => updatePocaOrder(payload),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['pocaOrder'] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['pocaorderdetails'] }),
   });
 };
