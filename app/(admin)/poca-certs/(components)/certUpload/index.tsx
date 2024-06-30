@@ -9,7 +9,7 @@ export default function CertUpload() {
 
   const { orderId } = useParams();
 
-  const { mutate: patchOrders } = useModifyPocaOrder();
+  const { mutateAsync: patchOrders } = useModifyPocaOrder();
 
   AWS.config.update({
     region,
@@ -32,12 +32,14 @@ export default function CertUpload() {
     promise
       .then(
         // eslint-disable-next-line func-names
-        function () {
+        async () => {
           // eslint-disable-next-line func-names
           // window.setTimeout(function () {
-          //   // eslint-disable-next-line no-restricted-globals
-          //   location.reload();
+          // eslint-disable-next-line no-restricted-globals
+
           // }, 2000);
+          await patchOrders({ id: orderId, isCert: true });
+          alert('업로드를 성공했습니다.');
         },
         // eslint-disable-next-line func-names
         function (err) {
@@ -57,8 +59,6 @@ export default function CertUpload() {
         //   .catch((efff) => {
         //     console.log("efff", efff);
         //   });
-        patchOrders({ id: orderId, isCert: true });
-        alert('업로드를 성공했습니다.');
       });
   };
 
