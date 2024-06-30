@@ -7,10 +7,14 @@ export const menus = [
     href: '/poca-cert',
     text: '인증',
   },
-  // {
-  //   href: '/poca-store/orders',
-  //   text: '주문',
-  // },
+  {
+    href: '/poca-withdraw-user',
+    text: '입완',
+  },
+  {
+    href: '/poca-shipping-user',
+    text: '발송',
+  },
   // {
   //   href: '/poca-store/shippings',
   //   text: '배송',
