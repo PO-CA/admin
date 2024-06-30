@@ -18,7 +18,6 @@ export const useIsPocaMember = () => {
           userEmail === 'rudghksldl@gmail.com' ||
           userEmail === 'dbfl990501@naver.com'
         ) {
-          router.push('/poca-store');
         } else {
           router.push('/store');
         }
