@@ -348,8 +348,8 @@ export default function PocaOrdersList() {
           <Image
             src={`${process.env.NEXT_PUBLIC_S3_CERT_URL}${orderId}.JPG`}
             alt="pocaImg"
-            width={400}
-            height={400}
+            width={300}
+            height={300}
           />
         </div>
         <div className={styles.titleContainer}>인증사진 업로드</div>
