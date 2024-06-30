@@ -1,5 +1,5 @@
 import TanTable, { fuzzyFilter } from '@/components/table';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   ColumnFiltersState,
   getCoreRowModel,
@@ -30,9 +30,12 @@ export default function PocaCertsList() {
   const { data: certsData } = useGetAllCerts();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
-
+  const data = useMemo(
+    () => (userEmail === 'rudghksldl@gmail.com' ? certsData : pocasData || []),
+    [userEmail, certsData, pocasData],
+  );
   const table = useReactTable({
-    data: userEmail === 'rudghksldl@gmail.com' ? certsData : pocasData,
+    data,
     columns: certsColumns,
     filterFns: {
       fuzzy: fuzzyFilter,
