@@ -19,7 +19,7 @@ import { certsColumns } from '../tableColumns/certsColumns';
 import { useGetAllCerts } from '@/query/query/poca/poca';
 
 export default function PocaCertsList() {
-  const { userId } = useAuth();
+  const { userId, userEmail } = useAuth();
 
   const {
     data: pocasData,
@@ -32,7 +32,7 @@ export default function PocaCertsList() {
   const [globalFilter, setGlobalFilter] = useState('');
 
   const table = useReactTable({
-    data: userId === 1 ? certsData : pocasData,
+    data: userEmail === 'rudghksldl@gmail.com' ? certsData : pocasData,
     columns: certsColumns,
     filterFns: {
       fuzzy: fuzzyFilter,
