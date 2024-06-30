@@ -1,5 +1,5 @@
 import TanTable, { fuzzyFilter } from '@/components/table';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   ColumnFiltersState,
   getCoreRowModel,
@@ -27,13 +27,39 @@ export default function PocaCertsList() {
     isSuccess: isPocasSuccess,
   } = useGetPocaOrderByUsersIdAndStatus(userId, '인증요청');
 
-  const { data: certsData } = useGetAllCerts();
+  const {
+    data: certsData,
+    isLoading: isCertsLoading,
+    isSuccess: isCertsSuccess,
+  } = useGetAllCerts();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
   const data = useMemo(
-    () => (userEmail === 'rudghksldl@gmail.com' ? certsData : pocasData || []),
-    [userEmail, certsData, pocasData],
+    () =>
+      !isPocasLoading &&
+      !isCertsLoading &&
+      isPocasSuccess &&
+      isCertsSuccess &&
+      userEmail === 'rudghksldl@gmail.com'
+        ? certsData
+        : !isPocasLoading &&
+            !isCertsLoading &&
+            isPocasSuccess &&
+            isCertsSuccess &&
+            userEmail !== 'rudghksldl@gmail.com'
+          ? pocasData
+          : [] || [],
+    [
+      userEmail,
+      certsData,
+      pocasData,
+      isPocasLoading,
+      isCertsLoading,
+      isPocasSuccess,
+      isCertsSuccess,
+    ],
   );
+
   const table = useReactTable({
     data,
     columns: certsColumns,
