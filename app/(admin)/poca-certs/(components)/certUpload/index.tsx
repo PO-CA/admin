@@ -41,7 +41,6 @@ export default function CertUpload() {
           await patchOrders({ id: orderId, isCert: true });
           alert('업로드를 성공했습니다.');
         },
-        // eslint-disable-next-line func-names
         function (err) {
           console.error('ee', err);
         },
