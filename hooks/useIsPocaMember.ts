@@ -14,7 +14,12 @@ export const useIsPocaMember = () => {
   useEffect(() => {
     if (!myInfoLoading) {
       if (isAuthenticated) {
-        if (userEmail !== 'rudghksldl@gmail.com') {
+        if (
+          userEmail === 'rudghksldl@gmail.com' ||
+          userEmail === 'dbfl990501@naver.com'
+        ) {
+          router.push('/poca-store');
+        } else {
           router.push('/store');
         }
       } else {

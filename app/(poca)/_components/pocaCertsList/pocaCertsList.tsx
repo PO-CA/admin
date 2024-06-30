@@ -14,7 +14,6 @@ import {
 import tableStyles from './pocaStoreListTable.module.css';
 import { useAuth } from '@/hooks/useAuth';
 import styles from './page.module.css';
-import { pocaStoreListColumns } from '../tableColumns/pocaStoreListColumns';
 import { useGetPocaOrderByUsersIdAndStatus } from '@/query/query/poca/pocaOrders';
 import { certsColumns } from '../tableColumns/certsColumns';
 
