@@ -16,7 +16,8 @@ export const useIsPocaMember = () => {
       if (isAuthenticated) {
         if (
           userEmail === 'rudghksldl@gmail.com' ||
-          userEmail === 'dbfl990501@naver.com'
+          userEmail === 'dbfl990501@naver.com' ||
+          userEmail === 'kurare@naver.com'
         ) {
         } else {
           router.push('/store');
