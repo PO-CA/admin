@@ -55,7 +55,6 @@ export function usePutFixedPriceOrderItem() {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orderItems'] });
-      alert('가격 변경을 성공했습니다');
     },
   });
 }
@@ -69,7 +68,6 @@ export function usePutFixedQtyOrderItem() {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orderItems'] });
-      alert('수량 수정을 성공했습니다');
     },
   });
 }

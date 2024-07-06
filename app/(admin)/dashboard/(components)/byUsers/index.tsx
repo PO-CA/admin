@@ -58,8 +58,8 @@ export default function StatsByUsers() {
               {selectedData.map((item: any, i: number) => (
                 <div key={i} style={{ marginRight: '20px' }}>
                   <div>{item.month} 월</div>
-                  <div>매출액: {item.totalSell}</div>
-                  <div>판매수량: {item.totalQty}</div>
+                  <div>매출액: {item.totalSell.toLocaleString()} 원</div>
+                  <div>판매수량: {item.totalQty.toLocaleString()} 개</div>
                 </div>
               ))}
             </div>

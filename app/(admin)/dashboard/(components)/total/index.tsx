@@ -31,18 +31,26 @@ export default function StatsTotal() {
   } = useGetTop5();
   return (
     <div className={styles.totalContainer}>
-      <div className={styles.statsContainer}>
+      <div className={styles.statsContainer} style={{ width: '30%' }}>
         <div>전체</div>
         <div>
-          총 매출액
-          {!isTotalSellLoading && isTotalSellSuccess && totalSell && totalSell}
+          총 매출액 :
+          {!isTotalSellLoading &&
+            isTotalSellSuccess &&
+            totalSell &&
+            totalSell.toLocaleString()}{' '}
+          원
         </div>
         <div>
-          총 판매수량
-          {!isTotalQtyLoading && isTotalQtySuccess && totalQty && totalQty}
+          총 판매수량 :
+          {!isTotalQtyLoading &&
+            isTotalQtySuccess &&
+            totalQty &&
+            totalQty.toLocaleString()}{' '}
+          개
         </div>
       </div>
-      <div className={styles.statsContainer}>
+      <div className={styles.statsContainer} style={{ width: '70%' }}>
         <div>전체 TOP 5</div>
         {!isTop5Loading &&
           isTop5Success &&
@@ -51,8 +59,8 @@ export default function StatsTotal() {
             <>
               <div key={i} style={{ display: 'flex' }}>
                 <div>앨범명 : {item.title}</div>-
-                <div>총 매출액 : {item.totalSell} 원</div>-
-                <div>총 판매수량 : {item.totalQty} 개</div>
+                <div>총 매출액 : {item.totalSell.toLocaleString()} 원</div>-
+                <div>총 판매수량 : {item.totalQty.toLocaleString()} 개</div>
               </div>
             </>
           ))}

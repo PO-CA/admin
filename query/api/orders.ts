@@ -71,6 +71,7 @@ export const putFixedPriceOrderItem = async (
   } else if (errorMessage) {
     return alert(`${errorMessage}\n${errorCode}`);
   }
+  alert('가격 수정을 성공했습니다');
   return data;
 };
 
@@ -88,6 +89,7 @@ export const putFixedQtyOrderItem = async (payload: updateOrderItemsQtyDTO) => {
   } else if (errorMessage) {
     return alert(`${errorMessage}\n${errorCode}`);
   }
+  alert('수량 수정을 성공했습니다');
   return data;
 };
 

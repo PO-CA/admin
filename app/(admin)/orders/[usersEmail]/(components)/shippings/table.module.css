@@ -16,7 +16,7 @@
   display: flex;
   align-items: center;
   margin-right: 5px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .leftTopPanal {
@@ -35,12 +35,12 @@
   width: 45px;
   height: 23px;
   margin-right: 5px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .totalRowcount {
   margin-left: 10px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
 }
 
@@ -49,7 +49,7 @@
   border: 1px solid lightgray;
   border-collapse: collapse;
   padding: 3px 8px;
-  font-size: 13px;
+  font-size: 16px;
 }
 
 /* .tableHeader:nth-child(1) {
@@ -67,7 +67,7 @@
   border-collapse: collapse;
   padding: 5px 12px;
   text-align: center;
-  font-size: 11px;
+  font-size: 16px;
 }
 
 .sortable {
@@ -90,18 +90,18 @@
 
 .paginationText {
   margin: 0px 10px;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .paginationInputContainer {
   display: flex;
   align-items: center;
-  font-size: 12px;
+  font-size: 16px;
 }
 .paginationInput {
   width: 40px;
   height: 20px;
   margin: 2px;
-  font-size: 15px;
+  font-size: 16px;
   text-align: center;
 }

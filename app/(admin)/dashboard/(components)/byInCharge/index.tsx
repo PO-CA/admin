@@ -56,8 +56,8 @@ export default function StatsByInCharge() {
             selectedInCharge && (
               <div>
                 <div>{selectedInCharge}</div>
-                <div>매출액: {inChargeData.totalSell}</div>
-                <div>판매수량: {inChargeData.totalQty}</div>
+                <div>매출액: {inChargeData.totalSell.toLocaleString()} 원</div>
+                <div>판매수량: {inChargeData.totalQty.toLocaleString()} 개</div>
               </div>
             )}
           {!isSellsByInChargeLoading &&
@@ -69,8 +69,8 @@ export default function StatsByInCharge() {
                 {selectedData.map((item: any, i: number) => (
                   <div key={i} style={{ marginRight: '20px' }}>
                     <div>{item.month} 월</div>
-                    <div>매출액: {item.totalSell}</div>
-                    <div>판매수량: {item.totalQty}</div>
+                    <div>매출액: {item.totalSell.toLocaleString()} 원</div>
+                    <div>판매수량: {item.totalQty.toLocaleString()} 개</div>
                   </div>
                 ))}
               </div>
