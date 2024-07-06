@@ -18,6 +18,7 @@ export const useAuth = () => {
   } = useUserStore();
 
   const { data, isLoading: myInfoLoading } = useGetMyInfo();
+
   useEffect(() => {
     setIsLoading(true);
     const accessToken = localStorage?.getItem('accessToken');

@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { requests } from '../request';
 import { CreateOrderItemDTO } from '@/types/createOrderItemDTO';
 import { updateOrderItemsPriceDTO } from '@/types/updateOrderItemsPriceDTO';
+import { updateOrderItemsQtyDTO } from '@/types/updateOrderItemsQtyDTO';
 
 export const getAllPickedOrderByUsersEmail = async (usersEmail: string) => {
   const { data } = await requests({
@@ -72,6 +73,24 @@ export const putFixedPriceOrderItem = async (
   }
   return data;
 };
+
+export const putFixedQtyOrderItem = async (payload: updateOrderItemsQtyDTO) => {
+  const { data } = await requests(`${API_URL}/logi/orderitems/updateqty`, {
+    method: 'put',
+    headers: { 'Content-Type': 'application/json' },
+    data: payload,
+  });
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  return data;
+};
+
 export const putToPickOrderItem = async (orderIds: number[]) => {
   const { data } = await requests(`${API_URL}/logi/orderitems/picked`, {
     method: 'put',

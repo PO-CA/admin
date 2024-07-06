@@ -5,12 +5,14 @@ import {
   getAllPickedOrderByUsersEmail,
   getAllUnpickedOrderByUsersEmail,
   putFixedPriceOrderItem,
+  putFixedQtyOrderItem,
   putToCancelOrderItem,
   putToPickOrderItem,
   putToUnPickOrderItem,
 } from '../api/orders';
 import { CreateOrderItemDTO } from '@/types/createOrderItemDTO';
 import { updateOrderItemsPriceDTO } from '@/types/updateOrderItemsPriceDTO';
+import { updateOrderItemsQtyDTO } from '@/types/updateOrderItemsQtyDTO';
 
 export function useGetAllPickedOrderByUsersEmail(usersEmail: string) {
   return useQuery({
@@ -51,10 +53,27 @@ export function usePutFixedPriceOrderItem() {
     mutationFn: (payload: updateOrderItemsPriceDTO) =>
       putFixedPriceOrderItem(payload),
 
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ['orderItems'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['orderItems'] });
+      alert('가격 변경을 성공했습니다');
+    },
   });
 }
+
+export function usePutFixedQtyOrderItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: updateOrderItemsQtyDTO) =>
+      putFixedQtyOrderItem(payload),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['orderItems'] });
+      alert('수량 수정을 성공했습니다');
+    },
+  });
+}
+
 export function usePutToPickOrderItem() {
   const queryClient = useQueryClient();
 

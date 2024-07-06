@@ -3,6 +3,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import Image from 'next/image';
 import React from 'react';
 import UpdatePriceOrderItem from '../../../(components)/updatePriceOrderItem';
+import UpdateQtyOrderItem from '../../../(components)/updateQtyOrderItem';
 
 export const orderItemsColumns: ColumnDef<any, any>[] = [
   {
@@ -70,7 +71,7 @@ export const orderItemsColumns: ColumnDef<any, any>[] = [
   {
     accessorFn: (row) => row.qty,
     id: 'qty',
-    cell: (info) => info.getValue(),
+    cell: (info) => <UpdateQtyOrderItem info={info} />,
     header: () => <span>판매수량</span>,
     footer: (props) => props.column.id,
   },

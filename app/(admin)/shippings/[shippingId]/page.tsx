@@ -133,6 +133,7 @@ export default function ShippingDetail({
               <div style={{ marginTop: '10px' }}>Tel: +82 2 010 5788 7679</div>
             </div>
             <div style={{ flex: '0.5' }}>
+              <div>Company Name : {shippingData?.userNickname}</div>
               <div>invoice No.: {shippingData?.id}</div>
               <div>
                 invoice Date: {new Date().toISOString().substring(0, 10)}

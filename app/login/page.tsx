@@ -17,7 +17,6 @@ export default function Login() {
     formState: { errors },
   } = useForm<SignIn>({ mode: 'onChange' });
   const onSubmit: SubmitHandler<SignIn> = (data) => signIn(data);
-  //   .finally(() => router.push('/'));
 
   useIsAdmin();
 
