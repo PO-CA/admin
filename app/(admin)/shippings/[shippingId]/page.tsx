@@ -38,6 +38,7 @@ export default function ShippingDetail({
   const [globalFilter, setGlobalFilter] = useState('');
 
   const [invoiceData, setInvoiceData] = useState<any>([]);
+  const [excelData, setExcelData] = useState<any>([]);
 
   useEffect(() => {
     if (shippingData) {
@@ -55,6 +56,24 @@ export default function ShippingDetail({
             shippingData?.totalProductPrice + shippingData?.shippingFee,
         },
       ]);
+
+      setExcelData(
+        shippingData?.logiShippingItems.map((item: any) => {
+          return {
+            'Description of goods': item.productName,
+            SKU: item.logiProduct.sku,
+            QTY: item.qty,
+            'Unit Price': item.price,
+            Price: ((item.totalPrice * 100) / 110)?.toLocaleString('ko-KR', {
+              maximumFractionDigits: 0,
+            }),
+            Tax: ((item.totalPrice * 10) / 110)?.toLocaleString('ko-KR', {
+              maximumFractionDigits: 0,
+            }),
+            'Total Amount': item.totalPrice,
+          };
+        }),
+      );
     }
   }, [shippingData]);
 
@@ -229,6 +248,42 @@ export default function ShippingDetail({
   return (
     <main className={styles.productDetailContainer}>
       <button onClick={printGoback}>인쇄하기</button>
+      <button
+        onClick={async () => {
+          const fields = [
+            'Description of goods',
+            'SKU',
+            'QTY',
+            'Unit Price',
+            'Price',
+            'Tax',
+            'Total Amount',
+          ];
+
+          const res = await fetch('/api/download-csv', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ fields, excelData }),
+          });
+
+          const csv = await res.text();
+
+          const blob = new Blob([csv], { type: 'text/csv' });
+          const url = URL.createObjectURL(blob);
+
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'INVOICE.csv';
+          a.click();
+
+          URL.revokeObjectURL(url);
+        }}
+      >
+        엑셀 저장
+      </button>
+
       <ComponentToPrint ref={componentRef} />
     </main>
   );
