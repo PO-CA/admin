@@ -57,23 +57,44 @@ export default function ShippingDetail({
         },
       ]);
 
-      setExcelData(
-        shippingData?.logiShippingItems.map((item: any) => {
+      const totalSums = shippingData?.logiShippingItems.reduce(
+        (acc: any, product: any) => {
+          acc.totalPriceSum += product.totalPrice;
+          return acc;
+        },
+        { totalPriceSum: 0 },
+      );
+
+      setExcelData([
+        ...shippingData?.logiShippingItems.map((item: any) => {
           return {
             'Description of goods': item.productName,
             SKU: item.logiProduct.sku,
             QTY: item.qty,
-            'Unit Price': item.price,
+            'Unit Price': item.price?.toLocaleString('ko-KR', {
+              maximumFractionDigits: 0,
+            }),
             Price: ((item.totalPrice * 100) / 110)?.toLocaleString('ko-KR', {
               maximumFractionDigits: 0,
             }),
             Tax: ((item.totalPrice * 10) / 110)?.toLocaleString('ko-KR', {
               maximumFractionDigits: 0,
             }),
-            'Total Amount': item.totalPrice,
+            'Total Amount': item.totalPrice?.toLocaleString('ko-KR', {
+              maximumFractionDigits: 0,
+            }),
           };
         }),
-      );
+        {
+          'Description of goods': '',
+          SKU: '',
+          QTY: '',
+          'Unit Price': '',
+          Price: '',
+          Tax: '',
+          'Total Amount': totalSums.totalPriceSum,
+        },
+      ]);
     }
   }, [shippingData]);
 
