@@ -62,4 +62,14 @@ export const shippingColumns: ColumnDef<any, any>[] = [
     header: () => <span></span>,
     footer: (props) => props.column.id,
   },
+  {
+    accessorFn: (row) => row.shippingStatus,
+    id: 'shippingStatus',
+    cell: (info) =>
+      info.getValue() === '결제완료'
+        ? info.row.original.updatedAt?.slice(0, 10)
+        : '',
+    header: () => <span></span>,
+    footer: (props) => props.column.id,
+  },
 ];
