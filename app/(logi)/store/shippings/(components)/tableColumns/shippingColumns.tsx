@@ -36,6 +36,13 @@ export const shippingColumns: ColumnDef<any, any>[] = [
     footer: (props) => props.column.id,
   },
   {
+    accessorFn: (row) => row.createdAt,
+    id: 'createdAt',
+    cell: (info) => info.getValue()?.slice(0, 10),
+    header: () => <span>발송일</span>,
+    footer: (props) => props.column.id,
+  },
+  {
     accessorFn: (row) => row.userNickname,
     id: 'userNickname',
     cell: (info) => info.getValue(),
