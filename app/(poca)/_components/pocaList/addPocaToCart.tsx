@@ -39,7 +39,7 @@ export default function AddPocaToCart({ info }: any) {
       <div>판매가 : {info.row.original.price}</div>
       <div>재고 : {info.row.original.stock}</div>
       <input
-        style={{ fontSize: '16px', width: '80px' }}
+        style={{ fontSize: '14px', width: '80px' }}
         value={qty}
         type="number"
         onChange={qtyHandler}
@@ -47,7 +47,7 @@ export default function AddPocaToCart({ info }: any) {
       <button
         style={{
           border: 'none',
-          fontSize: '16px',
+          fontSize: '14px',
           backgroundColor: 'rgb(77, 24, 127)',
           padding: ' 4px',
           color: 'white',

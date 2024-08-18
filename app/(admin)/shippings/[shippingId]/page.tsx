@@ -219,7 +219,7 @@ export default function ShippingDetail({
                 style={{
                   flex: '0.65',
                   textAlign: 'center',
-                  fontSize: '16px',
+                  fontSize: '14px',
                   fontWeight: 900,
                   padding: '5px 0px',
                   border: '1px solid lightgray',
@@ -242,7 +242,7 @@ export default function ShippingDetail({
                 style={{
                   flex: '0.35',
                   textAlign: 'center',
-                  fontSize: '16px',
+                  fontSize: '14px',
                   fontWeight: 900,
                   padding: '5px 0px 0px',
                   border: '1px solid lightgray',

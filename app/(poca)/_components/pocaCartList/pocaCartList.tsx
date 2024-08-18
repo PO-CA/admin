@@ -158,7 +158,7 @@ export default function PocaCartList() {
             <div style={{ display: 'flex', marginBottom: '5px' }}>
               <label style={{ width: '50%' }}>판매채널</label>
               <select
-                style={{ width: '50%', fontSize: '16px' }}
+                style={{ width: '50%', fontSize: '14px' }}
                 name="channelType"
                 value={inputValues.channelType}
                 onChange={handleInputChange}
@@ -171,7 +171,7 @@ export default function PocaCartList() {
             <div style={{ display: 'flex', marginBottom: '5px' }}>
               <label style={{ width: '50%' }}>인증아이디</label>
               <input
-                style={{ width: '50%', fontSize: '16px' }}
+                style={{ width: '50%', fontSize: '14px' }}
                 type="text"
                 name="nickname"
                 placeholder="인증아이디(필수)"
@@ -182,7 +182,7 @@ export default function PocaCartList() {
             <div style={{ display: 'flex', marginBottom: '5px' }}>
               <label style={{ width: '50%' }}>메모</label>
               <input
-                style={{ width: '50%', fontSize: '16px' }}
+                style={{ width: '50%', fontSize: '14px' }}
                 type="text"
                 name="shippingMemo"
                 placeholder="요청 메모"
