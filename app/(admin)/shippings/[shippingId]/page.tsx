@@ -57,7 +57,6 @@ export default function ShippingDetail({
       ]);
     }
   }, [shippingData]);
-  console.log('invoiceData', invoiceData);
 
   const table = useReactTable({
     data: invoiceData,

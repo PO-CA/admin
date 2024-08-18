@@ -18,8 +18,8 @@ export const useIsAdmin = () => {
             if (
               pathname !== '/store' &&
               pathname !== '/store/orders' &&
-              pathname !== '/store/shippings' &&
-              pathname !== '/store/notice'
+              pathname !== '/store/notice' &&
+              !pathname.includes('/store/shippings')
             ) {
               router.push('/store');
             }
