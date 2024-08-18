@@ -1,6 +1,6 @@
 /* html {
   font-family: sans-serif;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 table {
@@ -48,12 +48,12 @@ tfoot th {
   width: 55px;
   height: 30px;
   margin-right: 10px;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .totalRowcount {
   margin-left: 10px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -99,12 +99,12 @@ tfoot th {
 .paginationInputContainer {
   display: flex;
   align-items: center;
-  font-size: 16px;
+  font-size: 14px;
 }
 .paginationInput {
   width: 50px;
   height: 30px;
   margin: 2px;
-  font-size: 16px;
+  font-size: 14px;
   text-align: center;
 }
