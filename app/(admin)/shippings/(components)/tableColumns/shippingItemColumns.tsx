@@ -64,6 +64,40 @@ export const shippingItemColumns: ColumnDef<any, any>[] = [
     cell: (info) =>
       info.getValue() ? (
         <p>
+          {((info.getValue() * 100) / 110)?.toLocaleString('ko-KR', {
+            maximumFractionDigits: 0,
+          })}{' '}
+          KRW
+        </p>
+      ) : (
+        ''
+      ),
+    header: () => <span>Price</span>,
+    footer: (props) => props.column.id,
+  },
+  {
+    accessorFn: (row) => row.totalPrice,
+    id: 'totalPrice',
+    cell: (info) =>
+      info.getValue() ? (
+        <p>
+          {((info.getValue() * 10) / 110)?.toLocaleString('ko-KR', {
+            maximumFractionDigits: 0,
+          })}{' '}
+          KRW
+        </p>
+      ) : (
+        ''
+      ),
+    header: () => <span>Tax</span>,
+    footer: (props) => props.column.id,
+  },
+  {
+    accessorFn: (row) => row.totalPrice,
+    id: 'totalPrice',
+    cell: (info) =>
+      info.getValue() ? (
+        <p>
           {info
             .getValue()
             ?.toLocaleString('ko-KR', { maximumFractionDigits: 0 })}{' '}
@@ -72,7 +106,7 @@ export const shippingItemColumns: ColumnDef<any, any>[] = [
       ) : (
         ''
       ),
-    header: () => <span>Amount</span>,
+    header: () => <span>Total Amount</span>,
     footer: (props) => props.column.id,
   },
 ];
