@@ -18,10 +18,10 @@ export const shippingItemColumns: ColumnDef<any, any>[] = [
     footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.qty,
-    id: 'qty',
-    cell: (info) => '',
-    header: () => <span>Option</span>,
+    accessorFn: (row) => row.logiProduct.sku,
+    id: 'sku',
+    cell: (info) => info.getValue().logiProduct.sku,
+    header: () => <span>SKU</span>,
     footer: (props) => props.column.id,
   },
   {
