@@ -25,10 +25,20 @@ export const addOrderProductColumns: ColumnDef<any, any>[] = [
     cell: (info) => (
       <div>
         <div>{info.getValue()}</div>
-        <div>{info?.row?.original?.sku}</div>
       </div>
     ),
-    header: () => <span>바코드/sku</span>,
+    header: () => <span>바코드</span>,
+    footer: (props) => props.column.id,
+  },
+  {
+    accessorFn: (row) => row.sku,
+    id: 'sku',
+    cell: (info) => (
+      <div>
+        <div>{info.getValue()}</div>
+      </div>
+    ),
+    header: () => <span>sku</span>,
     footer: (props) => props.column.id,
   },
   {
