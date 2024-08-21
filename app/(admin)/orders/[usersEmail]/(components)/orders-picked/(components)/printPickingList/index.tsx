@@ -29,7 +29,7 @@ export default function PrintPickingList({ table: data }: { table: any }) {
       fuzzy: fuzzyFilter,
     },
     initialState: {
-      pagination: { pageSize: 20, pageIndex: 0 },
+      pagination: { pageSize: 500, pageIndex: 0 },
     },
     state: {
       columnFilters,

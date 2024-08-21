@@ -36,15 +36,11 @@ export default function ExcelUpload() {
 
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
-        console.log('sheet', sheet);
 
         const jsonData = XLSX.utils.sheet_to_json(sheet, { defval: null });
 
         // 밸리데이션
-        console.log('jsonData', jsonData);
         jsonData.forEach((row: any, i: number) => {
-          console.log('row', row['바코드']);
-
           if (!row['바코드(필수)']) {
             return alert(`${i + 1}번째 행의 바코드가 없습니다`);
           }
@@ -78,7 +74,6 @@ export default function ExcelUpload() {
       reader.readAsArrayBuffer(file);
     }
   }, []);
-  console.log('uploadedFile', uploadedFile);
 
   return (
     <form>

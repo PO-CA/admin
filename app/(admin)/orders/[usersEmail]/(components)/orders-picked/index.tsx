@@ -141,7 +141,6 @@ export default function OrdersPicked({ usersEmail }: any) {
     receiverName: '',
     receiverPhoneNumber: '',
   });
-  console.log('selectedAddress', selectedAddress);
 
   useEffect(() => {
     if (addressData)

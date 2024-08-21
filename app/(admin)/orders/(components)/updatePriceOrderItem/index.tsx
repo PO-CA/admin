@@ -28,7 +28,6 @@ export default function UpdatePriceOrderItem({ info }: any) {
       />
       <button
         onClick={() => {
-          console.log('payload', payload);
           mutateAsync(payload);
         }}
       >
