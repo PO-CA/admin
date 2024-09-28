@@ -42,8 +42,6 @@ export default function ShippingDetail({
 
   useEffect(() => {
     if (shippingData) {
-      console.log('shippingData', shippingData);
-
       setInvoiceData([
         ...shippingData?.logiShippingItems,
         {},
@@ -71,7 +69,7 @@ export default function ShippingDetail({
         ...shippingData?.logiShippingItems.map((item: any) => {
           return {
             'Description of goods': item.productName,
-            SKU: item.logiProduct.sku,
+            SKU: item.logiProduct?.sku,
             QTY: item.qty,
             'Unit Price': item.price?.toLocaleString('ko-KR', {
               maximumFractionDigits: 0,
