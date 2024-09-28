@@ -166,14 +166,14 @@ export default function ShippingDetail({
             <div style={{ flex: '0.5' }}>
               <div style={{ fontWeight: 900, marginBottom: '5px' }}>Seller</div>
               <div>HMcompany</div>
-              <div>71, Bukhang-ro 207beon-gil</div>
-              <div>Seo-gu, Incheon, Korea, 22856 </div>
+              <div>188-1, Songpa-ro, Ilsanseo-gu</div>
+              <div>Goyang-si, Gyeonggi-do, Republic of Korea, 10205 </div>
               <div style={{ marginTop: '10px' }}>Tel: +82 2 010 5788 7679</div>
             </div>
             <div style={{ flex: '0.5' }}>
               <div>invoice No.: {shippingData?.id}</div>
               <div>
-                invoice Date: {new Date().toISOString().substring(0, 10)}
+                invoice Date: {shippingData?.createdAt?.substring(0, 10)}
               </div>
             </div>
           </div>
