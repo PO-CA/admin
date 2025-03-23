@@ -37,10 +37,16 @@ export const productColumns: ColumnDef<any, any>[] = [
     header: () => <span>가수</span>,
   },
   {
+    accessorFn: (row) => row.sku,
+    id: 'sku',
+    cell: (info) => info.getValue(),
+    header: () => <span>sku</span>,
+  },
+  {
     accessorFn: (row) => row.barcode,
     id: 'barcode',
     cell: (info) => info.getValue(),
-    header: () => <span>바코드/sku</span>,
+    header: () => <span>바코드</span>,
   },
   {
     accessorFn: (row) => row.logiCategory.title,
