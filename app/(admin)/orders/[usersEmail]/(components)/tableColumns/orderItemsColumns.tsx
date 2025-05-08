@@ -76,20 +76,6 @@ export const orderItemsColumns: ColumnDef<any, any>[] = [
     footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.totalPrice,
-    id: 'totalPrice',
-    cell: (info) => info.getValue(),
-    header: () => <span>총액</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    accessorFn: (row) => row.addressName,
-    id: 'addressName',
-    cell: (info) => info.getValue(),
-    header: () => <span>배송지</span>,
-    footer: (props) => props.column.id,
-  },
-  {
     accessorFn: (row) => row.coordinates,
     id: 'coordinates',
     cell: (info) => (
@@ -102,6 +88,20 @@ export const orderItemsColumns: ColumnDef<any, any>[] = [
       </div>
     ),
     header: () => <span>좌표</span>,
+    footer: (props) => props.column.id,
+  },
+  {
+    accessorFn: (row) => row.totalPrice,
+    id: 'totalPrice',
+    cell: (info) => info.getValue(),
+    header: () => <span>총액</span>,
+    footer: (props) => props.column.id,
+  },
+  {
+    accessorFn: (row) => row.addressName,
+    id: 'addressName',
+    cell: (info) => info.getValue(),
+    header: () => <span>배송지</span>,
     footer: (props) => props.column.id,
   },
 ];

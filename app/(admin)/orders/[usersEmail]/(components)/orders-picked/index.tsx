@@ -26,6 +26,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { CreateShippingDTO } from '@/types/createShippingDTO';
 import { useCreateShipping } from '@/query/query/shippings';
 import PrintPickingList from './(components)/printPickingList';
+import { useGetUsersDetailByUsersEmail } from '@/query/query/users';
 
 export default function OrdersPicked({ usersEmail }: any) {
   const {
@@ -148,12 +149,22 @@ export default function OrdersPicked({ usersEmail }: any) {
         addressData.find((address: any) => address.id === selectedOption),
       );
   }, [selectedOption, addressData]);
+
+  const {
+    data: usersData,
+    isLoading: isUsersLoading,
+    isSuccess: isUsersSuccess,
+  } = useGetUsersDetailByUsersEmail(usersEmail);
+
   return (
     <>
       <div className={styles.buttons}>
-        {!isPickedOrderItemsLoading && isPickedOrderItemsSuccess && (
-          <PrintPickingList table={table} />
-        )}
+        {!isPickedOrderItemsLoading &&
+          isPickedOrderItemsSuccess &&
+          !isUsersLoading &&
+          isUsersSuccess && (
+            <PrintPickingList table={table} usersData={usersData} />
+          )}
         <button
           type="button"
           onClick={() => {

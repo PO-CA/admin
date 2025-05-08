@@ -18,7 +18,13 @@ import {
 } from '@tanstack/react-table';
 import { printPickingListColumns } from '../printPickingListColumns';
 
-export default function PrintPickingList({ table: data }: { table: any }) {
+export default function PrintPickingList({
+  table: data,
+  usersData,
+}: {
+  table: any;
+  usersData: any;
+}) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
 
@@ -82,6 +88,16 @@ export default function PrintPickingList({ table: data }: { table: any }) {
             }}
           >
             PICKING LIST
+          </div>
+
+          <div
+            style={{
+              fontSize: '20px',
+              fontWeight: 600,
+              margin: '20px 0 0 30px',
+            }}
+          >
+            {usersData?.nickname}
           </div>
           {/* <div
             style={{
