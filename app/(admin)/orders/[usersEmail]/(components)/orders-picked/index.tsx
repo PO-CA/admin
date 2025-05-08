@@ -37,6 +37,8 @@ export default function OrdersPicked({ usersEmail }: any) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
 
+  console.log('pickedOrderItemsData in orders-picked', pickedOrderItemsData);
+
   const table = useReactTable({
     data: pickedOrderItemsData,
     columns: orderItemsColumns,
