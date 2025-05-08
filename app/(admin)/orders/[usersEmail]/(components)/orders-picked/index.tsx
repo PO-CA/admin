@@ -155,6 +155,7 @@ export default function OrdersPicked({ usersEmail }: any) {
     isLoading: isUsersLoading,
     isSuccess: isUsersSuccess,
   } = useGetUsersDetailByUsersEmail(usersEmail);
+  console.log('pickedOrderItemsData in orders-picked', pickedOrderItemsData);
 
   return (
     <>
