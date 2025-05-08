@@ -27,7 +27,6 @@ export default function PrintPickingList({
 }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
-  console.log('data in printPickingList', data);
 
   const table = useReactTable({
     data: data.getSelectedRowModel().rows,
