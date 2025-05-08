@@ -51,13 +51,11 @@ export const printPickingListColumns: ColumnDef<any, any>[] = [
   {
     accessorFn: (row) => row.coordinates,
     id: 'coordinates',
-    cell: (info) => (
+    cell: ({ row }) => (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {info
-          .getValue()
-          ?.map((coordinate: any) => (
-            <div key={coordinate.id}>{coordinate.name}</div>
-          ))}
+        {row.original.original?.coordinates?.map((coordinate: any) => (
+          <div key={coordinate.id}>{coordinate.name}</div>
+        ))}
       </div>
     ),
     header: () => <span>좌표</span>,
