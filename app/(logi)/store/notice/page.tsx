@@ -8,6 +8,9 @@ export default function NoticePage() {
 
   if (isLoading) return <div style={{ padding: 32 }}>로딩중...</div>;
 
+  // visible이 true인 공지만 보여줌
+  const visibleNotices = notices?.filter((notice: any) => notice.visible);
+
   return (
     <div
       style={{
@@ -31,7 +34,7 @@ export default function NoticePage() {
         공지사항
       </h2>
       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-        {notices?.map((notice: any) => (
+        {visibleNotices?.map((notice: any) => (
           <li
             key={notice.id}
             style={{ borderBottom: '1px solid #f0f0f0', padding: '16px 0' }}
