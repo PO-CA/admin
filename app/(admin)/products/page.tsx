@@ -20,6 +20,8 @@ import ExcelUpload from './(components)/excelUpload';
 import TableLoader from '@/components/tableLoader';
 import ExcelDownload from './(components)/excelDownload';
 import ProductListDownload from './(components)/productListlDownload';
+import ExcelUploadForUpdate from './(components)/excelUploadForUpdate';
+import ExcelDownloadForUpdate from './(components)/excelDownloadForUpdate';
 
 export default function Products() {
   const {
@@ -71,6 +73,16 @@ export default function Products() {
         </div>
         <div>
           <ExcelDownload />
+        </div>
+      </div>
+      <div className={styles.titleContainer}>
+        대량 수정
+        <div style={{ display: 'flex' }}>
+          엑셀 업로드로 수정
+          <ExcelUploadForUpdate />
+        </div>
+        <div>
+          <ExcelDownloadForUpdate />
         </div>
       </div>
 

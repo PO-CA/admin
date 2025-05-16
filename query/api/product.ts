@@ -170,3 +170,41 @@ export const deleteAProduct = async (productId: number) => {
 
   return data;
 };
+
+export const creatProductsBulk = async (payload: ProductData[]) => {
+  const { data } = await requests(`${API_URL}/logi/products/bulk`, {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    data: payload,
+  });
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  alert('상품 벌크 생성을 성공했습니다');
+
+  return data;
+};
+
+export const updateProductsBulk = async (payload: any[]) => {
+  const { data } = await requests(`${API_URL}/logi/products/bulk-update`, {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    data: payload,
+  });
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  alert('상품 벌크 수정을 성공했습니다');
+
+  return data;
+};

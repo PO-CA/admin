@@ -9,6 +9,8 @@ import {
   getUsersAllProducts,
   getUsersAllProductsForAddOrder,
   updateAProduct,
+  creatProductsBulk,
+  updateProductsBulk,
 } from '../api/product';
 import { ProductData } from '@/types/productData';
 import { UpdateProductData } from '@/types/updateProductData';
@@ -106,5 +108,24 @@ export function useDeleteAProduct() {
     mutationFn: (productId: number) => deleteAProduct(productId),
 
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['products'] }),
+  });
+}
+
+export function useCreateProductsBulk() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: ProductData[]) => creatProductsBulk(payload),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['products'] }),
+  });
+}
+
+export function useUpdateProductsBulk(options?: any) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: any) => updateProductsBulk(payload),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['products'] }),
+    ...options,
   });
 }
