@@ -1,65 +1,60 @@
 'use client';
-import { useMemo, useState } from 'react';
-import styles from './page.module.css';
-import tableStyles from './table.module.css';
-import {
-  ColumnFiltersState,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
-import { noticeColumns } from './(components)/tableColumns/NoticeColumns';
-import TanTable, { fuzzyFilter } from '@/components/table';
-import { NOTICE_DATA } from '@/constants/NoticeData';
+import React from 'react';
+import { useGetNotices } from '@/query/query/notice';
+import Link from 'next/link';
 
-export default function Notice() {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [globalFilter, setGlobalFilter] = useState('');
+export default function NoticePage() {
+  const { data: notices, isLoading } = useGetNotices();
 
-  const noticeData = useMemo(() => NOTICE_DATA || [], []);
+  if (isLoading) return <div style={{ padding: 32 }}>로딩중...</div>;
 
-  const table = useReactTable({
-    data: noticeData,
-    columns: noticeColumns,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
-    initialState: {
-      pagination: { pageSize: 20, pageIndex: 0 },
-    },
-    state: {
-      columnFilters,
-      globalFilter,
-    },
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: fuzzyFilter,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: false,
-  });
   return (
-    <main className={styles.mainContainer}>
-      <div className={styles.subTitle}>공지사항</div>
-      <TanTable
-        table={table}
-        globalFilter={globalFilter}
-        setGlobalFilter={setGlobalFilter}
-        styles={tableStyles}
-        pagenation
-      />
-    </main>
+    <div
+      style={{
+        maxWidth: 600,
+        margin: '40px auto',
+        background: '#fff',
+        borderRadius: 8,
+        boxShadow: '0 2px 8px #eee',
+        padding: 32,
+      }}
+    >
+      <h2
+        style={{
+          fontSize: 28,
+          fontWeight: 700,
+          marginBottom: 24,
+          borderBottom: '1px solid #eee',
+          paddingBottom: 12,
+        }}
+      >
+        공지사항
+      </h2>
+      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+        {notices?.map((notice: any) => (
+          <li
+            key={notice.id}
+            style={{ borderBottom: '1px solid #f0f0f0', padding: '16px 0' }}
+          >
+            <Link
+              href={`/store/notice/${notice.id}`}
+              style={{
+                textDecoration: 'none',
+                color: '#222',
+                fontSize: 18,
+                fontWeight: 500,
+              }}
+            >
+              <b>{notice.title}</b>{' '}
+              {notice.visible ? (
+                ''
+              ) : (
+                <span style={{ color: '#aaa', fontSize: 14 }}>(숨김)</span>
+              )}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

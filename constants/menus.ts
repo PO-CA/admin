@@ -23,4 +23,11 @@ export const menus = [
     subMenus: [{ href: '/customers', text: '고객 목록' }],
     // href: '/customers',
   },
+  {
+    text: '공지사항',
+    subMenus: [
+      { href: '/notice', text: '공지사항 목록' },
+      { href: '/notice/create', text: '공지사항 추가' },
+    ],
+  },
 ];

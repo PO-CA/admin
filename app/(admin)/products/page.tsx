@@ -20,8 +20,8 @@ import ExcelUpload from './(components)/excelUpload';
 import TableLoader from '@/components/tableLoader';
 import ExcelDownload from './(components)/excelDownload';
 import ProductListDownload from './(components)/productListlDownload';
-import ExcelUploadForUpdate from './(components)/excelUploadForUpdate';
-import ExcelDownloadForUpdate from './(components)/excelDownloadForUpdate';
+import ExcelUploadForUpdate from './(components)/excelUploadForUpload';
+import ExcelDownloadForUpdate from './(components)/excelDownloadForupload';
 
 export default function Products() {
   const {
