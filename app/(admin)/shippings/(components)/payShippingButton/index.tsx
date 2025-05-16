@@ -3,18 +3,23 @@ import { useUpdateShipping } from '@/query/query/shippings';
 import React from 'react';
 
 export default function PayShippingButton({ info }: any) {
-  const { mutate: updateShippingItem } = useUpdateShipping();
+  const { mutate: updateShippingItem, isPending } = useUpdateShipping();
   if (info.row.original.shippingStatus === '결제완료') return null;
 
   return (
     <button
       type="button"
-      style={{ width: '40px' }}
+      disabled={isPending}
+      style={{
+        width: '40px',
+        backgroundColor: isPending ? 'lightgray' : 'gray',
+        color: 'white',
+      }}
       onClick={() => {
         updateShippingItem(info.row.original.id);
       }}
     >
-      결제
+      {isPending ? '결제중...' : '결제'}
     </button>
   );
 }

@@ -60,11 +60,11 @@ export function useGetSellsByInCharge() {
   });
 }
 
-export function useGetSellsWithMonth() {
+export function useGetSellsWithMonth(year: number) {
   return useQuery({
-    queryKey: ['stats', 'sells', 'month'],
+    queryKey: ['stats', 'sells', 'month', year],
     queryFn: async () => {
-      const data = await getSellsWithMonth();
+      const data = await getSellsWithMonth(year);
       return data;
     },
   });

@@ -46,10 +46,10 @@ export const getSellsByInCharge = async () => {
   return data;
 };
 
-export const getSellsWithMonth = async () => {
+export const getSellsWithMonth = async (year: number) => {
   const { data } = await requests({
     method: 'get',
-    url: `${API_URL}/logi/stats/total-month`,
+    url: `${API_URL}/logi/stats/total-month?year=${year}`,
   });
 
   return data;
