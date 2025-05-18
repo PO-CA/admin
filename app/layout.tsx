@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import ReactQueryProvider from './ReactQueryProvider';
+import { SnackbarProvider } from '@/providers/SnackbarProvider';
 
 export const metadata: Metadata = {
   title: 'HM Music',
@@ -15,8 +16,10 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ReactQueryProvider>
-          {children}
-          <div id="modal-root"></div>
+          <SnackbarProvider>
+            {children}
+            <div id="modal-root"></div>
+          </SnackbarProvider>
         </ReactQueryProvider>
       </body>
     </html>

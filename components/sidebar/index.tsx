@@ -23,11 +23,11 @@ import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useSnackbar } from '@/providers/SnackbarProvider';
 
 function Sidebar() {
+  const { showSnackbar } = useSnackbar();
   const { userEmail } = useAuth();
   const [openMenus, setOpenMenus] = React.useState<{ [key: string]: boolean }>(
     {},
@@ -42,11 +42,6 @@ function Sidebar() {
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
   const mediaRecorderRef = React.useRef<MediaRecorder | null>(null);
   const [openQrScanner, setOpenQrScanner] = React.useState(false);
-  const [snackbar, setSnackbar] = React.useState({
-    open: false,
-    message: '',
-    severity: 'info' as 'error' | 'info' | 'success' | 'warning',
-  });
   const [isRecording, setIsRecording] = React.useState(false);
   const [isPaused, setIsPaused] = React.useState(false);
   const [deviceSupportsCamera, setDeviceSupportsCamera] = React.useState(true);
@@ -68,17 +63,6 @@ function Sidebar() {
       showSnackbar('이 기기는 비디오 녹화를 지원하지 않습니다.', 'warning');
     }
   }, []);
-
-  const showSnackbar = (
-    message: string,
-    severity: 'error' | 'info' | 'success' | 'warning' = 'info',
-  ) => {
-    setSnackbar({ open: true, message, severity });
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
 
   // 디바이스에 적합한 비디오 MIME 타입 감지
   const getSupportedMimeType = (): string => {
@@ -673,38 +657,6 @@ function Sidebar() {
             <Button onClick={() => setOpenQrScanner(false)}>닫기</Button>
           </DialogActions>
         </Dialog>
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={3000}
-          onClose={handleCloseSnackbar}
-          disableWindowBlurListener={true}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          sx={{
-            zIndex: 99999,
-            position: 'fixed',
-            bottom: isMobile ? 10 : 24,
-            left: '50%',
-            transform: 'translateX(-50%)',
-          }}
-        >
-          <Alert
-            onClose={handleCloseSnackbar}
-            severity={snackbar.severity}
-            elevation={6}
-            variant="filled"
-            sx={{
-              width: '100%',
-              boxShadow: 3,
-              minWidth: '250px',
-              fontSize: '1rem',
-              '& .MuiAlert-icon': {
-                fontSize: '1.5rem',
-              },
-            }}
-          >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
       </Box>
     </Drawer>
   );
