@@ -677,11 +677,11 @@ function Sidebar() {
           open={snackbar.open}
           autoHideDuration={3000}
           onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           sx={{
-            zIndex: theme.zIndex.modal + 1,
+            zIndex: theme.zIndex.tooltip + 10,
             position: 'fixed',
-            top: isMobile ? 10 : 24,
+            bottom: isMobile ? 10 : 24,
             left: '50%',
             transform: 'translateX(-50%)',
           }}
