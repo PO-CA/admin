@@ -139,10 +139,21 @@ function Sidebar() {
         setRecordingState('inactive');
         setIsRecording(false);
         setIsPaused(false);
-        showSnackbar('촬영이 완료되었습니다', 'success');
 
-        // 디버깅 용도
-        console.log('녹화 종료됨, 비디오 크기:', blob.size, 'bytes');
+        // 파일 크기를 MB 단위로 계산
+        const fileSizeInBytes = blob.size;
+        const fileSizeInMB = (fileSizeInBytes / (1024 * 1024)).toFixed(2);
+
+        showSnackbar(
+          `촬영 완료: ${fileSizeInMB}MB 비디오가 생성되었습니다`,
+          'success',
+        );
+        console.log(
+          '녹화 종료됨, 비디오 크기:',
+          fileSizeInBytes,
+          'bytes',
+          `(${fileSizeInMB}MB)`,
+        );
       };
 
       // 일정 간격으로 데이터 수집 (더 안정적인 녹화를 위해)
@@ -196,6 +207,30 @@ function Sidebar() {
     }
   };
 
+  // iOS Safari 전체화면 후 모달로 돌아올 때 상태 재점검을 위한 함수
+  const handleModalFocus = () => {
+    // 녹화 상태 재점검
+    if (mediaRecorderRef.current) {
+      const state = mediaRecorderRef.current.state;
+      console.log('모달 포커스: 현재 MediaRecorder 상태:', state);
+
+      // 실제 상태와 UI 상태 동기화
+      if (state === 'recording' && !isRecording) {
+        setIsRecording(true);
+        setRecordingState('recording');
+        setIsPaused(false);
+      } else if (state === 'paused' && !isPaused) {
+        setIsRecording(true);
+        setRecordingState('paused');
+        setIsPaused(true);
+      } else if (state === 'inactive' && isRecording) {
+        setIsRecording(false);
+        setRecordingState('inactive');
+        setIsPaused(false);
+      }
+    }
+  };
+
   const uploadRecording = async () => {
     try {
       if (!videoBlob) {
@@ -208,8 +243,17 @@ function Sidebar() {
         return;
       }
 
-      showSnackbar('비디오를 업로드하는 중...', 'info');
-      console.log('업로드 시작, 비디오 크기:', videoBlob.size, 'bytes');
+      // 파일 크기 표시
+      const fileSizeInBytes = videoBlob.size;
+      const fileSizeInMB = (fileSizeInBytes / (1024 * 1024)).toFixed(2);
+
+      showSnackbar(`${fileSizeInMB}MB 비디오 업로드 중...`, 'info');
+      console.log(
+        '업로드 시작, 비디오 크기:',
+        fileSizeInBytes,
+        'bytes',
+        `(${fileSizeInMB}MB)`,
+      );
 
       // Presigned URL 요청
       const presignRes = await fetch('/api/shipping-videos/presign', {
@@ -397,6 +441,10 @@ function Sidebar() {
           }}
           fullWidth
           maxWidth="sm"
+          onFocus={handleModalFocus}
+          TransitionProps={{
+            onEntered: handleModalFocus,
+          }}
         >
           <DialogTitle>배송 ID 입력 또는 스캔</DialogTitle>
           <DialogContent>
@@ -445,6 +493,7 @@ function Sidebar() {
                 onClick={pauseRecording}
                 disabled={!isRecording || recordingState !== 'recording'}
                 color="primary"
+                sx={{ minWidth: '100px' }}
               >
                 일시정지
               </Button>
