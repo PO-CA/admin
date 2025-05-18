@@ -1,64 +1,75 @@
 'use client';
-import { ColumnDef } from '@tanstack/react-table';
 import Image from 'next/image';
 import React from 'react';
+import { GridColDef } from '@mui/x-data-grid';
 
-export const printPickingListColumns: ColumnDef<any, any>[] = [
+export const printPickingListColumns: GridColDef[] = [
   {
-    accessorFn: (row) => row.thumbNailUrl,
-    id: 'thumbNailUrl',
-    cell: ({ row }) => (
+    field: 'thumbNailUrl',
+    headerName: '썸네일',
+    width: 100,
+    sortable: false,
+    filterable: false,
+    renderCell: (params: any) => (
       <div>
         <Image
-          alt="asd"
+          alt="상품 이미지"
           unoptimized={true}
-          src={row.original.original.thumbNailUrl}
+          src={params.row.original.thumbNailUrl}
           width={50}
           height={50}
+          style={{ objectFit: 'contain' }}
         />
       </div>
     ),
-    header: () => <span>썸네일</span>,
-    footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.barcode,
-    id: 'barcode',
-    cell: ({ row }) => (
+    field: 'barcode',
+    headerName: '바코드/sku',
+    flex: 1,
+    sortable: false,
+    filterable: false,
+    renderCell: (params: any) => (
       <div>
-        <div>{row.original.original.barcode}</div>
-        <div>{row.original.original.sku}</div>
+        <div>{params.row.original.barcode}</div>
+        <div style={{ fontSize: '0.8rem', color: '#666' }}>
+          {params.row.original.sku}
+        </div>
       </div>
     ),
-    header: () => <span>바코드/sku</span>,
-    footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.title,
-    id: 'title',
-    cell: ({ row }) => row.original.original.title,
-    header: () => <span>제목</span>,
-    footer: (props) => props.column.id,
-  },
-
-  {
-    accessorFn: (row) => row.qty,
-    id: 'qty',
-    cell: ({ row }) => row.original.original.qty,
-    header: () => <span>수량</span>,
-    footer: (props) => props.column.id,
+    field: 'title',
+    headerName: '제목',
+    flex: 2,
+    sortable: false,
+    filterable: false,
+    renderCell: (params: any) => params.row.original.title,
   },
   {
-    accessorFn: (row) => row.coordinates,
-    id: 'coordinates',
-    cell: ({ row }) => (
+    field: 'qty',
+    headerName: '수량',
+    width: 70,
+    sortable: false,
+    filterable: false,
+    align: 'center',
+    headerAlign: 'center',
+    renderCell: (params: any) => params.row.original.qty,
+  },
+  {
+    field: 'coordinates',
+    headerName: '좌표',
+    flex: 1,
+    sortable: false,
+    filterable: false,
+    renderCell: (params: any) => (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {row.original.original?.coordinates?.map((coordinate: any) => (
-          <div key={coordinate.id}>{coordinate.name}</div>
+        {params.row.original?.coordinates?.map((coordinate: any) => (
+          <div key={coordinate.id} style={{ padding: '2px 0' }}>
+            {coordinate.name}
+          </div>
         ))}
       </div>
     ),
-    header: () => <span>좌표</span>,
-    footer: (props) => props.column.id,
   },
 ];

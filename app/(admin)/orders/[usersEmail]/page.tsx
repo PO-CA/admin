@@ -104,7 +104,7 @@ export default function OrdersByUsersId({
             p: 2,
           }}
         >
-          {/* <OrdersPicked usersEmail={usersEmail} /> */}
+          <OrdersPicked usersEmail={usersEmail} />
         </Paper>
       </Box>
 

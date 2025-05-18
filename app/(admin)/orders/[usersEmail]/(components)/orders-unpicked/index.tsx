@@ -28,7 +28,6 @@ export default function OrdersUnpicked({ usersEmail }: any) {
     id: row.id || idx,
     ...row,
   }));
-  console.log('selectedRows', selectedRows);
 
   const handlePickOrders = () => {
     if (selectedRows.length > 0) {
@@ -99,7 +98,6 @@ export default function OrdersUnpicked({ usersEmail }: any) {
             }
           }
 
-          console.log('처리된 selectedIds', selectedIds);
           setSelectedRows(selectedIds);
         }}
         loading={isUnpickedOrderItemsLoading}

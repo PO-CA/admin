@@ -1,32 +1,30 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { orderItemsColumns } from '../tableColumns/orderItemsColumns';
-import {
-  ColumnFiltersState,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
-import { useState } from 'react';
-import TanTable, { fuzzyFilter } from '@/components/table';
-import styles from './index.module.css';
-import tableStyles from './table.module.css';
 import {
   useGetAllPickedOrderByUsersEmail,
   usePutToCancelOrderItem,
   usePutToUnPickOrderItem,
 } from '@/query/query/orders';
 import { useGetAddressByUsersEmail } from '@/query/query/address';
-import { SubmitHandler, useForm } from 'react-hook-form';
 import { CreateShippingDTO } from '@/types/createShippingDTO';
 import { useCreateShipping } from '@/query/query/shippings';
 import PrintPickingList from './(components)/printPickingList';
 import { useGetUsersDetailByUsersEmail } from '@/query/query/users';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import { DataGrid } from '@mui/x-data-grid';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+
+// shippingType 타입 정의
+type ShippingType = '택배' | '퀵' | '기타';
 
 export default function OrdersPicked({ usersEmail }: any) {
   const {
@@ -34,59 +32,22 @@ export default function OrdersPicked({ usersEmail }: any) {
     isLoading: isPickedOrderItemsLoading,
     isSuccess: isPickedOrderItemsSuccess,
   } = useGetAllPickedOrderByUsersEmail(usersEmail);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [globalFilter, setGlobalFilter] = useState('');
 
-  const table = useReactTable({
-    data: pickedOrderItemsData,
-    columns: orderItemsColumns,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
-    initialState: {
-      pagination: { pageSize: 20, pageIndex: 0 },
-    },
-    state: {
-      columnFilters,
-      globalFilter,
-    },
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: fuzzyFilter,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: false,
-  });
+  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  console.log('selectedRows', selectedRows);
 
-  const [selectedRowIds, setSelectedRowIds] = useState([]);
+  const {
+    mutateAsync: putToUnPickOrderItem,
+    isPending: isPutToUnPickOrderItemPending,
+  } = usePutToUnPickOrderItem();
 
-  let selectedRows: any = null;
-  if (!isPickedOrderItemsLoading && isPickedOrderItemsSuccess) {
-    selectedRows = table.getSelectedRowModel().rows;
-  }
+  const { mutateAsync: cancelOrderItem, isPending: isCancelOrderItemPending } =
+    usePutToCancelOrderItem();
 
-  useEffect(() => {
-    if (selectedRows !== null) {
-      if (!isPickedOrderItemsLoading && isPickedOrderItemsSuccess) {
-        setSelectedRowIds(selectedRows.map((row: any) => row.original.id));
-      }
-    }
-  }, [
-    table,
-    isPickedOrderItemsLoading,
-    isPickedOrderItemsSuccess,
-    selectedRows,
-  ]);
-
-  const { mutateAsync: putToUnPickOrderItem } = usePutToUnPickOrderItem();
-  const { mutateAsync: cancelOrderItem } = usePutToCancelOrderItem();
+  const rows = (pickedOrderItemsData || []).map((row: any, idx: number) => ({
+    id: row.id || idx,
+    ...row,
+  }));
 
   const {
     data: addressData,
@@ -94,44 +55,80 @@ export default function OrdersPicked({ usersEmail }: any) {
     isSuccess: isAddressSuccess,
   } = useGetAddressByUsersEmail(usersEmail);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    getFieldState,
-    getValues,
-    formState: { errors },
-  } = useForm<CreateShippingDTO>({
-    mode: 'onChange',
-    defaultValues: {
-      shippingFee: 0,
-    },
+  // Controlled 폼 상태
+  const [formState, setFormState] = useState({
+    shippingType: '택배' as ShippingType,
+    trackingNumber: '',
+    shippingFee: 0,
+    memo: '',
   });
 
-  const { mutateAsync: createShipping } = useCreateShipping();
+  // 폼 입력 핸들러
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormState((prev) => ({
+      ...prev,
+      [name]: name === 'shippingFee' ? Number(value) : value,
+    }));
+  };
+
+  // Select 핸들러
+  const handleSelectChange = (
+    e: React.ChangeEvent<{ name?: string; value: unknown }>,
+  ) => {
+    const name = e.target.name as string;
+    const value = e.target.value;
+    setFormState((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const { mutateAsync: createShipping, isPending: isCreateShippingPending } =
+    useCreateShipping();
 
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
 
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleAddressChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
     setSelectedOption(Number(event.target.value));
   };
 
-  const onSubmit: SubmitHandler<CreateShippingDTO> = (data) => {
-    if (selectedRowIds.length < 1)
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (selectedRows.length < 1) {
       return alert('배송처리할 주문을 선택해 주세요');
-    if (Number(data.shippingFee) < 0)
+    }
+
+    if (Number(formState.shippingFee) < 0) {
       return alert('올바른 배송비를 작성해 주세요.');
-    data.usersEmail = usersEmail.replace('%40', '@');
-    data.orderItemsIds = selectedRowIds;
-    data.addressId = selectedOption;
+    }
+
+    if (!selectedOption) {
+      return alert('배송지를 선택해주세요.');
+    }
+
+    const data: CreateShippingDTO = {
+      ...formState,
+      usersEmail: usersEmail.replace('%40', '@'),
+      orderItemsIds: selectedRows,
+      addressId: selectedOption,
+    };
 
     createShipping(data);
-    reset({
+
+    // 폼 초기화
+    setFormState({
+      shippingType: '택배' as ShippingType,
+      trackingNumber: '',
       shippingFee: 0,
       memo: '',
-      trackingNumber: '',
     });
-    setSelectedRowIds([]);
+    setSelectedRows([]);
   };
 
   const [selectedAddress, setSelectedAddress] = useState<any>({
@@ -157,120 +154,280 @@ export default function OrdersPicked({ usersEmail }: any) {
   } = useGetUsersDetailByUsersEmail(usersEmail);
 
   return (
-    <>
-      <div className={styles.buttons}>
+    <Box sx={{ width: '100%' }}>
+      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
         {!isPickedOrderItemsLoading &&
           isPickedOrderItemsSuccess &&
           !isUsersLoading &&
           isUsersSuccess && (
-            <PrintPickingList table={table} usersData={usersData} />
+            <PrintPickingList
+              table={{
+                getSelectedRowModel: () => ({
+                  rows: selectedRows.map((id) => ({
+                    original: rows.find((row: any) => row.id === id),
+                  })),
+                }),
+              }}
+              usersData={usersData}
+            />
           )}
-        <button
-          type="button"
+
+        <Button
+          variant="contained"
+          color="primary"
           onClick={() => {
-            if (selectedRowIds.length > 0) {
-              putToUnPickOrderItem(selectedRowIds);
+            if (selectedRows.length > 0) {
+              putToUnPickOrderItem(selectedRows);
             } else {
               alert('포장 해제할 주문을 선택해 주세요');
             }
           }}
+          disabled={isPutToUnPickOrderItemPending}
+          size="small"
         >
-          포장 해제
-        </button>
-        <button
-          type="button"
+          {isPutToUnPickOrderItemPending ? '처리 중...' : '포장 해제'}
+        </Button>
+
+        <Button
+          variant="contained"
+          color="error"
           onClick={() => {
-            if (selectedRowIds.length > 0) {
-              cancelOrderItem(selectedRowIds);
+            if (selectedRows.length > 0) {
+              cancelOrderItem(selectedRows);
             } else {
               alert('취소할 주문을 선택해 주세요');
             }
           }}
+          disabled={isCancelOrderItemPending}
+          size="small"
         >
-          주문 삭제
-        </button>{' '}
-      </div>
-      {!isPickedOrderItemsLoading && isPickedOrderItemsSuccess && (
-        <TanTable
-          table={table}
-          globalFilter={globalFilter}
-          setGlobalFilter={setGlobalFilter}
-          styles={tableStyles}
-          sort
-          search
-          filter
-          pagenation
-        />
-      )}
+          {isCancelOrderItemPending ? '처리 중...' : '주문 삭제'}
+        </Button>
+      </Stack>
 
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-        <div className={styles.subTitle}>주문처리</div>
+      <DataGrid
+        sx={{
+          height: 'auto',
+          background: 'white',
+          fontSize: 14,
+          mb: 4,
+          '& .MuiDataGrid-row.Mui-selected': {
+            backgroundColor: 'rgba(25, 118, 210, 0.08)',
+          },
+        }}
+        rows={rows}
+        columns={orderItemsColumns}
+        pageSizeOptions={[20, 50, 100]}
+        checkboxSelection
+        onRowSelectionModelChange={(newSelectionModel) => {
+          // 새로운 처리 방식
+          let selectedIds: number[] = [];
+          if (Array.isArray(newSelectionModel)) {
+            selectedIds = newSelectionModel.map((id) =>
+              typeof id === 'string' ? parseInt(id, 10) : Number(id),
+            );
+          } else if (
+            newSelectionModel &&
+            typeof newSelectionModel === 'object'
+          ) {
+            if (newSelectionModel.ids && newSelectionModel.ids instanceof Set) {
+              selectedIds = Array.from(newSelectionModel.ids).map((id) =>
+                typeof id === 'string' ? parseInt(id, 10) : Number(id),
+              );
+            }
+          }
 
-        <div style={{ display: 'flex' }}>
-          {!isPickedOrderItemsLoading && isPickedOrderItemsSuccess && (
-            <div>총 {table.getSelectedRowModel().rows.length} 개</div>
-          )}
-          <div>
-            <div>배송방법</div>
-            <select {...register('shippingType')}>
-              <option value="택배">택배</option>
-              <option value="퀵">퀵</option>
-            </select>
-          </div>
-          <div>
-            <div>송장번호</div>
-            <input {...register('trackingNumber')} />
-          </div>
-          <div>
-            <div>배송지</div>
-            {!isAddressLoading &&
-              isAddressSuccess &&
-              addressData &&
-              addressData.length > 0 && (
-                <select id="address" onChange={handleSelectChange}>
-                  <option defaultChecked>배송지를 선택해주세요</option>
-                  {addressData.map((address: any) => (
-                    <option key={address.id} value={address.id}>
-                      {address.addressName}
-                    </option>
-                  ))}
-                </select>
-              )}
-          </div>
-          <div>
-            <div style={{ display: 'flex' }}>
-              <div>배송지 : </div>
-              <div>{selectedAddress?.addressName}</div>
-            </div>
-            <div style={{ display: 'flex' }}>
-              <div>주소 : </div>
-              <div>{selectedAddress?.city}</div>
-            </div>
-            <div style={{ display: 'flex' }}>
-              <div>상세주소 : </div>
-              <div>{selectedAddress?.state}</div>
-            </div>
-            <div style={{ display: 'flex' }}>
-              <div>우편번호 : </div>
-              <div>{selectedAddress?.zipcode}</div>
-            </div>
-            <div style={{ display: 'flex' }}>
-              <div>수령인 : </div>
-              <div>{selectedAddress?.receiverName}</div>
-            </div>
-            <div style={{ display: 'flex' }}>
-              <div>번호 : </div>
-              <div>{selectedAddress?.receiverPhoneNumber}</div>
-            </div>
-          </div>
-          <div>
-            <div>배송비</div>{' '}
-            <input type="number" {...register('shippingFee')} />
-          </div>
-        </div>
+          setSelectedRows(selectedIds);
+        }}
+        loading={isPickedOrderItemsLoading}
+        disableRowSelectionOnClick={false}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 20 },
+          },
+        }}
+      />
 
-        <button type="submit">주문 처리</button>
-      </form>
-    </>
+      <Paper
+        component="form"
+        onSubmit={handleSubmit}
+        elevation={0}
+        sx={{
+          p: 3,
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 1,
+        }}
+      >
+        <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 500 }}>
+          주문처리
+        </Typography>
+
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+          <Box sx={{ flexBasis: '15%', minWidth: '150px' }}>
+            <Typography variant="body2" sx={{ mb: 1 }}>
+              총 {selectedRows.length} 개
+            </Typography>
+          </Box>
+
+          <Box sx={{ flexBasis: '15%', minWidth: '150px' }}>
+            <FormControl fullWidth size="small">
+              <InputLabel>배송방법</InputLabel>
+              <Select
+                name="shippingType"
+                label="배송방법"
+                value={formState.shippingType}
+                onChange={handleSelectChange as any}
+              >
+                <MenuItem value="택배">택배</MenuItem>
+                <MenuItem value="퀵">퀵</MenuItem>
+                <MenuItem value="기타">기타</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box sx={{ flexBasis: '15%', minWidth: '150px' }}>
+            <TextField
+              fullWidth
+              label="송장번호"
+              name="trackingNumber"
+              value={formState.trackingNumber}
+              onChange={handleInputChange}
+              size="small"
+            />
+          </Box>
+
+          <Box sx={{ flexBasis: '15%', minWidth: '150px' }}>
+            <FormControl fullWidth size="small">
+              <InputLabel>배송지</InputLabel>
+              {!isAddressLoading &&
+                isAddressSuccess &&
+                addressData &&
+                addressData.length > 0 && (
+                  <Select
+                    label="배송지"
+                    onChange={handleAddressChange as any}
+                    value={selectedOption || ''}
+                  >
+                    <MenuItem value="" disabled>
+                      배송지를 선택해주세요
+                    </MenuItem>
+                    {addressData.map((address: any) => (
+                      <MenuItem key={address.id} value={address.id}>
+                        {address.addressName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+            </FormControl>
+          </Box>
+
+          <Box sx={{ flexBasis: '15%', minWidth: '150px' }}>
+            <TextField
+              fullWidth
+              label="배송비"
+              type="number"
+              name="shippingFee"
+              value={formState.shippingFee}
+              onChange={handleInputChange}
+              size="small"
+            />
+          </Box>
+
+          <Box sx={{ flexBasis: '15%', minWidth: '150px' }}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              disabled={isCreateShippingPending}
+            >
+              {isCreateShippingPending ? '처리 중...' : '주문 처리'}
+            </Button>
+          </Box>
+        </Box>
+
+        {selectedOption && (
+          <Paper
+            elevation={0}
+            sx={{
+              mt: 2,
+              p: 2,
+              bgcolor: 'rgba(0, 0, 0, 0.02)',
+              border: '1px solid',
+              borderColor: 'divider',
+            }}
+          >
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+              <Box sx={{ flexBasis: '30%', minWidth: '200px' }}>
+                <Stack direction="row" spacing={1}>
+                  <Typography variant="body2" fontWeight={500}>
+                    배송지:
+                  </Typography>
+                  <Typography variant="body2">
+                    {selectedAddress?.addressName}
+                  </Typography>
+                </Stack>
+              </Box>
+
+              <Box sx={{ flexBasis: '30%', minWidth: '200px' }}>
+                <Stack direction="row" spacing={1}>
+                  <Typography variant="body2" fontWeight={500}>
+                    주소:
+                  </Typography>
+                  <Typography variant="body2">
+                    {selectedAddress?.city}
+                  </Typography>
+                </Stack>
+              </Box>
+
+              <Box sx={{ flexBasis: '30%', minWidth: '200px' }}>
+                <Stack direction="row" spacing={1}>
+                  <Typography variant="body2" fontWeight={500}>
+                    상세주소:
+                  </Typography>
+                  <Typography variant="body2">
+                    {selectedAddress?.state}
+                  </Typography>
+                </Stack>
+              </Box>
+
+              <Box sx={{ flexBasis: '30%', minWidth: '200px' }}>
+                <Stack direction="row" spacing={1}>
+                  <Typography variant="body2" fontWeight={500}>
+                    우편번호:
+                  </Typography>
+                  <Typography variant="body2">
+                    {selectedAddress?.zipcode}
+                  </Typography>
+                </Stack>
+              </Box>
+
+              <Box sx={{ flexBasis: '30%', minWidth: '200px' }}>
+                <Stack direction="row" spacing={1}>
+                  <Typography variant="body2" fontWeight={500}>
+                    수령인:
+                  </Typography>
+                  <Typography variant="body2">
+                    {selectedAddress?.receiverName}
+                  </Typography>
+                </Stack>
+              </Box>
+
+              <Box sx={{ flexBasis: '30%', minWidth: '200px' }}>
+                <Stack direction="row" spacing={1}>
+                  <Typography variant="body2" fontWeight={500}>
+                    번호:
+                  </Typography>
+                  <Typography variant="body2">
+                    {selectedAddress?.receiverPhoneNumber}
+                  </Typography>
+                </Stack>
+              </Box>
+            </Box>
+          </Paper>
+        )}
+      </Paper>
+    </Box>
   );
 }
