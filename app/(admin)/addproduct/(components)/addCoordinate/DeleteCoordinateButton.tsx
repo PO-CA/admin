@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 
 export default function DeleteCoordinateButton({ row }: any) {
   const { mutateAsync: deleteACoordinate, isPending } = useDeleteACoordinate();
-  let coordinateId;
+  let coordinateId: number;
   if (row.original) {
     coordinateId = row.original.id;
   } else {
