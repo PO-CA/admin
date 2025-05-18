@@ -4,131 +4,114 @@ import {
   usePutToCancelOrderItem,
   usePutToPickOrderItem,
 } from '@/query/query/orders';
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { orderItemsColumns } from '../tableColumns/orderItemsColumns';
-import {
-  ColumnFiltersState,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
-import { useState } from 'react';
-import TanTable, { fuzzyFilter } from '@/components/table';
-import tableStyles from './table.module.css';
-import styles from './index.module.css';
-import TableLoader from '@/components/tableLoader';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 export default function OrdersUnpicked({ usersEmail }: any) {
   const {
     data: unpickedOrderItemsData,
     isLoading: isUnpickedOrderItemsLoading,
-    isSuccess: isUnpickedOrderItemsSuccess,
   } = useGetAllUnpickedOrderByusersEmail(usersEmail);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [globalFilter, setGlobalFilter] = useState('');
 
-  const table = useReactTable({
-    data: unpickedOrderItemsData,
-    columns: orderItemsColumns,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
-    initialState: {
-      pagination: { pageSize: 20, pageIndex: 0 },
-    },
-    state: {
-      columnFilters,
-      globalFilter,
-    },
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: fuzzyFilter,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: false,
-  });
+  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  const {
+    mutateAsync: putToPickOrderItem,
+    isPending: isPutToPickOrderItemPending,
+  } = usePutToPickOrderItem();
+  const { mutateAsync: cancelOrderItem, isPending: isCancelOrderItemPending } =
+    usePutToCancelOrderItem();
 
-  const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
+  const rows = (unpickedOrderItemsData || []).map((row: any, idx: number) => ({
+    id: row.id || idx,
+    ...row,
+  }));
 
-  let selectedRows: any = null;
-  if (!isUnpickedOrderItemsLoading && isUnpickedOrderItemsSuccess) {
-    selectedRows = table.getSelectedRowModel().rows;
-  }
-
-  useEffect(() => {
-    if (selectedRows !== null) {
-      if (!isUnpickedOrderItemsLoading && isUnpickedOrderItemsSuccess) {
-        setSelectedRowIds(selectedRows.map((row: any) => row.original.id));
-      }
+  const handlePickOrders = () => {
+    if (selectedRows.length > 0) {
+      putToPickOrderItem(selectedRows);
+    } else {
+      alert('포장 처리할 주문을 선택해 주세요');
     }
-  }, [
-    table,
-    isUnpickedOrderItemsLoading,
-    isUnpickedOrderItemsSuccess,
-    selectedRows,
-  ]);
+  };
 
-  const { mutateAsync: putToPickOrderItem } = usePutToPickOrderItem();
-  const { mutateAsync: cancelOrderItem } = usePutToCancelOrderItem();
-
-  if (isUnpickedOrderItemsLoading) {
-    return <TableLoader />;
-  }
-
-  if (!isUnpickedOrderItemsSuccess) {
-    return <div>Failed to load</div>;
-  }
+  const handleCancelOrders = () => {
+    if (selectedRows.length > 0) {
+      cancelOrderItem(selectedRows);
+    } else {
+      alert('취소할 주문을 선택해 주세요');
+    }
+  };
 
   return (
-    <>
-      <div className={styles.buttons}>
-        <button
-          type="button"
-          onClick={() => {
-            if (selectedRowIds.length > 0) {
-              putToPickOrderItem(selectedRowIds);
-            } else {
-              alert('포장 처리할 주문을 선택해 주세요');
-            }
-          }}
+    <Box sx={{ width: '100%' }}>
+      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handlePickOrders}
+          size="small"
+          disabled={isPutToPickOrderItemPending}
         >
-          포장 처리
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            if (selectedRowIds.length > 0) {
-              cancelOrderItem(selectedRowIds);
-            } else {
-              alert('취소할 주문을 선택해 주세요');
-            }
-          }}
+          {isPutToPickOrderItemPending ? '포장 처리중...' : '포장 처리'}
+        </Button>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={handleCancelOrders}
+          size="small"
+          disabled={isCancelOrderItemPending}
         >
-          주문 삭제
-        </button>
-      </div>
-      <TanTable
-        table={table}
-        globalFilter={globalFilter}
-        setGlobalFilter={setGlobalFilter}
-        styles={tableStyles}
-        sort
-        search
-        filter
-        pagenation
+          {isCancelOrderItemPending ? '주문 삭제중...' : '주문 삭제'}
+        </Button>
+      </Stack>
+
+      <DataGrid
+        sx={{
+          height: 'auto',
+          background: 'white',
+          fontSize: 14,
+          '& .MuiDataGrid-row.Mui-selected': {
+            backgroundColor: 'rgba(25, 118, 210, 0.08)',
+          },
+        }}
+        rows={rows}
+        columns={orderItemsColumns as GridColDef[]}
+        pageSizeOptions={[20, 50, 100]}
+        rowHeight={100}
+        checkboxSelection
+        showToolbar
+        onRowSelectionModelChange={(newSelectionModel) => {
+          let selectedIds: number[] = [];
+
+          if (Array.isArray(newSelectionModel)) {
+            selectedIds = newSelectionModel.map((id) =>
+              typeof id === 'string' ? parseInt(id, 10) : Number(id),
+            );
+          } else if (
+            newSelectionModel &&
+            typeof newSelectionModel === 'object'
+          ) {
+            if (newSelectionModel.ids && newSelectionModel.ids instanceof Set) {
+              selectedIds = Array.from(newSelectionModel.ids).map((id) =>
+                typeof id === 'string' ? parseInt(id, 10) : Number(id),
+              );
+            }
+          }
+
+          setSelectedRows(selectedIds);
+        }}
+        loading={isUnpickedOrderItemsLoading}
+        disableRowSelectionOnClick={false}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 20 },
+          },
+        }}
       />
-    </>
+    </Box>
   );
 }

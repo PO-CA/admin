@@ -1,18 +1,23 @@
 'use client';
 import { useCreateAProduct, useGetAProduct } from '@/query/query/products';
-import styles from './page.module.css';
 import useInput from '@/hooks/useInput';
 import { useEffect, useState } from 'react';
 import ProductInput from '@/components/productInput';
 import CategorySelect from '../../../addproduct/(components)/addCategory/CategorySelect';
 import DeleteCategory from '../../../addproduct/(components)/addCategory/DeleteCategory';
 import AddCategory from '../../../addproduct/(components)/addCategory/AddCategory';
-import CoordinateSelect from '../../../addproduct/(components)/addCoordinate/CoordinateSelect';
+import { CoordinateSelectEdit } from '../../../addproduct/(components)/addCoordinate/CoordinateSelect';
 import AddCoordinate from '../../../addproduct/(components)/addCoordinate/AddCoordinate';
 import { ProductData } from '@/types/productData';
 import { coordinatesColumns } from '@/app/(admin)/addproduct/(components)/addCoordinate/coordinatesColumns';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import { SelectChangeEvent } from '@mui/material/Select';
 
-export default function ProductDetail({
+export default function ProductCopy({
   params,
 }: {
   params: { productId: string };
@@ -27,7 +32,7 @@ export default function ProductDetail({
 
   const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
 
-  const { mutateAsync: createAProduct } = useCreateAProduct();
+  const { mutateAsync: createAProduct, isPending } = useCreateAProduct();
 
   const {
     value: productInputData,
@@ -113,40 +118,92 @@ export default function ProductDetail({
   if (!isProductSuccess) return <div>fail</div>;
 
   return (
-    <main className={styles.productDetailContainer}>
-      <div className={styles.addProductTitle}>상품-복사 등록</div>
-      <form onSubmit={onSubmit}>
-        <button type="submit" className={styles.addProductBtn}>
-          상품 복사
-        </button>
-        <div style={{ marginTop: '10px' }}>
-          <label style={{ marginLeft: '20px', fontSize: '25px' }}>
-            상품번호
-          </label>
-          <input
-            style={{ marginLeft: '20px', fontSize: '25px' }}
-            value={productId}
-            disabled
-          />
-        </div>
-        <div className={styles.categoryContainer}>
-          <div style={{ display: 'flex' }}>
-            <CategorySelect onChange={onChange} />
-            <DeleteCategory categoryId={Number(productData.categoryId)} />
-          </div>
-          <AddCategory />
-        </div>
-
-        <div className={styles.tableContainer}>
-          <CoordinateSelect
-            coordinatesColumns={coordinatesColumns}
-            setSelectedRowIds={setSelectedRowIds}
-          />
-          <AddCoordinate />
-        </div>
-
-        <ProductInput addProductData={productInputData} onChange={onChange} />
-      </form>
-    </main>
+    <Box sx={{ p: 3 }}>
+      <Typography
+        variant="h6"
+        sx={{
+          background: 'white',
+          p: 2,
+          fontWeight: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          mb: 2,
+          fontSize: 18,
+        }}
+      >
+        상품-복사 등록
+      </Typography>
+      <Paper
+        sx={{
+          background: 'white',
+          p: 2,
+          mb: 2,
+          border: '1px solid',
+          borderColor: 'divider',
+        }}
+      >
+        <form onSubmit={onSubmit}>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{ mb: 2, fontWeight: 600, borderRadius: 2 }}
+            disabled={isPending}
+          >
+            {isPending ? '복사중...' : '상품 복사'}
+          </Button>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+            <Typography sx={{ minWidth: 80, fontWeight: 600 }}>
+              상품번호
+            </Typography>
+            <TextField
+              value={productId}
+              size="small"
+              disabled
+              sx={{ minWidth: 120 }}
+            />
+          </Box>
+          <Paper
+            sx={{
+              background: 'white',
+              p: 2,
+              mb: 2,
+              border: '1px solid',
+              borderColor: 'divider',
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+              <CategorySelect
+                onChange={(e: SelectChangeEvent) => {
+                  onChange({
+                    target: {
+                      name: e.target.name || 'categoryId',
+                      value: e.target.value,
+                    },
+                  } as any);
+                }}
+              />
+              <DeleteCategory categoryId={Number(productData.categoryId)} />
+            </Box>
+            <AddCategory />
+          </Paper>
+          <Paper
+            sx={{
+              background: 'white',
+              p: 2,
+              mb: 2,
+              border: '1px solid',
+              borderColor: 'divider',
+            }}
+          >
+            <CoordinateSelectEdit
+              columns={coordinatesColumns}
+              productData={productData}
+            />
+            <AddCoordinate />
+          </Paper>
+          <ProductInput addProductData={productInputData} onChange={onChange} />
+        </form>
+      </Paper>
+    </Box>
   );
 }

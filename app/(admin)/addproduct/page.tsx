@@ -1,5 +1,4 @@
 'use client';
-import styles from './page.module.css';
 import AddCategory from './(components)/addCategory/AddCategory';
 import useInput from '@/hooks/useInput';
 import CategorySelect from './(components)/addCategory/CategorySelect';
@@ -7,10 +6,15 @@ import { ProductData } from '@/types/productData';
 import ProductInput from '@/components/productInput';
 import { useCreateAProduct } from '@/query/query/products';
 import AddCoordinate from './(components)/addCoordinate/AddCoordinate';
-import CoordinateSelect from './(components)/addCoordinate/CoordinateSelect';
+import { CoordinateSelectRegister } from './(components)/addCoordinate/CoordinateSelect';
 import { useState } from 'react';
 import DeleteCategory from './(components)/addCategory/DeleteCategory';
 import { coordinatesColumns } from './(components)/addCoordinate/coordinatesColumns';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import type { SelectChangeEvent } from '@mui/material/Select';
 
 export default function AddProduct() {
   const {
@@ -40,9 +44,7 @@ export default function AddProduct() {
     coordinateIds: [],
   });
   const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
-
-  const { mutateAsync: createAProduct } = useCreateAProduct();
-
+  const { mutateAsync: createAProduct, isPending } = useCreateAProduct();
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     addProductData.coordinateIds = selectedRowIds;
@@ -68,31 +70,81 @@ export default function AddProduct() {
   };
 
   return (
-    <main className={styles.addProductContainer}>
-      <div className={styles.addProductTitle}>상품-등록</div>
-      <section>
+    <Box sx={{ p: 3 }}>
+      <Typography
+        variant="h6"
+        sx={{
+          background: 'white',
+          p: 2,
+          fontWeight: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          mb: 2,
+          fontSize: 18,
+        }}
+      >
+        상품-등록
+      </Typography>
+      <Paper
+        sx={{
+          background: 'white',
+          p: 2,
+          mb: 2,
+          border: '1px solid',
+          borderColor: 'divider',
+        }}
+      >
         <form onSubmit={onSubmit}>
-          <button type="submit" className={styles.addProductBtn}>
-            상품추가
-          </button>
-          <div className={styles.categoryContainer}>
-            <div style={{ display: 'flex' }}>
-              <CategorySelect onChange={onChange} />
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{ mb: 2, fontWeight: 600, borderRadius: 2 }}
+            disabled={isPending}
+          >
+            {isPending ? '추가중...' : '상품추가'}
+          </Button>
+          <Paper
+            sx={{
+              background: 'white',
+              p: 2,
+              mb: 2,
+              border: '1px solid',
+              borderColor: 'divider',
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+              <CategorySelect
+                onChange={(e: SelectChangeEvent) => {
+                  onChange({
+                    target: {
+                      name: e.target.name || 'categoryId',
+                      value: e.target.value,
+                    },
+                  } as any);
+                }}
+              />
               <DeleteCategory categoryId={Number(addProductData.categoryId)} />
-            </div>
+            </Box>
             <AddCategory />
-          </div>
-
-          <div className={styles.tableContainer}>
-            <CoordinateSelect
-              coordinatesColumns={coordinatesColumns}
+          </Paper>
+          <Paper
+            sx={{
+              background: 'white',
+              p: 2,
+              mb: 2,
+              border: '1px solid',
+              borderColor: 'divider',
+            }}
+          >
+            <CoordinateSelectRegister
+              columns={coordinatesColumns}
               setSelectedRowIds={setSelectedRowIds}
             />
             <AddCoordinate />
-          </div>
+          </Paper>
           <ProductInput addProductData={addProductData} onChange={onChange} />
         </form>
-      </section>
-    </main>
+      </Paper>
+    </Box>
   );
 }

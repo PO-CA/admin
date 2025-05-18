@@ -4,11 +4,13 @@ import {
   useGetTotalSell,
 } from '@/query/query/stats';
 import React from 'react';
-import styles from './index.module.css';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import dynamic from 'next/dynamic';
 const Plot = dynamic(() => import('react-plotly.js'), {
   ssr: false,
-  loading: () => null, // 로딩 중에 보여줄 컴포넌트
+  loading: () => null,
 });
 
 export default function StatsTotal() {
@@ -30,54 +32,73 @@ export default function StatsTotal() {
     isSuccess: isTop5Success,
   } = useGetTop5();
   return (
-    <div className={styles.totalContainer}>
-      <div className={styles.statsContainer} style={{ width: '30%' }}>
-        <div>전체</div>
-        <div>
-          총 매출액 :
+    <Box sx={{ display: 'flex', gap: 2 }}>
+      <Paper
+        sx={{
+          width: '30%',
+          p: 2,
+          fontSize: 14,
+          fontWeight: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          display: 'flex',
+          flexDirection: 'column',
+          mb: 1,
+        }}
+      >
+        <Typography variant="subtitle1" fontWeight={700} mb={1}>
+          전체
+        </Typography>
+        <Typography>
+          총 매출액 :{' '}
           {!isTotalSellLoading &&
             isTotalSellSuccess &&
             totalSell &&
             totalSell.toLocaleString()}{' '}
           원
-        </div>
-        <div>
-          총 판매수량 :
+        </Typography>
+        <Typography>
+          총 판매수량 :{' '}
           {!isTotalQtyLoading &&
             isTotalQtySuccess &&
             totalQty &&
             totalQty.toLocaleString()}{' '}
           개
-        </div>
-      </div>
-      <div className={styles.statsContainer} style={{ width: '70%' }}>
-        <div>전체 TOP 5</div>
+        </Typography>
+      </Paper>
+      <Paper
+        sx={{
+          width: '70%',
+          p: 2,
+          fontSize: 14,
+          fontWeight: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          display: 'flex',
+          flexDirection: 'column',
+          mb: 1,
+        }}
+      >
+        <Typography variant="subtitle1" fontWeight={700} mb={1}>
+          전체 TOP 5
+        </Typography>
         {!isTop5Loading &&
           isTop5Success &&
           top5data &&
           top5data.map((item: any, i: number) => (
-            <>
-              <div key={i} style={{ display: 'flex' }}>
-                <div>앨범명 : {item.title}</div>-
-                <div>총 매출액 : {item.totalSell.toLocaleString()} 원</div>-
-                <div>총 판매수량 : {item.totalQty.toLocaleString()} 개</div>
-              </div>
-            </>
+            <Box key={i} sx={{ display: 'flex', gap: 1, mb: 0.5 }}>
+              <Typography sx={{ minWidth: 120 }}>
+                앨범명 : {item.title}
+              </Typography>
+              <Typography sx={{ minWidth: 160 }}>
+                총 매출액 : {item.totalSell.toLocaleString()} 원
+              </Typography>
+              <Typography>
+                총 판매수량 : {item.totalQty.toLocaleString()} 개
+              </Typography>
+            </Box>
           ))}
-        {/* <Plot
-          data={[
-            {
-              x: [1, 2, 3],
-              y: [2, 6, 3],
-              type: 'scatter',
-              mode: 'lines+markers',
-              marker: { color: 'red' },
-            },
-            { type: 'bar', x: [1, 2, 3], y: [2, 5, 3] },
-          ]}
-          layout={{ width: 320, height: 240, title: 'A Fancy Plot' }}
-        /> */}
-      </div>
-    </div>
+      </Paper>
+    </Box>
   );
 }

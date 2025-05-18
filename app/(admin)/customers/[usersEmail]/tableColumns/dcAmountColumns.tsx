@@ -1,28 +1,38 @@
 'use client';
-import { ColumnDef } from '@tanstack/react-table';
 import React from 'react';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import UpdateDcAmount from '../(components)/updateDcAmount';
 
-export const dcAmountColumns: ColumnDef<any, any>[] = [
+export const dcAmountColumns: GridColDef[] = [
   {
-    accessorFn: (row) => row.logiCategory.title,
-    id: 'title',
-    cell: (info) => info.getValue(),
-    header: () => <span>카테고리</span>,
-    footer: (props) => props.column.id,
+    field: 'logiCategory',
+    headerName: '카테고리',
+    flex: 1,
+    valueGetter: (params: any) => {
+      return params?.title || '';
+    },
   },
   {
-    accessorFn: (row) => row.amount,
-    id: 'amount',
-    cell: (info) => `${info.getValue()} 원`,
-    header: () => <span>할인액</span>,
-    footer: (props) => props.column.id,
+    field: 'amount',
+    headerName: '할인액',
+    flex: 1,
+    valueFormatter: (params: any) => {
+      return `${params} 원`;
+    },
   },
   {
-    accessorFn: (row) => row.amount,
-    id: 'amount',
-    cell: (info) => <UpdateDcAmount info={info} />,
-    enableColumnFilter: false,
-    header: () => '',
+    field: 'actions',
+    headerName: '',
+    flex: 1.5,
+    filterable: false,
+    sortable: false,
+    renderCell: (params: GridRenderCellParams) => (
+      <UpdateDcAmount
+        info={{
+          getValue: () => params.row.amount,
+          row: { original: params.row },
+        }}
+      />
+    ),
   },
 ];

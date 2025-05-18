@@ -1,106 +1,90 @@
 'use client';
-import TanTable, { fuzzyFilter } from '@/components/table';
-import styles from './page.module.css';
-import { productColumns } from './(components)/tableColumns/productColumns';
-import { useGetAllproducts } from '@/query/query/products';
-import {
-  ColumnFiltersState,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
-import { useState } from 'react';
-import tableStyles from './table.module.css';
-import ExcelUpload from './(components)/excelUpload';
-import TableLoader from '@/components/tableLoader';
-import ExcelDownload from './(components)/excelDownload';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
 import ProductListDownload from './(components)/productListlDownload';
+import ExcelUpload from './(components)/excelUpload';
+import ExcelDownload from './(components)/excelDownload';
 import ExcelUploadForUpdate from './(components)/excelUploadForUpload';
 import ExcelDownloadForUpdate from './(components)/excelDownloadForupload';
+import ProductTable from './(components)/ProductTable';
+import { useGetAllproducts } from '@/query/query/products';
 
 export default function Products() {
-  const {
-    data: productsData,
-    isLoading: isProductsLoading,
-    isSuccess: isProductsSuccess,
-  } = useGetAllproducts();
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [globalFilter, setGlobalFilter] = useState('');
-
-  const table = useReactTable({
-    data: productsData,
-    columns: productColumns,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
-    initialState: {
-      pagination: { pageSize: 20, pageIndex: 0 },
-    },
-    state: {
-      columnFilters,
-      globalFilter,
-    },
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: fuzzyFilter,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: false,
-  });
+  const { data: productsData, isLoading } = useGetAllproducts();
 
   return (
-    <main className={styles.productsContainer}>
-      <div className={styles.titleContainer}>
-        상품-목록 <ProductListDownload productsData={productsData} />
-      </div>
-      <div className={styles.titleContainer}>
-        대량등록
-        <div style={{ display: 'flex' }}>
-          엑셀 업로드
-          <ExcelUpload />
-        </div>
-        <div>
-          <ExcelDownload />
-        </div>
-      </div>
-      <div className={styles.titleContainer}>
-        대량 수정
-        <div style={{ display: 'flex' }}>
-          엑셀 업로드로 수정
-          <ExcelUploadForUpdate />
-        </div>
-        <div>
-          <ExcelDownloadForUpdate />
-        </div>
-      </div>
-
-      <div className={styles.tableContainer}>
-        {isProductsLoading && <TableLoader />}
-        {!isProductsLoading && isProductsSuccess && (
-          <TanTable
-            table={table}
-            globalFilter={globalFilter}
-            setGlobalFilter={setGlobalFilter}
-            styles={tableStyles}
-            search
-            sort
-            pagenation
-            filter
+    <Box sx={{ p: 3 }}>
+      <Typography
+        variant="h6"
+        sx={{
+          background: 'white',
+          p: 2,
+          fontWeight: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          mb: 2,
+          fontSize: 18,
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        상품-목록
+        <Box sx={{ ml: 2 }}>
+          <ProductListDownload
+            productsData={productsData}
+            isLoading={isLoading}
           />
-        )}
-      </div>
-    </main>
+        </Box>
+      </Typography>
+      <Paper
+        sx={{
+          background: 'white',
+          p: 2,
+          mb: 2,
+          border: '1px solid',
+          borderColor: 'divider',
+        }}
+      >
+        <Typography fontWeight={700} mb={1}>
+          대량등록
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+          <span>엑셀 업로드</span>
+          <ExcelUpload />
+        </Box>
+        <ExcelDownload />
+      </Paper>
+      <Paper
+        sx={{
+          background: 'white',
+          p: 2,
+          mb: 2,
+          border: '1px solid',
+          borderColor: 'divider',
+        }}
+      >
+        <Typography fontWeight={700} mb={1}>
+          대량 수정
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+          <span>엑셀 업로드로 수정</span>
+          <ExcelUploadForUpdate />
+        </Box>
+        <ExcelDownloadForUpdate />
+      </Paper>
+      <Paper
+        sx={{
+          background: 'white',
+          fontSize: 14,
+          fontWeight: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          p: 2,
+        }}
+      >
+        <ProductTable />
+      </Paper>
+    </Box>
   );
 }

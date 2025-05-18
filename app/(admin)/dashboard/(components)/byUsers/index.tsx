@@ -1,6 +1,10 @@
 import { useGetSellsByUsers } from '@/query/query/stats';
 import React, { useEffect } from 'react';
-import styles from './index.module.css';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 export default function StatsByUsers() {
   const {
@@ -40,32 +44,55 @@ export default function StatsByUsers() {
   }
 
   return (
-    <div className={styles.statsContainer}>
-      <div>유저별</div>
+    <Paper
+      sx={{
+        background: 'white',
+        p: 2,
+        fontSize: 14,
+        fontWeight: 500,
+        border: '1px solid',
+        borderColor: 'divider',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Typography variant="subtitle1" fontWeight={700} mb={1}>
+        유저별
+      </Typography>
 
       {!isUsersLoading && isUsersSuccess && usersData && (
-        <div>
-          <select onChange={(e) => setSelectedUser(e.target.value)}>
-            <option value="">유저를 선택해 주세요</option>
+        <Box>
+          <Select
+            value={selectedUser}
+            onChange={(e) => setSelectedUser(e.target.value)}
+            displayEmpty
+            sx={{ minWidth: 180, mb: 1 }}
+            size="small"
+          >
+            <MenuItem value="">유저를 선택해 주세요</MenuItem>
             {userData.map((item: any, i: number) => (
-              <option key={i} value={item}>
+              <MenuItem key={i} value={item}>
                 {item}
-              </option>
+              </MenuItem>
             ))}
-          </select>
+          </Select>
           {userData && selectedData && (
-            <div style={{ display: 'flex' }}>
+            <Box sx={{ display: 'flex', gap: 2 }}>
               {selectedData.map((item: any, i: number) => (
-                <div key={i} style={{ marginRight: '20px' }}>
-                  <div>{item.month} 월</div>
-                  <div>매출액: {item.totalSell.toLocaleString()} 원</div>
-                  <div>판매수량: {item.totalQty.toLocaleString()} 개</div>
-                </div>
+                <Box key={i} sx={{ mr: 2 }}>
+                  <Typography>{item.month} 월</Typography>
+                  <Typography>
+                    매출액: {item.totalSell.toLocaleString()} 원
+                  </Typography>
+                  <Typography>
+                    판매수량: {item.totalQty.toLocaleString()} 개
+                  </Typography>
+                </Box>
               ))}
-            </div>
+            </Box>
           )}
-        </div>
+        </Box>
       )}
-    </div>
+    </Paper>
   );
 }

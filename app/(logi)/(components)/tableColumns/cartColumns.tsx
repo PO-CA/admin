@@ -1,52 +1,76 @@
 'use client';
-import { ColumnDef } from '@tanstack/react-table';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import React from 'react';
 import DeleteCartButton from '../deleteCartButton';
+import { Box } from '@mui/material';
 
-export const cartColumns: ColumnDef<any, any>[] = [
+export const cartColumns: GridColDef[] = [
   {
-    accessorFn: (row) => row.logiProduct.artist,
-    id: 'artist',
-    cell: (info) => info.getValue(),
-    header: () => <span>가수</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    accessorFn: (row) => row.logiProduct.title,
-    id: 'title',
-    cell: (info) => info.getValue(),
-    header: () => <span>제목</span>,
-    footer: (props) => props.column.id,
-  },
-
-  {
-    accessorFn: (row) => row.price,
-    id: 'price',
-    cell: (info) => info.getValue(),
-    header: () => <span>가격</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    accessorFn: (row) => row.qty,
-    id: 'qty',
-    cell: (info) => info.getValue(),
-    header: () => <span>수량</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    accessorFn: (row) => row.totalPrice,
-    id: 'totalPrice',
-    cell: (info) => info.getValue(),
-    header: () => <span>총액</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    accessorFn: (row) => row.id,
-    id: 'id',
-    header: () => '',
-
-    cell: (info) => {
-      return <DeleteCartButton info={info} />;
+    field: 'logiProduct',
+    headerName: '가수',
+    flex: 1,
+    minWidth: 120,
+    valueGetter: (params: any) => {
+      return params?.artist || '';
     },
+  },
+  {
+    field: 'logiProduct',
+    headerName: '제목',
+    flex: 1.5,
+    minWidth: 200,
+    valueGetter: (params: any) => {
+      return params?.title || '';
+    },
+  },
+  {
+    field: 'price',
+    headerName: '가격',
+    flex: 0.8,
+    minWidth: 100,
+    valueFormatter: (params: any) => {
+      return params ? `${params.toLocaleString()}원` : '';
+    },
+  },
+  {
+    field: 'qty',
+    headerName: '수량',
+    width: 80,
+    align: 'center',
+    headerAlign: 'center',
+  },
+  {
+    field: 'totalPrice',
+    headerName: '총액',
+    flex: 0.8,
+    minWidth: 100,
+    valueFormatter: (params: any) => {
+      return params ? `${params.toLocaleString()}원` : '';
+    },
+  },
+  {
+    field: 'actions',
+    headerName: '',
+    width: 120,
+    sortable: false,
+    filterable: false,
+    renderCell: (params: GridRenderCellParams) => (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+          width: '100%',
+        }}
+      >
+        <DeleteCartButton
+          info={{
+            getValue: () => params.row.id,
+            row: { original: params.row },
+          }}
+        />
+      </Box>
+    ),
   },
 ];

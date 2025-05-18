@@ -1,49 +1,36 @@
 'use client';
-import { ColumnDef } from '@tanstack/react-table';
-import Link from 'next/link';
 import React from 'react';
 
-export const creditsColumns: ColumnDef<any, any>[] = [
+export const creditsColumns = [
   {
-    accessorFn: (row) => row.createdAt,
-    id: 'createdAt',
-    cell: (info) => info.getValue()?.slice(0, 10),
-    header: () => <span>날짜</span>,
-    footer: (props) => props.column.id,
+    field: 'createdAt',
+    headerName: '날짜',
+    flex: 1,
+    valueGetter: (params: any) => params.value?.slice(0, 10),
   },
   {
-    accessorFn: (row) => row.content,
-    id: 'content',
-    cell: (info) => info.getValue(),
-    header: () => <span>내용</span>,
-    footer: (props) => props.column.id,
+    field: 'content',
+    headerName: '내용',
+    flex: 1,
   },
   {
-    accessorFn: (row) => row.plus,
-    id: 'plus',
-    cell: (info) => info.getValue(),
-    header: () => <span> ➕ </span>,
-    footer: (props) => props.column.id,
+    field: 'plus',
+    headerName: '➕',
+    flex: 1,
   },
   {
-    accessorFn: (row) => row.minus,
-    id: 'minus',
-    cell: (info) => info.getValue(),
-    header: () => <span> ➖ </span>,
-    footer: (props) => props.column.id,
+    field: 'minus',
+    headerName: '➖',
+    flex: 1,
   },
   {
-    accessorFn: (row) => row.balance,
-    id: 'balance',
-    cell: (info) => info.getValue(),
-    header: () => <span>잔액</span>,
-    footer: (props) => props.column.id,
+    field: 'balance',
+    headerName: '잔액',
+    flex: 1,
   },
   {
-    accessorFn: (row) => row.memo,
-    id: 'memo',
-    cell: (info) => info.getValue(),
-    header: () => <span>메모</span>,
-    footer: (props) => props.column.id,
+    field: 'memo',
+    headerName: '메모',
+    flex: 1,
   },
 ];

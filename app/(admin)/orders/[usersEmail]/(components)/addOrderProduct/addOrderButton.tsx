@@ -2,13 +2,15 @@
 import { useCreateAOrderItem } from '@/query/query/orders';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { Button, TextField, Box } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
-export default function AddOrderButton({ info }: any) {
+export default function AddOrderButton({ row }: any) {
   const { mutate: createOrderItem } = useCreateAOrderItem();
   const pathName = usePathname();
 
   const [addOrderPayload, setAddOrderPayload] = useState({
-    productId: info.getValue(),
+    productId: row.id,
     orderQty: 0,
     usersEmail: pathName.replace('/orders/', ''),
   });
@@ -23,28 +25,42 @@ export default function AddOrderButton({ info }: any) {
   }, [window.location.pathname]);
 
   return (
-    <div style={{ display: 'flex', width: '100px' }}>
-      <input
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 1,
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+      }}
+    >
+      <TextField
         type="number"
+        size="small"
         value={addOrderPayload.orderQty}
-        style={{ width: '60px', height: '30px' }}
+        sx={{ width: '160px' }}
         onChange={(e) =>
           setAddOrderPayload({
             ...addOrderPayload,
             orderQty: Number(e.target.value),
           })
         }
+        inputProps={{ min: 0 }}
       />
-      <button
-        type="button"
-        style={{ width: '40px' }}
+      <Button
+        variant="contained"
+        color="primary"
+        size="small"
         onClick={() => {
           createOrderItem(addOrderPayload);
           setAddOrderPayload({ ...addOrderPayload, orderQty: 0 });
         }}
+        startIcon={<AddIcon />}
+        sx={{ minWidth: 'unset', px: 1 }}
       >
         추가
-      </button>
-    </div>
+      </Button>
+    </Box>
   );
 }

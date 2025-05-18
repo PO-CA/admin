@@ -1,41 +1,21 @@
 'use client';
-import { ColumnDef } from '@tanstack/react-table';
 import React from 'react';
 import DeleteCoordinateButton from './DeleteCoordinateButton';
 
-export const coordinatesColumns: ColumnDef<any, any>[] = [
+export const coordinatesColumns = [
   {
-    id: 'select-col',
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        checked={table.getIsAllRowsSelected()}
-        onChange={table.getToggleAllRowsSelectedHandler()}
-      />
+    field: 'name',
+    headerName: '좌표',
+    flex: 1,
+  },
+  {
+    field: 'delete',
+    headerName: '',
+    flex: 0.5,
+    sortable: false,
+    filterable: false,
+    renderCell: (params: any) => (
+      <DeleteCoordinateButton row={{ original: params.row }} />
     ),
-    cell: ({ row }) => {
-      return (
-        <input
-          type="checkbox"
-          checked={row.getIsSelected()}
-          disabled={!row.getCanSelect()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      );
-    },
-  },
-
-  {
-    accessorFn: (row) => row.name,
-    id: 'name',
-    cell: (info) => info.getValue(),
-    header: () => <span>좌표</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    id: 'delete',
-    cell: ({ row }) => <DeleteCoordinateButton row={row} />,
-    header: () => '',
-    footer: (props) => props.column.id,
   },
 ];

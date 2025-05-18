@@ -1,28 +1,38 @@
 'use client';
-import { ColumnDef } from '@tanstack/react-table';
 import React from 'react';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import UpdateDcRate from '../(components)/updateDcRate';
 
-export const dcRateColumns: ColumnDef<any, any>[] = [
+export const dcRateColumns: GridColDef[] = [
   {
-    accessorFn: (row) => row.logiCategory.title,
-    id: 'title',
-    cell: (info) => info.getValue(),
-    header: () => <span>카테고리</span>,
-    footer: (props) => props.column.id,
+    field: 'logiCategory',
+    headerName: '카테고리',
+    flex: 1,
+    valueGetter: (params: any) => {
+      return params?.title || '';
+    },
   },
   {
-    accessorFn: (row) => row.rate,
-    id: 'rate',
-    cell: (info) => `${info.getValue()} %`,
-    header: () => <span>할인률</span>,
-    footer: (props) => props.column.id,
+    field: 'rate',
+    headerName: '할인률',
+    flex: 1,
+    valueFormatter: (params: any) => {
+      return `${params} %`;
+    },
   },
   {
-    accessorFn: (row) => row.rate,
-    id: 'rate',
-    cell: (info) => <UpdateDcRate info={info} />,
-    enableColumnFilter: false,
-    header: () => '',
+    field: 'actions',
+    headerName: '',
+    flex: 1.5,
+    filterable: false,
+    sortable: false,
+    renderCell: (params: GridRenderCellParams) => (
+      <UpdateDcRate
+        info={{
+          getValue: () => params.row.rate,
+          row: { original: params.row },
+        }}
+      />
+    ),
   },
 ];

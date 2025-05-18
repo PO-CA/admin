@@ -6,6 +6,9 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
+import { Button } from '@mui/material';
+import PrintIcon from '@mui/icons-material/Print';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { shippingItemColumns } from '../(components)/tableColumns/shippingItemColumns';
 import tableStyles from './table.module.css';
 import {
@@ -268,8 +271,17 @@ export default function ShippingDetail({
 
   return (
     <main className={styles.productDetailContainer}>
-      <button onClick={printGoback}>인쇄하기</button>
-      <button
+      <Button
+        variant="contained"
+        startIcon={<PrintIcon />}
+        onClick={printGoback}
+        sx={{ mr: 1, ml: 4 }}
+      >
+        인쇄하기
+      </Button>
+      <Button
+        variant="contained"
+        startIcon={<FileDownloadIcon />}
         onClick={async () => {
           const fields = [
             'Description of goods',
@@ -303,7 +315,7 @@ export default function ShippingDetail({
         }}
       >
         엑셀 저장
-      </button>
+      </Button>
 
       <ComponentToPrint ref={componentRef} />
     </main>

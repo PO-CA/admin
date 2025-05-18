@@ -1,16 +1,24 @@
 'use client';
 import CartList from '../(components)/cartList/cartList';
 import ProductList from '../(components)/productList/productList';
-import styles from './page.module.css';
+import { Box } from '@mui/material';
 
 export default function Store() {
   return (
-    <main className={styles.productsContainer}>
-      <div className={styles.titleContainer}>스토어</div>
-      <div className={styles.productContents}>
-        <ProductList />
-        <CartList />
-      </div>
-    </main>
+    <Box sx={{ mt: 2, mb: 4 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+        }}
+      >
+        <Box sx={{ width: '65%' }}>
+          <ProductList />
+        </Box>
+        <Box sx={{ width: '35%' }}>
+          <CartList />
+        </Box>
+      </Box>
+    </Box>
   );
 }

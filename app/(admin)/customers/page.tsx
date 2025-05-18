@@ -1,77 +1,40 @@
 'use client';
-import TanTable, { fuzzyFilter } from '@/components/table';
-import styles from './page.module.css';
-import { usersColumns } from './(components)/tableColumns/usersColumns';
-import { useGetAllUsersWithOrderItemsQty } from '@/query/query/users';
-import { useState } from 'react';
-import {
-  ColumnFiltersState,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
-import tableStyles from './table.module.css';
-import TableLoader from '@/components/tableLoader';
+import React from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import CustomerTable from './(components)/CustomerTable';
 
 export default function Customers() {
-  const {
-    data: usersData,
-    isLoading: isUsersLoading,
-    isSuccess: isUsersSuccess,
-  } = useGetAllUsersWithOrderItemsQty();
-
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [globalFilter, setGlobalFilter] = useState('');
-
-  const table = useReactTable({
-    data: usersData,
-    columns: usersColumns,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
-    initialState: {
-      pagination: { pageSize: 20, pageIndex: 0 },
-    },
-    state: {
-      columnFilters,
-      globalFilter,
-    },
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: fuzzyFilter,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: false,
-  });
   return (
-    <main className={styles.customersContainer}>
-      <div className={styles.titleContainer}>유저-목록</div>
-      <div className={styles.tableContainer}>
-        {isUsersLoading && <TableLoader />}
-        {!isUsersLoading && isUsersSuccess && (
-          <TanTable
-            table={table}
-            globalFilter={globalFilter}
-            setGlobalFilter={setGlobalFilter}
-            styles={tableStyles}
-            search
-            pagenation
-            filter
-          />
-        )}
-      </div>
-    </main>
+    <Box sx={{ p: 3 }}>
+      <Typography
+        variant="h6"
+        sx={{
+          background: 'white',
+          p: 2,
+          fontWeight: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          mb: 2,
+          fontSize: 18,
+        }}
+      >
+        유저-목록
+      </Typography>
+      <Paper
+        sx={{
+          background: 'white',
+          fontSize: 14,
+          fontWeight: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          m: '0 10px',
+          p: 2,
+        }}
+      >
+        <CustomerTable />
+      </Paper>
+    </Box>
   );
 }

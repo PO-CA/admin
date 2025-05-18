@@ -1,9 +1,16 @@
 'use client';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import Button from '@mui/material/Button';
 
-export default function ProductListDownload({ productsData }: any) {
+export default function ProductListDownload({
+  productsData,
+  isLoading,
+}: {
+  productsData: any;
+  isLoading: boolean;
+}) {
   const handleDown = useCallback(() => {
     const data = [
       ['SKU', '바코드', '상품이름', '수량', '가격'],
@@ -32,8 +39,15 @@ export default function ProductListDownload({ productsData }: any) {
   }, [productsData]);
 
   return (
-    <div>
-      <button onClick={handleDown}>상품 목록 받기</button>
-    </div>
+    <Button
+      variant="contained"
+      color="primary"
+      size="small"
+      sx={{ fontWeight: 600, borderRadius: 2 }}
+      onClick={handleDown}
+      disabled={isLoading}
+    >
+      {isLoading ? '상품 목록 로딩중...' : '상품 목록 받기'}
+    </Button>
   );
 }

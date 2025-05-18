@@ -18,6 +18,7 @@ import TanTable, { fuzzyFilter } from '@/components/table';
 import { useReactToPrint } from 'react-to-print';
 import { useRouter } from 'next/navigation';
 import tableStyles from './table.module.css';
+import { Button } from '@mui/material';
 
 export default function ShippingDetail({
   params,
@@ -265,8 +266,18 @@ export default function ShippingDetail({
 
   return (
     <main className={styles.productDetailContainer}>
-      <button onClick={printGoback}>인쇄하기</button>
-      <button
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={printGoback}
+        sx={{ ml: 4, mr: 2, mt: 2 }}
+      >
+        인쇄하기
+      </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        sx={{ mt: 2 }}
         onClick={async () => {
           const fields = [
             'Description of goods',
@@ -300,7 +311,7 @@ export default function ShippingDetail({
         }}
       >
         엑셀 저장
-      </button>
+      </Button>
       <ComponentToPrint ref={componentRef} />
     </main>
   );

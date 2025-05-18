@@ -5,10 +5,10 @@ import styles from '../../page.module.css';
 
 export default function DeleteProductCoordinateButton({ row }: any) {
   const payload = {
-    productId: row.original.productId,
-    coordinateId: row.original.id,
+    productId: Number(row.productId),
+    coordinateId: Number(row.id),
   };
-  const { mutate: deleteAProductCoordinate } =
+  const { mutateAsync: deleteAProductCoordinate, isPending } =
     useDeleteAProductCoordinate(payload);
 
   return (
@@ -16,14 +16,15 @@ export default function DeleteProductCoordinateButton({ row }: any) {
       <button
         type="button"
         className={styles.cellButton}
-        onClick={() => {
-          if (!row.original.isChecked) {
+        onClick={async () => {
+          if (!row.isChecked) {
             return alert('선택된 좌표가 없습니다');
           }
-          deleteAProductCoordinate();
+          await deleteAProductCoordinate();
         }}
+        disabled={isPending}
       >
-        좌표 해제
+        {isPending ? '좌표 해제중...' : '좌표 해제'}
       </button>
     </div>
   );

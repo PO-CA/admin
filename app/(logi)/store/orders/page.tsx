@@ -1,9 +1,9 @@
 'use client';
 import Credits from './(components)/credits';
 import UserShippings from './(components)/shippings';
-import styles from './page.module.css';
 import UserOrders from './(components)/userOrders';
 import { useAuth } from '@/hooks/useAuth';
+import { Box, Typography, Container, Paper, Stack } from '@mui/material';
 
 export default function OrdersByUsersId({
   params,
@@ -15,21 +15,35 @@ export default function OrdersByUsersId({
   const { userEmail } = useAuth();
 
   return (
-    <main className={styles.ordersDetailContainer}>
-      <div>
-        <div className={styles.subTitle}>유저-크레딧</div>
-        <Credits usersEmail={userEmail} />
-      </div>
+    <Container maxWidth="xl" component="main" sx={{ mt: 2, mb: 4 }}>
+      <Stack spacing={3}>
+        <Paper elevation={1} sx={{ p: 2 }}>
+          <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+            유저-크레딧
+          </Typography>
+          <Box>
+            <Credits usersEmail={userEmail} />
+          </Box>
+        </Paper>
 
-      <div>
-        <div className={styles.subTitle}>주문</div>
-        <UserOrders usersEmail={userEmail} />
-      </div>
+        <Paper elevation={1} sx={{ p: 2 }}>
+          <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+            주문
+          </Typography>
+          <Box>
+            <UserOrders usersEmail={userEmail} />
+          </Box>
+        </Paper>
 
-      <div>
-        <div className={styles.subTitle}>배송</div>
-        <UserShippings usersEmail={userEmail} />
-      </div>
-    </main>
+        <Paper elevation={1} sx={{ p: 2 }}>
+          <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+            배송
+          </Typography>
+          <Box>
+            <UserShippings usersEmail={userEmail} />
+          </Box>
+        </Paper>
+      </Stack>
+    </Container>
   );
 }

@@ -1,25 +1,31 @@
 'use client';
 import { useUpdateShipping } from '@/query/query/shippings';
 import React from 'react';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function PayShippingButton({ info }: any) {
   const { mutate: updateShippingItem, isPending } = useUpdateShipping();
+
+  const handlePay = async () => {
+    updateShippingItem(info.row.original.id);
+  };
+
   if (info.row.original.shippingStatus === '결제완료') return null;
 
   return (
-    <button
-      type="button"
+    <Button
+      color="primary"
+      variant="contained"
+      size="small"
+      sx={{ minWidth: 80, fontWeight: 600 }}
+      onClick={handlePay}
       disabled={isPending}
-      style={{
-        width: '40px',
-        backgroundColor: isPending ? 'lightgray' : 'gray',
-        color: 'white',
-      }}
-      onClick={() => {
-        updateShippingItem(info.row.original.id);
-      }}
+      startIcon={
+        isPending ? <CircularProgress size={16} color="inherit" /> : null
+      }
     >
-      {isPending ? '결제중...' : '결제'}
-    </button>
+      결제
+    </Button>
   );
 }

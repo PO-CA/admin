@@ -1,11 +1,17 @@
 import React from 'react';
-import styles from '../../page.module.css';
 import { useGetAllCategory } from '@/query/query/category';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import type { SelectChangeEvent } from '@mui/material/Select';
 
 export default function CategorySelect({
   onChange,
 }: {
-  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  onChange: (event: SelectChangeEvent) => void;
 }) {
   const {
     data: categoryData,
@@ -14,20 +20,31 @@ export default function CategorySelect({
   } = useGetAllCategory();
 
   if (isCategoryLoading) return <div>loading</div>;
-
   if (!isCategorySuccess) return <div>fail</div>;
 
   return (
-    <div className={styles.inputContainer}>
-      <label className={styles.inputLabel}>카테고리❗️</label>
-      <select id="categoryId" onChange={onChange} className={styles.inputCell}>
-        <option value="">카테고리 선택(필수)</option>
-        {categoryData.map((category: any, i: number) => (
-          <option key={`category.title${i}`} value={category.id}>
-            {category.title}
-          </option>
-        ))}
-      </select>
-    </div>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Typography fontWeight={600} fontSize={14} sx={{ minWidth: 70 }}>
+        카테고리❗️
+      </Typography>
+      <FormControl size="small" sx={{ minWidth: 180 }}>
+        <InputLabel id="logiCategoryId">카테고리 선택(필수)</InputLabel>
+        <Select
+          labelId="logiCategoryId"
+          id="logiCategoryId"
+          name="logiCategoryId"
+          label="카테고리 선택(필수)"
+          onChange={onChange}
+          defaultValue=""
+        >
+          <MenuItem value="">카테고리 선택(필수)</MenuItem>
+          {categoryData.map((category: any, i: number) => (
+            <MenuItem key={`category.title${i}`} value={category.id}>
+              {category.title}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Box>
   );
 }

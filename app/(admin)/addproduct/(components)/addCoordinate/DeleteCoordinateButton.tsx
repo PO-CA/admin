@@ -1,21 +1,32 @@
 'use client';
 import { useDeleteACoordinate } from '@/query/query/coordinate';
 import React from 'react';
-import styles from '../../page.module.css';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 export default function DeleteCoordinateButton({ row }: any) {
-  const { mutate: deleteACoordinate } = useDeleteACoordinate();
+  const { mutateAsync: deleteACoordinate, isPending } = useDeleteACoordinate();
+  let coordinateId;
+  if (row.original) {
+    coordinateId = row.original.id;
+  } else {
+    coordinateId = row.id;
+  }
   return (
-    <div style={{ display: 'flex', width: '100px' }}>
-      <button
+    <Box sx={{ display: 'flex', width: 100 }}>
+      <Button
         type="button"
-        className={styles.addCategoryBtn}
-        onClick={() => {
-          deleteACoordinate(row.original.id);
+        variant="outlined"
+        color="error"
+        size="small"
+        onClick={async () => {
+          await deleteACoordinate(coordinateId);
         }}
+        disabled={isPending}
+        sx={{ fontWeight: 600, borderRadius: 2 }}
       >
-        삭제
-      </button>
-    </div>
+        {isPending ? '삭제중...' : '삭제'}
+      </Button>
+    </Box>
   );
 }

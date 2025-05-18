@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './index.module.css';
+import { Button, Box } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import { useModal } from '@/hooks/useModal';
-import { ProductAverageModal } from '@/components/modal/productAverageModal';
 import { CustomerUpdateAddress } from '@/components/modal/customerUpdateAddress';
 
 export default function CustomerCellButtons({ info }: any) {
@@ -11,11 +11,23 @@ export default function CustomerCellButtons({ info }: any) {
     openModal: alertOpen,
     closeModal: alertClose,
   } = useModal();
+
   return (
-    <div>
-      <button className={styles.cellButton} type="button" onClick={alertOpen}>
+    <Box>
+      <Button
+        variant="contained"
+        size="small"
+        startIcon={<EditIcon />}
+        onClick={alertOpen}
+        sx={{
+          minWidth: 'unset',
+          fontSize: 12,
+          py: 0.5,
+          px: 1,
+        }}
+      >
         수정
-      </button>
+      </Button>
       <ModalAlert isOpen={alertIsOpen} closeModal={alertClose}>
         <CustomerUpdateAddress
           content={'주소 수정'}
@@ -23,6 +35,6 @@ export default function CustomerCellButtons({ info }: any) {
           addressInfo={info.row.original}
         />
       </ModalAlert>
-    </div>
+    </Box>
   );
 }

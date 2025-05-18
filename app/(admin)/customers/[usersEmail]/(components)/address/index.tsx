@@ -1,20 +1,10 @@
-import {
-  ColumnFiltersState,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
+'use client';
 import React, { useState } from 'react';
+import { DataGrid } from '@mui/x-data-grid';
 import { addressColumns } from '../../tableColumns/addressColumns';
-import TanTable, { fuzzyFilter } from '@/components/table';
-import tableStyles from './table.module.css';
 import { useGetAddressByUsersEmail } from '@/query/query/address';
-import TableLoader from '@/components/tableLoader';
+import { Box, CircularProgress, Typography } from '@mui/material';
+
 export default function UserAddress({ usersEmail }: { usersEmail: string }) {
   const {
     data: addressData,
@@ -22,54 +12,48 @@ export default function UserAddress({ usersEmail }: { usersEmail: string }) {
     isSuccess: isAddressSuccess,
   } = useGetAddressByUsersEmail(usersEmail);
 
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [globalFilter, setGlobalFilter] = useState('');
-
-  const table = useReactTable({
-    data: addressData,
-    columns: addressColumns,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
-    initialState: {
-      pagination: { pageSize: 20, pageIndex: 0 },
-    },
-    state: {
-      columnFilters,
-      globalFilter,
-    },
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: fuzzyFilter,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: false,
-  });
+  // 데이터를 DataGrid가 요구하는 형식으로 변환
+  const rows = React.useMemo(() => {
+    if (!addressData) return [];
+    return addressData.map((row: any, idx: number) => ({
+      id: row.id || `row-${idx}`,
+      ...row,
+    }));
+  }, [addressData]);
 
   if (isAddressLoading) {
-    return <TableLoader />;
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (!isAddressSuccess) {
-    return <div>Failed to load</div>;
+    return (
+      <Box sx={{ p: 2 }}>
+        <Typography color="error">Failed to load data</Typography>
+      </Box>
+    );
   }
 
   return (
-    <TanTable
-      table={table}
-      globalFilter={globalFilter}
-      setGlobalFilter={setGlobalFilter}
-      styles={tableStyles}
-      search
-      filter
-      pagenation
-    />
+    <Box sx={{ width: '100%', height: '100%' }}>
+      <DataGrid
+        rows={rows}
+        columns={addressColumns}
+        initialState={{
+          pagination: {
+            paginationModel: { pageSize: 10, page: 0 },
+          },
+        }}
+        pageSizeOptions={[5, 10, 20]}
+        disableRowSelectionOnClick
+        sx={{
+          backgroundColor: 'white',
+          fontSize: 14,
+        }}
+      />
+    </Box>
   );
 }

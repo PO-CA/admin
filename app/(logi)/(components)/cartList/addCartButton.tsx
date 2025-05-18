@@ -3,9 +3,11 @@ import { useAuth } from '@/hooks/useAuth';
 import { useCreateACart } from '@/query/query/cart';
 import { CreateCartItemDTO } from '@/types/createCartItemDTO';
 import React, { useState } from 'react';
+import { Box, TextField, Button, Stack } from '@mui/material';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 export default function AddCartButton({ info }: any) {
-  const { mutate: createCartItem } = useCreateACart();
+  const { mutate: createCartItem, isPending } = useCreateACart();
   const { userId } = useAuth();
   const [addOrderPayload, setAddOrderPayload] = useState<CreateCartItemDTO>({
     price: info.row.original.dcPrice,
@@ -15,9 +17,10 @@ export default function AddCartButton({ info }: any) {
   });
 
   return (
-    <div style={{ display: 'flex' }}>
-      <input
+    <Stack direction="row" spacing={1} alignItems="center">
+      <TextField
         type="number"
+        size="small"
         value={addOrderPayload.qty}
         onChange={(e) =>
           setAddOrderPayload({
@@ -25,16 +28,24 @@ export default function AddCartButton({ info }: any) {
             qty: Number(e.target.value),
           })
         }
+        InputProps={{
+          inputProps: { min: 0 },
+        }}
+        sx={{ width: 60 }}
       />
-      <button
-        type="button"
+      <Button
+        variant="contained"
+        size="small"
+        startIcon={<AddShoppingCartIcon />}
         onClick={() => {
           createCartItem(addOrderPayload);
           setAddOrderPayload({ ...addOrderPayload, qty: 0 });
         }}
+        disabled={isPending || addOrderPayload.qty <= 0}
+        sx={{ minWidth: 'unset', px: 1 }}
       >
-        추가하기
-      </button>
-    </div>
+        {isPending ? '추가중...' : '추가'}
+      </Button>
+    </Stack>
   );
 }

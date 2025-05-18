@@ -3,6 +3,7 @@ import React, { useCallback } from 'react';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { useGetAllproducts } from '@/query/query/products';
+import Button from '@mui/material/Button';
 
 export default function ExcelDownloadForUpdate() {
   const { data: allProducts } = useGetAllproducts();
@@ -76,8 +77,14 @@ export default function ExcelDownloadForUpdate() {
   }, [allProducts]);
 
   return (
-    <div>
-      <button onClick={handleDown}>양식받기</button>
-    </div>
+    <Button
+      variant="outlined"
+      color="primary"
+      size="small"
+      sx={{ fontWeight: 600, borderRadius: 2, mt: 1 }}
+      onClick={handleDown}
+    >
+      양식받기
+    </Button>
   );
 }

@@ -1,107 +1,146 @@
 'use client';
-import { ColumnDef } from '@tanstack/react-table';
 import Image from 'next/image';
 import React from 'react';
 import UpdatePriceOrderItem from '../../../(components)/updatePriceOrderItem';
 import UpdateQtyOrderItem from '../../../(components)/updateQtyOrderItem';
 
-export const orderItemsColumns: ColumnDef<any, any>[] = [
+export const orderItemsColumns = [
   {
-    id: 'select-col',
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        checked={table.getIsAllRowsSelected()}
-        onChange={table.getToggleAllRowsSelectedHandler()}
-      />
-    ),
-    cell: ({ row }) => (
-      <input
-        type="checkbox"
-        checked={row.getIsSelected()}
-        disabled={!row.getCanSelect()}
-        onChange={row.getToggleSelectedHandler()}
-      />
-    ),
+    field: 'thumbNailUrl',
+    headerName: '썸네일',
+    width: 150,
+    renderCell: (params: any) => {
+      return (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Image
+            alt="상품 이미지"
+            unoptimized={true}
+            src={params?.row?.thumbNailUrl}
+            width={100}
+            height={100}
+            style={{ objectFit: 'contain' }}
+          />
+          <div>상세페이지</div>
+        </div>
+      );
+    },
   },
   {
-    accessorFn: (row) => row.thumbNailUrl,
-    id: 'thumbNailUrl',
-    cell: (info) => (
-      <div>
-        <Image
-          alt="asd"
-          unoptimized={true}
-          src={info.getValue()}
-          width={100}
-          height={100}
-        />
-        <div>상세페이지</div>
+    field: 'title',
+    headerName: '제목',
+    flex: 1,
+  },
+  {
+    field: 'barcode',
+    headerName: '바코드/SKU',
+    flex: 1,
+    renderCell: (params: any) => {
+      const barcodeValue = params.row.barcode;
+      const skuValue = params.row.sku;
+
+      return (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            height: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div
+            style={{
+              fontWeight: 500,
+              padding: '3px 0',
+              whiteSpace: 'normal',
+              lineHeight: '1.2',
+            }}
+          >
+            바코드: {barcodeValue || '-'}
+          </div>
+
+          <div
+            style={{
+              fontSize: '0.85rem',
+              padding: '3px 0',
+              whiteSpace: 'normal',
+              lineHeight: '1.2',
+            }}
+          >
+            SKU: {skuValue || '-'}
+          </div>
+        </div>
+      );
+    },
+  },
+  {
+    field: 'price',
+    headerName: '판매가',
+    flex: 1,
+    align: 'center',
+    headerAlign: 'center',
+    renderCell: (params: any) => (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        <UpdatePriceOrderItem info={{ row: { original: params.row } }} />
       </div>
     ),
-    header: () => <span>썸네일</span>,
-    footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.title,
-    id: 'title',
-    cell: (info) => info.getValue(),
-    header: () => <span>제목</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    accessorFn: (row) => row.barcode,
-    id: 'barcode',
-    cell: (info) => (
-      <div>
-        <div>{info.getValue()}</div>
-        <div>{info?.row?.original?.sku}</div>
+    field: 'qty',
+    headerName: '판매수량',
+    flex: 1,
+    align: 'center',
+    headerAlign: 'center',
+    renderCell: (params: any) => (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        <UpdateQtyOrderItem info={{ row: { original: params.row } }} />
       </div>
     ),
-    header: () => <span>바코드/sku</span>,
-    footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.price,
-    id: 'price',
-    cell: (info) => <UpdatePriceOrderItem info={info} />,
-    header: () => <span>판매가</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    accessorFn: (row) => row.qty,
-    id: 'qty',
-    cell: (info) => <UpdateQtyOrderItem info={info} />,
-    header: () => <span>판매수량</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    accessorFn: (row) => row.coordinates,
-    id: 'coordinates',
-    cell: (info) => (
+    field: 'coordinates',
+    headerName: '좌표',
+    flex: 1,
+    renderCell: (params: any) => (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {info
-          .getValue()
-          ?.map((coordinate: any) => (
-            <div key={coordinate.id}>{coordinate.name}</div>
-          ))}
+        {params.value?.map((coordinate: any) => (
+          <div key={coordinate.id}>{coordinate.name}</div>
+        ))}
       </div>
     ),
-    header: () => <span>좌표</span>,
-    footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.totalPrice,
-    id: 'totalPrice',
-    cell: (info) => info.getValue(),
-    header: () => <span>총액</span>,
-    footer: (props) => props.column.id,
+    field: 'totalPrice',
+    headerName: '총액',
+    flex: 1,
   },
   {
-    accessorFn: (row) => row.addressName,
-    id: 'addressName',
-    cell: (info) => info.getValue(),
-    header: () => <span>배송지</span>,
-    footer: (props) => props.column.id,
+    field: 'addressName',
+    headerName: '배송지',
+    flex: 1,
   },
 ];

@@ -1,24 +1,13 @@
 'use client';
 import React from 'react';
-import {
-  ColumnFiltersState,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
 import { useState } from 'react';
+import { Box, Typography, Container, Paper } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 import { useGetAllShippingsByUsersEmail } from '@/query/query/shippings';
-import styles from './page.module.css';
 import { shippingColumns } from './(components)/tableColumns/shippingColumns';
-import tableStyles from './table.module.css';
-import TanTable, { fuzzyFilter } from '@/components/table';
 import TableLoader from '@/components/tableLoader';
 import { useGetMyInfo } from '@/query/query/users';
+
 export default function Shippings() {
   const { data } = useGetMyInfo();
 
@@ -28,35 +17,9 @@ export default function Shippings() {
     isSuccess: isShippingSuccess,
   } = useGetAllShippingsByUsersEmail(data?.userEmail);
 
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [globalFilter, setGlobalFilter] = useState('');
-
-  const table = useReactTable({
-    data: shippingData,
-    columns: shippingColumns,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
-    initialState: {
-      pagination: { pageSize: 20, pageIndex: 0 },
-    },
-    state: {
-      columnFilters,
-      globalFilter,
-    },
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: fuzzyFilter,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: false,
+  const [paginationModel, setPaginationModel] = useState({
+    pageSize: 20,
+    page: 0,
   });
 
   if (isShippingLoading) {
@@ -68,18 +31,47 @@ export default function Shippings() {
   }
 
   return (
-    <main className={styles.shippingsContainer}>
-      <div className={styles.subTitle}>배송-목록</div>
-      <TanTable
-        table={table}
-        globalFilter={globalFilter}
-        setGlobalFilter={setGlobalFilter}
-        styles={tableStyles}
-        search
-        filter
-        pagenation
-        sort
-      />
-    </main>
+    <Container maxWidth="xl" sx={{ p: 3 }}>
+      <Typography
+        variant="h5"
+        sx={{
+          mb: 3,
+          fontWeight: 'bold',
+          borderBottom: '2px solid #eaeaea',
+          pb: 1,
+        }}
+      >
+        배송-목록
+      </Typography>
+      <Paper elevation={2} sx={{ width: '100%', overflow: 'hidden', p: 2 }}>
+        <DataGrid
+          rows={shippingData || []}
+          columns={shippingColumns}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[10, 20, 50, 100]}
+          initialState={{
+            pagination: {
+              paginationModel: { pageSize: 20, page: 0 },
+            },
+          }}
+          rowHeight={100}
+          showToolbar
+          disableRowSelectionOnClick
+          getRowId={(row) => row.id || row._id || Math.random().toString()}
+          density="standard"
+          autoHeight
+          sx={{
+            '& .MuiDataGrid-cell': {
+              px: 2,
+            },
+            '& .MuiDataGrid-columnHeaders': {
+              backgroundColor: '#f5f5f5',
+              borderBottom: '2px solid #ddd',
+            },
+          }}
+        />
+      </Paper>
+    </Container>
   );
 }

@@ -1,96 +1,96 @@
 'use client';
-import { ColumnDef } from '@tanstack/react-table';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import React from 'react';
 import AddCartButton from '../cartList/addCartButton';
 import Image from 'next/image';
+import { Box, Typography } from '@mui/material';
 
-export const productColumns: ColumnDef<any, any>[] = [
+export const productColumns: GridColDef[] = [
   {
-    accessorFn: (row) => row.thumbNailUrl,
-    id: 'thumbNailUrl',
-    cell: (info) => (
-      <div>
+    field: 'thumbNailUrl',
+    headerName: '썸네일',
+    width: 120,
+    sortable: false,
+    renderCell: (params: GridRenderCellParams) => (
+      <Box sx={{ textAlign: 'center' }}>
         <Image
-          alt="asd"
+          alt="제품 이미지"
           unoptimized={true}
-          src={info.getValue()}
+          src={params.value}
           width={100}
           height={100}
+          style={{ objectFit: 'contain' }}
         />
-        <div>상세페이지</div>
-      </div>
+      </Box>
     ),
-    header: () => <span>썸네일</span>,
-    footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.barcode,
-    id: 'barcode',
-    cell: (info) => (
-      <div>
-        <div>{info.getValue()}</div>
-      </div>
-    ),
-    header: () => <span>바코드</span>,
-    footer: (props) => props.column.id,
+    field: 'barcode',
+    headerName: '바코드',
+    width: 120,
   },
   {
-    accessorFn: (row) => row.sku,
-    id: 'sku',
-    cell: (info) => (
-      <div>
-        <div>{info.getValue()}</div>
-      </div>
-    ),
-    header: () => <span>sku</span>,
-    footer: (props) => props.column.id,
+    field: 'sku',
+    headerName: 'sku',
+    width: 120,
   },
   {
-    accessorFn: (row) => row.title,
-    id: 'title',
-    cell: (info) => info.getValue(),
-    header: () => <span>제목</span>,
-    footer: (props) => props.column.id,
-  },
-
-  {
-    accessorFn: (row) => row.deadlineDate,
-    id: 'deadlineDate',
-    cell: (info) => info.getValue()?.slice(0, 10),
-    header: () => <span>주문마감일</span>,
-    footer: (props) => props.column.id,
+    field: 'title',
+    headerName: '제목',
+    flex: 1,
+    minWidth: 200,
   },
   {
-    accessorFn: (row) => row.releaseDate,
-    id: 'releaseDate',
-    cell: (info) => info.getValue()?.slice(0, 10),
-    header: () => <span>출시일</span>,
-    footer: (props) => props.column.id,
-  },
-
-  {
-    accessorFn: (row) => row.dcPrice,
-    id: 'dcPrice',
-    cell: (info) => {
-      return info.getValue();
+    field: 'deadlineDate',
+    headerName: '주문마감일',
+    width: 120,
+    valueGetter: (params: any) => {
+      return params ? params.slice(0, 10) : '';
     },
-    header: () => <span>가격</span>,
-    footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.stock,
-    id: 'stock',
-    cell: (info) => info.getValue(),
-    header: () => <span>재고</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    accessorFn: (row) => row.id,
-    id: 'id',
-    header: () => <span>담기</span>,
-
-    cell: (info) => {
-      return <AddCartButton info={info} />;
+    field: 'releaseDate',
+    headerName: '출시일',
+    width: 120,
+    valueGetter: (params: any) => {
+      return params ? params.slice(0, 10) : '';
     },
+  },
+  {
+    field: 'dcPrice',
+    headerName: '가격',
+    width: 100,
+    valueFormatter: (params: any) => {
+      return params ? `${params.toLocaleString()}원` : '';
+    },
+  },
+  {
+    field: 'stock',
+    headerName: '재고',
+    width: 80,
+  },
+  {
+    field: 'actions',
+    headerName: '담기',
+    width: 150,
+    sortable: false,
+    filterable: false,
+    renderCell: (params: GridRenderCellParams) => (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+        }}
+      >
+        <AddCartButton
+          info={{
+            getValue: () => params.row.id,
+            row: { original: params.row },
+          }}
+        />
+      </Box>
+    ),
   },
 ];

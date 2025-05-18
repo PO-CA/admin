@@ -1,9 +1,24 @@
-import TableLoader from '@/components/tableLoader';
+import React, { useEffect, useState } from 'react';
 import {
   useCreateAAddressByUsersEmail,
   useUpdateAAddressByUsersEmail,
 } from '@/query/query/address';
-import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Stack,
+  Paper,
+  CircularProgress,
+  Divider,
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 
 export default function Addresses({
   data,
@@ -32,8 +47,10 @@ export default function Addresses({
     receiverPhoneNumber: '',
   });
 
-  const { mutateAsync } = useCreateAAddressByUsersEmail();
-  const { mutateAsync: mutateAsyncUpdate } = useUpdateAAddressByUsersEmail();
+  const { mutateAsync, isPending: isAddingAddress } =
+    useCreateAAddressByUsersEmail();
+  const { mutateAsync: mutateAsyncUpdate, isPending: isUpdatingAddress } =
+    useUpdateAAddressByUsersEmail();
 
   useEffect(() => {
     if (data)
@@ -56,153 +73,194 @@ export default function Addresses({
   }, [selectedAddress, selectedOption]);
 
   if (!data) {
-    return <TableLoader />;
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
+        <CircularProgress size={24} />
+      </Box>
+    );
   }
 
   return (
-    <div>
-      <div>
-        <div>
-          <div>배송지</div>
-          <div>
-            <button
-              onClick={() => {
-                mutateAsync(userEmail);
-              }}
-            >
-              배송지 추가
-            </button>
-            <button
-              onClick={() => {
-                mutateAsyncUpdate(payload);
-              }}
-            >
-              배송지 수정
-            </button>
-          </div>
-        </div>
+    <Paper elevation={1} sx={{ p: 2, mt: 2 }}>
+      <Box sx={{ mb: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 2,
+          }}
+        >
+          <Typography variant="subtitle1" fontWeight="bold">
+            배송지
+          </Typography>
+        </Box>
+
         {data && (
-          <select id="address" onChange={handleSelectChange}>
-            <option defaultChecked>배송지를 선택해주세요</option>
-            {data.map((address: any) => (
-              <option key={address.id} value={address.id}>
-                {address.addressName}
-              </option>
-            ))}
-          </select>
+          <FormControl fullWidth size="small">
+            <Select
+              value={selectedOption || ''}
+              onChange={handleSelectChange}
+              displayEmpty
+              sx={{ mb: 2 }}
+            >
+              <MenuItem value="" disabled>
+                배송지를 선택해주세요
+              </MenuItem>
+              {data.map((address: any) => (
+                <MenuItem key={address.id} value={address.id}>
+                  {address.addressName || '배송지명 설정이 필요합니다'}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         )}
-      </div>
+      </Box>
+
       {selectedAddress ? (
-        <div>
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: '100px' }}>배송지명 : </div>
-            <div>
-              <input
-                type="text"
-                value={payload?.addressName || ''}
-                onChange={(e) =>
-                  setPayload({
-                    ...payload,
-                    addressName: e.target.value,
-                  })
-                }
-              />
-            </div>
-          </div>
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: '100px' }}>주소 : </div>
-            <div>
-              <input
-                type="text"
-                value={payload?.city || ''}
-                onChange={(e) =>
-                  setPayload({
-                    ...payload,
-                    city: e.target.value,
-                  })
-                }
-              />{' '}
-            </div>
-          </div>
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: '100px' }}>군구 : </div>
-            <div>
-              <input
-                type="text"
-                value={payload?.state || ''}
-                onChange={(e) =>
-                  setPayload({
-                    ...payload,
-                    state: e.target.value,
-                  })
-                }
-              />
-            </div>
-          </div>
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: '100px' }}>상세 주소 : </div>
-            <div>
-              <input
-                type="text"
-                value={payload?.street || ''}
-                onChange={(e) =>
-                  setPayload({
-                    ...payload,
-                    street: e.target.value,
-                  })
-                }
-              />
-            </div>
-          </div>
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: '100px' }}>우편번호</div>
-            <div>
-              <input
-                type="text"
-                value={payload?.zipcode || ''}
-                onChange={(e) =>
-                  setPayload({
-                    ...payload,
-                    zipcode: e.target.value,
-                  })
-                }
-              />
-            </div>
-          </div>
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: '100px' }}>수령인</div>
-            <div>
-              <input
-                type="text"
-                value={payload?.receiverName || ''}
-                onChange={(e) =>
-                  setPayload({
-                    ...payload,
-                    receiverName: e.target.value,
-                  })
-                }
-              />
-            </div>
-          </div>
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: '100px' }}>번호</div>
-            <div>
-              <input
-                type="text"
-                value={payload?.receiverPhoneNumber || ''}
-                onChange={(e) =>
-                  setPayload({
-                    ...payload,
-                    receiverPhoneNumber: e.target.value,
-                  })
-                }
-              />
-            </div>
-          </div>
-        </div>
+        <Stack spacing={2}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography sx={{ width: 100, minWidth: 100 }}>
+              배송지명 :
+            </Typography>
+            <TextField
+              size="small"
+              fullWidth
+              value={payload?.addressName || ''}
+              onChange={(e) =>
+                setPayload({
+                  ...payload,
+                  addressName: e.target.value,
+                })
+              }
+            />
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography sx={{ width: 100, minWidth: 100 }}>주소 :</Typography>
+            <TextField
+              size="small"
+              fullWidth
+              value={payload?.city || ''}
+              onChange={(e) =>
+                setPayload({
+                  ...payload,
+                  city: e.target.value,
+                })
+              }
+            />
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography sx={{ width: 100, minWidth: 100 }}>군구 :</Typography>
+            <TextField
+              size="small"
+              fullWidth
+              value={payload?.state || ''}
+              onChange={(e) =>
+                setPayload({
+                  ...payload,
+                  state: e.target.value,
+                })
+              }
+            />
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography sx={{ width: 100, minWidth: 100 }}>
+              상세 주소 :
+            </Typography>
+            <TextField
+              size="small"
+              fullWidth
+              value={payload?.street || ''}
+              onChange={(e) =>
+                setPayload({
+                  ...payload,
+                  street: e.target.value,
+                })
+              }
+            />
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography sx={{ width: 100, minWidth: 100 }}>
+              우편번호 :
+            </Typography>
+            <TextField
+              size="small"
+              fullWidth
+              value={payload?.zipcode || ''}
+              onChange={(e) =>
+                setPayload({
+                  ...payload,
+                  zipcode: e.target.value,
+                })
+              }
+            />
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography sx={{ width: 100, minWidth: 100 }}>수령인 :</Typography>
+            <TextField
+              size="small"
+              fullWidth
+              value={payload?.receiverName || ''}
+              onChange={(e) =>
+                setPayload({
+                  ...payload,
+                  receiverName: e.target.value,
+                })
+              }
+            />
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography sx={{ width: 100, minWidth: 100 }}>번호 :</Typography>
+            <TextField
+              size="small"
+              fullWidth
+              value={payload?.receiverPhoneNumber || ''}
+              onChange={(e) =>
+                setPayload({
+                  ...payload,
+                  receiverPhoneNumber: e.target.value,
+                })
+              }
+            />
+          </Box>
+        </Stack>
       ) : (
-        '배송지를 선택해 주세요'
+        <Typography
+          sx={{ textAlign: 'center', py: 2, color: 'text.secondary' }}
+        >
+          배송지를 선택해 주세요
+        </Typography>
       )}
-    </div>
+      <Box sx={{ display: 'flex', gap: 1, mt: 4 }}>
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={<AddIcon />}
+          onClick={() => {
+            mutateAsync(userEmail);
+          }}
+          disabled={isAddingAddress}
+        >
+          {isAddingAddress ? '추가 중...' : '배송지 추가'}
+        </Button>
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={<EditIcon />}
+          onClick={() => {
+            mutateAsyncUpdate(payload);
+          }}
+          disabled={isUpdatingAddress || !selectedOption}
+        >
+          {isUpdatingAddress ? '수정 중...' : '배송지 수정'}
+        </Button>
+      </Box>
+    </Paper>
   );
 }

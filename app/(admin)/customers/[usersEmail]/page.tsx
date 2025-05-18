@@ -1,5 +1,4 @@
 'use client';
-import styles from './page.module.css';
 import UserAddress from './(components)/address';
 import UserDcAmount from './(components)/dcAmount';
 import UserDcRate from './(components)/dcRate';
@@ -7,6 +6,7 @@ import { useGetUsersDetailByUsersEmail } from '@/query/query/users';
 import UserPermission from './(components)/userPermission';
 import UserNickname from './(components)/userNickname';
 import UpdateInCharge from './(components)/updateInCharge';
+import { Box, Typography, Paper, Container, Stack } from '@mui/material';
 
 export default function CustomerDetail({
   params,
@@ -21,39 +21,76 @@ export default function CustomerDetail({
   } = useGetUsersDetailByUsersEmail(usersEmail);
 
   return (
-    <main className={styles.customersDetailContainer}>
-      <div className={styles.titleContainer}>고객-상세</div>
+    <Container maxWidth="lg" sx={{ py: 3 }}>
+      <Paper
+        elevation={1}
+        sx={{
+          p: 3,
+          mb: 3,
+          borderRadius: 2,
+        }}
+      >
+        <Typography variant="h5" fontWeight="bold" sx={{ mb: 3 }}>
+          고객-상세
+        </Typography>
 
-      <div className={styles.titleContainer}>
         {!isUsersLoading && isUsersSuccess && (
-          <div className={styles.userDataContainer}>
-            <div>유저 아이디 : {usersData.userEmail}</div>
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="body1" sx={{ mb: 1 }}>
+              유저 아이디 : {usersData.userEmail}
+            </Typography>
             <UserNickname usersData={usersData} />
             <UserPermission usersData={usersData} />
             <UpdateInCharge usersData={usersData} />
-          </div>
+          </Box>
         )}
-      </div>
 
-      <div style={{ display: 'flex' }}>
-        <div>
-          <div className={styles.titleContainer}>유저-할인율</div>
-          <div className={styles.tableContainer}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            gap: 3,
+            mb: 3,
+          }}
+        >
+          <Paper
+            elevation={1}
+            sx={{
+              p: 2,
+              flex: 1,
+              height: '100%',
+            }}
+          >
+            <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+              유저-할인율
+            </Typography>
             <UserDcRate usersEmail={usersEmail} />
-          </div>
-        </div>
-        <div>
-          <div className={styles.titleContainer}>유저-할인액</div>
-          <div className={styles.tableContainer}>
-            <UserDcAmount usersEmail={usersEmail} />
-          </div>
-        </div>
-      </div>
+          </Paper>
 
-      <div className={styles.titleContainer}>배송지</div>
-      <div className={styles.tableContainer}>
-        <UserAddress usersEmail={usersEmail} />
-      </div>
-    </main>
+          <Paper
+            elevation={1}
+            sx={{
+              p: 2,
+              flex: 1,
+              height: '100%',
+            }}
+          >
+            <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+              유저-할인액
+            </Typography>
+            <UserDcAmount usersEmail={usersEmail} />
+          </Paper>
+        </Box>
+
+        <Box sx={{ mt: 3 }}>
+          <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+            배송지
+          </Typography>
+          <Paper elevation={1} sx={{ p: 2 }}>
+            <UserAddress usersEmail={usersEmail} />
+          </Paper>
+        </Box>
+      </Paper>
+    </Container>
   );
 }

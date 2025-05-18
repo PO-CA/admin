@@ -5,10 +5,10 @@ import styles from '../../page.module.css';
 
 export default function CreateProductCoordinateButton({ row }: any) {
   const payload = {
-    productId: row.original.productId,
-    coordinateId: row.original.id,
+    productId: Number(row.productId),
+    coordinateId: Number(row.id),
   };
-  const { mutate: createAProductCoordinate } =
+  const { mutateAsync: createAProductCoordinate, isPending } =
     useCreateAProductCoordinate(payload);
 
   return (
@@ -16,14 +16,15 @@ export default function CreateProductCoordinateButton({ row }: any) {
       <button
         type="button"
         className={styles.cellButton}
-        onClick={() => {
-          if (row.original.isChecked) {
+        onClick={async () => {
+          if (row.isChecked) {
             return alert('이미 선택된 좌표입니다');
           }
-          createAProductCoordinate();
+          await createAProductCoordinate();
         }}
+        disabled={isPending}
       >
-        좌표 선택
+        {isPending ? '좌표 선택중...' : '좌표 선택'}
       </button>
     </div>
   );

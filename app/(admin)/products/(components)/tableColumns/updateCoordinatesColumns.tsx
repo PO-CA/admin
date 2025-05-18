@@ -1,42 +1,37 @@
 'use client';
 import DeleteCoordinateButton from '@/app/(admin)/addproduct/(components)/addCoordinate/DeleteCoordinateButton';
-import { ColumnDef } from '@tanstack/react-table';
 import React from 'react';
 import DeleteProductCoordinateButton from '../deleteProductCoordinateButton';
 import CreateProductCoordinateButton from '../createProductCoordinateButton';
 
-export const updateCoordinatesColumns: ColumnDef<any, any>[] = [
+export const updateCoordinatesColumns = [
   {
-    id: 'select-col',
-    // header: ({ table }) => '',
-    cell: ({ row }) => {
+    field: 'name',
+    headerName: '좌표',
+    flex: 1,
+  },
+  {
+    field: 'actions',
+    headerName: '',
+    flex: 1,
+    sortable: false,
+    filterable: false,
+    renderCell: (params: any) => {
       return (
-        <input
-          type="checkbox"
-          checked={row.original.isChecked}
-          disabled
-          onChange={row.getToggleSelectedHandler()}
-        />
+        <div
+          style={{
+            display: 'flex',
+            gap: 4,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
+          <CreateProductCoordinateButton row={params.row} />
+          <DeleteProductCoordinateButton row={params.row} />
+          <DeleteCoordinateButton row={params.row} />
+        </div>
       );
     },
-  },
-  {
-    accessorFn: (row) => row.name,
-    id: 'name',
-    cell: (info) => info.getValue(),
-    header: () => <span>좌표</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    id: 'delete',
-    cell: ({ row }) => (
-      <div>
-        <CreateProductCoordinateButton row={row} />
-        <DeleteProductCoordinateButton row={row} />
-        <DeleteCoordinateButton row={row} />
-      </div>
-    ),
-    header: () => '',
-    footer: (props) => props.column.id,
   },
 ];
