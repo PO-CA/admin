@@ -135,12 +135,28 @@ export const presignRes = async (shippingCode: string, videoBlob: Blob) => {
     },
   );
 
+  console.log('presignedData:', data);
+  console.log('presignedUrl:', data.presignedUrl);
+
   return data;
 };
 
 // 2. presigned URL로 직접 S3에 업로드
 export const uploadRes = async (presignedData: any, videoBlob: Blob) => {
-  const { data } = await axios.put(presignedData.presignedUrl, videoBlob, {
+  // URL이 유효한지 확인
+  if (!presignedData || !presignedData.presignedUrl) {
+    console.error('presignedUrl이 없습니다:', presignedData);
+    throw new Error('유효하지 않은 presigned URL');
+  }
+
+  // URL이 http:// 또는 https://로 시작하는지 확인
+  const url = presignedData.presignedUrl;
+  const validUrl =
+    url.startsWith('http://') || url.startsWith('https://')
+      ? url
+      : `https:${url.startsWith('//') ? url : `//${url}`}`;
+
+  const { data } = await axios.put(validUrl, videoBlob, {
     headers: {
       'Content-Type': videoBlob.type,
     },
