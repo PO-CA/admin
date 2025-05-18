@@ -677,9 +677,10 @@ function Sidebar() {
           open={snackbar.open}
           autoHideDuration={3000}
           onClose={handleCloseSnackbar}
+          disableWindowBlurListener={true}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           sx={{
-            zIndex: 9999,
+            zIndex: 99999,
             position: 'fixed',
             bottom: isMobile ? 10 : 24,
             left: '50%',
