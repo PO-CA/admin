@@ -679,7 +679,7 @@ function Sidebar() {
           onClose={handleCloseSnackbar}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           sx={{
-            zIndex: theme.zIndex.tooltip + 10,
+            zIndex: 9999,
             position: 'fixed',
             bottom: isMobile ? 10 : 24,
             left: '50%',
