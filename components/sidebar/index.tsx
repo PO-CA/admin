@@ -254,18 +254,25 @@ function Sidebar() {
         `(${fileSizeInMB}MB)`,
       );
       // 1. S3 업로드를 위한 presigned URL 가져오기
+      console.log('1, params', shippingCode, ',', videoBlob);
+
       const presignedData = await presignRes(shippingCode, videoBlob);
+      console.log('2, presignedData', presignedData);
       showSnackbar(
         `presignedData: ${JSON.stringify(presignedData)}`,
         'success',
       );
 
       // 2. presigned URL로 직접 S3에 업로드
+      console.log('3, params', presignedData, ',', videoBlob);
       const uploadResult = await uploadRes(presignedData, videoBlob);
       showSnackbar(`업로드 완료: ${JSON.stringify(uploadResult)}`, 'success');
+      console.log('4, uploadResult', uploadResult);
 
       // 3. 업로드 결과 등록
+      console.log('5, params', shippingCode, ',', presignedData.uploadFileUrl);
       const res = await registerRes(shippingCode, presignedData.uploadFileUrl);
+      console.log('6, res', res);
       showSnackbar(`res: ${JSON.stringify(res)}`, 'success');
       showSnackbar('영상이 성공적으로 업로드되었습니다', 'success');
       setOpenModal(false);

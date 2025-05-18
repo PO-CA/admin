@@ -1,6 +1,7 @@
 import { API_URL } from '@/constants/apis';
 import { CreateShippingDTO } from '@/types/createShippingDTO';
 import { requests } from '../request';
+import axios from 'axios';
 
 export const getAllShippings = async () => {
   const { data } = await requests(`${API_URL}/logi/shipping`, {
@@ -139,12 +140,11 @@ export const presignRes = async (shippingCode: string, videoBlob: Blob) => {
 
 // 2. presigned URL로 직접 S3에 업로드
 export const uploadRes = async (presignedData: any, videoBlob: Blob) => {
-  const { data } = await requests(presignedData.presignedUrl, {
-    method: 'PUT',
-    data: videoBlob,
+  const { data } = await axios.put(presignedData.presignedUrl, videoBlob, {
     headers: {
       'Content-Type': videoBlob.type,
     },
+    withCredentials: false,
   });
 
   return data;
