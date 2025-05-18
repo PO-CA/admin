@@ -92,6 +92,7 @@ export function CoordinateSelectRegister({
         rows={rows}
         columns={columns}
         pageSizeOptions={[10, 20, 50]}
+        showToolbar
         initialState={{
           pagination: {
             paginationModel: { pageSize: 10, page: 0 },
@@ -154,6 +155,7 @@ export function CoordinateSelectEdit({
         rows={enhancedRows}
         columns={columns}
         pageSizeOptions={[10, 20, 50]}
+        showToolbar
         initialState={{
           pagination: {
             paginationModel: { pageSize: 10, page: 0 },
