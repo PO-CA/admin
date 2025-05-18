@@ -1,81 +1,40 @@
 'use client';
 import React from 'react';
-import {
-  ColumnFiltersState,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
-import { useState } from 'react';
-import TanTable, { fuzzyFilter } from '@/components/table';
-import { useGetAllShippings } from '@/query/query/shippings';
-import { shippingColumns } from '@/app/(admin)/shippings/(components)/tableColumns/shippingColumns';
-import styles from './page.module.css';
-import tableStyles from './table.module.css';
-import TableLoader from '@/components/tableLoader';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import ShippingTable from './(components)/ShippingTable';
 
 export default function Shippings() {
-  const {
-    data: shippingData,
-    isLoading: isShippingLoading,
-    isSuccess: isShippingSuccess,
-  } = useGetAllShippings();
-
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [globalFilter, setGlobalFilter] = useState('');
-
-  const table = useReactTable({
-    data: shippingData,
-    columns: shippingColumns,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
-    initialState: {
-      pagination: { pageSize: 20, pageIndex: 0 },
-    },
-    state: {
-      columnFilters,
-      globalFilter,
-    },
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: fuzzyFilter,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: false,
-  });
-
-  if (!isShippingSuccess) {
-    return <div>Failed to load</div>;
-  }
-
   return (
-    <main className={styles.shippingsContainer}>
-      <div className={styles.titleContainer}>배송-목록</div>
-      <div className={styles.tableContainer}>
-        {isShippingLoading && <TableLoader />}
-        <TanTable
-          table={table}
-          globalFilter={globalFilter}
-          setGlobalFilter={setGlobalFilter}
-          styles={tableStyles}
-          search
-          filter
-          pagenation
-        />
-      </div>
-    </main>
+    <Box sx={{ p: 3 }}>
+      <Typography
+        variant="h6"
+        sx={{
+          background: 'white',
+          p: 2,
+          fontWeight: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          mb: 2,
+          fontSize: 18,
+        }}
+      >
+        배송-목록
+      </Typography>
+      <Paper
+        sx={{
+          background: 'white',
+          fontSize: 14,
+          fontWeight: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          m: '0 10px',
+          p: 2,
+        }}
+      >
+        <ShippingTable />
+      </Paper>
+    </Box>
   );
 }

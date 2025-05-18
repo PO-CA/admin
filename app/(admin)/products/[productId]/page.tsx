@@ -1,17 +1,22 @@
 'use client';
 import { useGetAProduct, useUpdateAProduct } from '@/query/query/products';
-import styles from './page.module.css';
 import useInput from '@/hooks/useInput';
 import { useEffect } from 'react';
 import ProductInput from '@/components/productInput';
 import CategorySelect from '../../addproduct/(components)/addCategory/CategorySelect';
 import DeleteCategory from '../../addproduct/(components)/addCategory/DeleteCategory';
 import AddCategory from '../../addproduct/(components)/addCategory/AddCategory';
-import CoordinateSelect from '../../addproduct/(components)/addCoordinate/CoordinateSelect';
+import { CoordinateSelectEdit } from '../../addproduct/(components)/addCoordinate/CoordinateSelect';
 import AddCoordinate from '../../addproduct/(components)/addCoordinate/AddCoordinate';
-import { updateCoordinatesColumns } from '../(components)/tableColumns/updateCoordinatesColumns';
 import { UpdateProductData } from '@/types/updateProductData';
 import { useRouter } from 'next/navigation';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import type { SelectChangeEvent } from '@mui/material/Select';
+import { updateCoordinatesColumns } from '../(components)/tableColumns/updateCoordinatesColumns';
 
 export default function ProductDetail({
   params,
@@ -19,7 +24,6 @@ export default function ProductDetail({
   params: { productId: string };
 }) {
   const { productId } = params;
-
   const {
     data: productData,
     isLoading: isProductLoading,
@@ -27,9 +31,7 @@ export default function ProductDetail({
   } = useGetAProduct(productId);
 
   const { mutateAsync: updateProduct, isPending } = useUpdateAProduct();
-
   const router = useRouter();
-
   const {
     value: productInputData,
     setValue,
@@ -85,71 +87,115 @@ export default function ProductDetail({
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (productInputData.logiCategoryId === '')
       return alert('카테고리를 선택해주세요.');
-
     if (productInputData.title === '') return alert('상품명을 작성해주세요.');
     if (productInputData.sku === '') return alert('sku를 작성해주세요.');
     if (productInputData.barcode === '')
       return alert('Barcode를 작성해주세요.');
-
     productInputData.releaseDate = new Date(
       productInputData.releaseDate,
     ).toISOString();
     productInputData.deadlineDate = new Date(
       productInputData.deadlineDate,
     ).toISOString();
-
     updateProduct(productInputData).then(() => {
       router.refresh();
     });
   };
 
   if (isProductLoading) return <div>loading</div>;
-
   if (!isProductSuccess) return <div>fail</div>;
 
   return (
-    <main className={styles.productDetailContainer}>
-      <div className={styles.addProductTitle}>상품-상세</div>
-      <form onSubmit={onSubmit}>
-        <button
-          type="submit"
-          className={styles.addProductBtn}
-          disabled={isPending}
-        >
-          상품수정
-        </button>
-
-        <div style={{ marginTop: '10px' }}>
-          <label style={{ marginLeft: '20px', fontSize: '25px' }}>
-            상품번호
-          </label>
-          <input
-            style={{ marginLeft: '20px', fontSize: '25px' }}
-            value={productInputData?.productId}
-            disabled
-          />
-        </div>
-        <div className={styles.categoryContainer}>
-          <div style={{ display: 'flex' }}>
-            <CategorySelect onChange={onChange} />
-            <DeleteCategory categoryId={Number(productData.categoryId)} />
-          </div>
-          <AddCategory />
-        </div>
-
-        <div className={styles.tableContainer}>
-          <CoordinateSelect
-            productData={productData}
-            coordinatesColumns={updateCoordinatesColumns}
-          />
-          <AddCoordinate />
-        </div>
-
-        <ProductInput addProductData={productInputData} onChange={onChange} />
-      </form>
-    </main>
+    <Box sx={{ p: 3 }}>
+      <Typography
+        variant="h6"
+        sx={{
+          background: 'white',
+          p: 2,
+          fontWeight: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          mb: 2,
+          fontSize: 18,
+        }}
+      >
+        상품-상세
+      </Typography>
+      <Paper
+        sx={{
+          background: 'white',
+          p: 2,
+          mb: 2,
+          border: '1px solid',
+          borderColor: 'divider',
+        }}
+      >
+        <form onSubmit={onSubmit}>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{ mb: 2, fontWeight: 600, borderRadius: 2 }}
+            disabled={isPending}
+          >
+            {isPending ? '수정중...' : '상품수정'}
+          </Button>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+            <Typography sx={{ minWidth: 80, fontWeight: 600 }}>
+              상품번호
+            </Typography>
+            <TextField
+              value={productInputData?.productId}
+              size="small"
+              disabled
+              sx={{ minWidth: 120 }}
+            />
+          </Box>
+          <Paper
+            sx={{
+              background: 'white',
+              p: 2,
+              mb: 2,
+              border: '1px solid',
+              borderColor: 'divider',
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+              <CategorySelect
+                onChange={(e: SelectChangeEvent) => {
+                  onChange({
+                    target: {
+                      name: e.target.name || 'logiCategoryId',
+                      value: e.target.value,
+                    },
+                  } as any);
+                }}
+              />
+              <DeleteCategory
+                categoryId={Number(productData.logiCategory?.id)}
+              />
+            </Box>
+            <AddCategory />
+          </Paper>
+          <Paper
+            sx={{
+              background: 'white',
+              p: 2,
+              mb: 2,
+              border: '1px solid',
+              borderColor: 'divider',
+            }}
+          >
+            <CoordinateSelectEdit
+              columns={updateCoordinatesColumns}
+              productData={productData}
+            />
+            <AddCoordinate />
+          </Paper>
+          <ProductInput addProductData={productInputData} onChange={onChange} />
+        </form>
+      </Paper>
+    </Box>
   );
 }

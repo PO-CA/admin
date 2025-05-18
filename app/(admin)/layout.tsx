@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useIsAdmin } from '@/hooks/useIAdmin';
 import Header from '@/components/header';
 import { pocaMenus } from '@/constants/poca-menus';
+import Box from '@mui/material/Box';
 
 export default function RootLayout({
   children,
@@ -23,29 +24,8 @@ export default function RootLayout({
       <>
         <Header />
         <div className={styles.contentContainer}>
-          <Sidebar>
-            <Sidebar.MenusConatiner>
-              {menus.map((menu, i) => (
-                <Sidebar.MainMenus
-                  key={`${menu.href}${i}`}
-                  href={menu.href}
-                  text={menu.text}
-                  subMenus={menu.subMenus}
-                />
-              ))}
-              {userEmail &&
-                (userEmail === 'rudghksldl@gmail.com' ||
-                  userEmail === 'kurare@naver.com') &&
-                pocaMenus.map((menu, i) => (
-                  <Sidebar.MainMenus
-                    key={`${i}poca`}
-                    text={menu.text}
-                    subMenus={menu.subMenus}
-                  />
-                ))}
-            </Sidebar.MenusConatiner>
-          </Sidebar>
-          {children}
+          <Sidebar />
+          <Box sx={{ flex: 1, pt: '72px' }}>{children}</Box>
         </div>
       </>
     )

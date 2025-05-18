@@ -11,6 +11,7 @@ import CoordinateSelect from '../../../addproduct/(components)/addCoordinate/Coo
 import AddCoordinate from '../../../addproduct/(components)/addCoordinate/AddCoordinate';
 import { ProductData } from '@/types/productData';
 import { coordinatesColumns } from '@/app/(admin)/addproduct/(components)/addCoordinate/coordinatesColumns';
+import { SelectChangeEvent } from '@mui/material/Select';
 
 export default function ProductDetail({
   params,
@@ -131,7 +132,16 @@ export default function ProductDetail({
         </div>
         <div className={styles.categoryContainer}>
           <div style={{ display: 'flex' }}>
-            <CategorySelect onChange={onChange} />
+            <CategorySelect
+              onChange={(e: SelectChangeEvent) => {
+                onChange({
+                  target: {
+                    name: e.target.name || 'categoryId',
+                    value: e.target.value,
+                  },
+                } as any);
+              }}
+            />
             <DeleteCategory categoryId={Number(productData.categoryId)} />
           </div>
           <AddCategory />
@@ -139,7 +149,7 @@ export default function ProductDetail({
 
         <div className={styles.tableContainer}>
           <CoordinateSelect
-            coordinatesColumns={coordinatesColumns}
+            columns={coordinatesColumns}
             setSelectedRowIds={setSelectedRowIds}
           />
           <AddCoordinate />

@@ -5,8 +5,8 @@ import styles from '../../page.module.css';
 
 export default function DeleteProductCoordinateButton({ row }: any) {
   const payload = {
-    productId: row.original.productId,
-    coordinateId: row.original.id,
+    productId: row.productId,
+    coordinateId: row.id,
   };
   const { mutate: deleteAProductCoordinate } =
     useDeleteAProductCoordinate(payload);
@@ -17,7 +17,7 @@ export default function DeleteProductCoordinateButton({ row }: any) {
         type="button"
         className={styles.cellButton}
         onClick={() => {
-          if (!row.original.isChecked) {
+          if (!row.isChecked) {
             return alert('선택된 좌표가 없습니다');
           }
           deleteAProductCoordinate();

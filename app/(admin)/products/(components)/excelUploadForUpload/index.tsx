@@ -5,6 +5,8 @@ import {
   useUpdateProductsBulk,
   useGetAllproducts,
 } from '@/query/query/products';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 export default function ExcelUploadForUpdate() {
   const [uploadedFile, setUploadedFile] = useState<any>(null);
@@ -19,6 +21,7 @@ export default function ExcelUploadForUpdate() {
       }
     },
   });
+  const [fileName, setFileName] = useState('');
 
   const handleDrop = useCallback(
     async (acceptedFiles: any) => {
@@ -29,15 +32,13 @@ export default function ExcelUploadForUpdate() {
       }
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
-
+        setFileName(file.name);
         const reader = new FileReader();
         reader.onload = async (e: any) => {
           const data = new Uint8Array(e.target.result);
           const workbook = XLSX.read(data, { type: 'array' });
-
           const sheetName = workbook.SheetNames[0];
           const sheet = workbook.Sheets[sheetName];
-
           const jsonData = XLSX.utils.sheet_to_json(sheet, { defval: null });
           // 밸리데이션 (for문으로 변경)
           for (let i = 0; i < jsonData.length; i++) {
@@ -72,11 +73,8 @@ export default function ExcelUploadForUpdate() {
               return;
             }
           }
-
-          // 모든 행이 통과한 경우에만 파일 저장
           setUploadedFile({ file, jsonData });
         };
-
         reader.readAsArrayBuffer(file);
       }
     },
@@ -122,15 +120,37 @@ export default function ExcelUploadForUpdate() {
   };
 
   return (
-    <form onSubmit={handleUpload}>
-      <input
-        type="file"
-        accept=".xlsx, .xls, .csv"
-        onChange={(e) => handleDrop(e.target.files)}
-      />
-      <button type="submit" disabled={isPending}>
+    <form
+      onSubmit={handleUpload}
+      style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+    >
+      <Button
+        variant="contained"
+        component="label"
+        size="small"
+        disabled={isPending}
+        sx={{ fontWeight: 600, borderRadius: 2 }}
+      >
+        엑셀 업로드
+        <input
+          type="file"
+          accept=".xlsx, .xls, .csv"
+          hidden
+          onChange={(e) => handleDrop(e.target.files)}
+        />
+      </Button>
+      <Button
+        type="submit"
+        size="small"
+        variant="outlined"
+        disabled={isPending}
+        sx={{ fontWeight: 600, borderRadius: 2 }}
+      >
         {isPending ? '업로드 중...' : '업로드'}
-      </button>
+      </Button>
+      {fileName && (
+        <span style={{ fontSize: 13, color: '#666' }}>{fileName}</span>
+      )}
     </form>
   );
 }

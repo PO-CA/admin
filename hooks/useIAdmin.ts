@@ -30,7 +30,7 @@ export const useIsAdmin = () => {
           }
         } else {
           if (
-            pathname === '/login' ||
+            pathname === '/sign-in' ||
             pathname === '/signup' ||
             pathname === '/'
           ) {
@@ -39,7 +39,7 @@ export const useIsAdmin = () => {
         }
       } else {
         if (pathname !== '/signup') {
-          router.push('/login');
+          router.push('/sign-in');
         } else {
           router.push('/signup');
         }

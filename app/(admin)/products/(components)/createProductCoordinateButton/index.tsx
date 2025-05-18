@@ -5,8 +5,8 @@ import styles from '../../page.module.css';
 
 export default function CreateProductCoordinateButton({ row }: any) {
   const payload = {
-    productId: row.original.productId,
-    coordinateId: row.original.id,
+    productId: row.productId,
+    coordinateId: row.id,
   };
   const { mutate: createAProductCoordinate } =
     useCreateAProductCoordinate(payload);
@@ -17,7 +17,7 @@ export default function CreateProductCoordinateButton({ row }: any) {
         type="button"
         className={styles.cellButton}
         onClick={() => {
-          if (row.original.isChecked) {
+          if (row.isChecked) {
             return alert('이미 선택된 좌표입니다');
           }
           createAProductCoordinate();
