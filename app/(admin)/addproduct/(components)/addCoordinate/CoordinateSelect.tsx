@@ -92,6 +92,11 @@ export function CoordinateSelectRegister({
         rows={rows}
         columns={columns}
         pageSizeOptions={[10, 20, 50]}
+        initialState={{
+          pagination: {
+            paginationModel: { pageSize: 10, page: 0 },
+          },
+        }}
         {...dataGridProps}
       />
     </Box>
@@ -149,6 +154,11 @@ export function CoordinateSelectEdit({
         rows={enhancedRows}
         columns={columns}
         pageSizeOptions={[10, 20, 50]}
+        initialState={{
+          pagination: {
+            paginationModel: { pageSize: 10, page: 0 },
+          },
+        }}
         {...dataGridProps}
       />
       <style jsx global>{`
