@@ -25,7 +25,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from '@/providers/SnackbarProvider';
-import { registerRes, presignRes } from '@/query/api/shipping';
+import { registerRes, presignRes, uploadRes } from '@/query/api/shipping';
 
 function Sidebar() {
   const { showSnackbar } = useSnackbar();
@@ -255,34 +255,27 @@ function Sidebar() {
       );
       // 1. S3 업로드를 위한 presigned URL 가져오기
       const presignedData = await presignRes(shippingCode, videoBlob);
-      console.log('presignedData', presignedData);
-      if (!presignedData) {
-        throw new Error('URL 생성 실패');
-      }
+      showSnackbar(
+        `presignedData: ${JSON.stringify(presignedData)}`,
+        'success',
+      );
 
       // 2. presigned URL로 직접 S3에 업로드
-      const uploadResult = await fetch(presignedData.presignedUrl, {
-        method: 'PUT',
-        body: videoBlob,
-        headers: {
-          'Content-Type': videoBlob.type,
-        },
-      });
-
-      if (!uploadResult.ok) {
-        throw new Error('파일 업로드 실패');
-      }
+      const uploadResult = await uploadRes(presignedData, videoBlob);
+      showSnackbar(`업로드 완료: ${JSON.stringify(uploadResult)}`, 'success');
 
       // 3. 업로드 결과 등록
-      await registerRes(shippingCode, presignedData.uploadFileUrl);
-
+      const res = await registerRes(shippingCode, presignedData.uploadFileUrl);
+      showSnackbar(`res: ${JSON.stringify(res)}`, 'success');
       showSnackbar('영상이 성공적으로 업로드되었습니다', 'success');
       setOpenModal(false);
       setShippingCode('');
       setVideoBlob(null);
     } catch (error) {
       console.error('업로드 오류:', error);
-      showSnackbar('영상 업로드 중 오류가 발생했습니다', 'error');
+      showSnackbar(
+        '영상 업로드 중 오류가 발생했습니다' + JSON.stringify(error),
+      );
     }
   };
 

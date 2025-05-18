@@ -137,6 +137,19 @@ export const presignRes = async (shippingCode: string, videoBlob: Blob) => {
   return data;
 };
 
+// 2. presigned URL로 직접 S3에 업로드
+export const uploadRes = async (presignedData: any, videoBlob: Blob) => {
+  const { data } = await requests(presignedData.presignedUrl, {
+    method: 'PUT',
+    data: videoBlob,
+    headers: {
+      'Content-Type': videoBlob.type,
+    },
+  });
+
+  return data;
+};
+
 // 업로드 결과 등록
 export const registerRes = async (
   shippingCode: string,
