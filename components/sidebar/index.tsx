@@ -677,12 +677,29 @@ function Sidebar() {
           open={snackbar.open}
           autoHideDuration={3000}
           onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          sx={{
+            zIndex: theme.zIndex.modal + 1,
+            position: 'fixed',
+            top: isMobile ? 10 : 24,
+            left: '50%',
+            transform: 'translateX(-50%)',
+          }}
         >
           <Alert
             onClose={handleCloseSnackbar}
             severity={snackbar.severity}
-            sx={{ width: '100%' }}
+            elevation={6}
+            variant="filled"
+            sx={{
+              width: '100%',
+              boxShadow: 3,
+              minWidth: '250px',
+              fontSize: '1rem',
+              '& .MuiAlert-icon': {
+                fontSize: '1.5rem',
+              },
+            }}
           >
             {snackbar.message}
           </Alert>
