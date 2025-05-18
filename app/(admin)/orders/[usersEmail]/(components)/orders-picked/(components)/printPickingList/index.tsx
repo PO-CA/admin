@@ -1,15 +1,20 @@
 'use client';
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
-import { printPickingListColumns } from '../printPickingListColumns';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import PrintIcon from '@mui/icons-material/Print';
 import { styled } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
+import Image from 'next/image';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 // 프린트용 스타일드 컴포넌트
 const PrintContainer = styled('div')(({ theme }) => ({
@@ -20,10 +25,12 @@ const PrintContainer = styled('div')(({ theme }) => ({
   margin: '0',
   '@media print': {
     width: '100%',
-    height: '100%',
+    height: 'auto',
     margin: 0,
     padding: '20px',
     backgroundColor: 'white',
+    pageBreakAfter: 'always',
+    pageBreakInside: 'avoid',
   },
 }));
 
@@ -45,30 +52,33 @@ const PrintSubheader = styled(Typography)(({ theme }) => ({
   },
 }));
 
-// 프린트용 스타일이 적용된 DataGrid
-const PrintDataGrid = styled(DataGrid)(({ theme }) => ({
-  border: 'none',
-  '& .MuiDataGrid-columnHeaders': {
-    backgroundColor: theme.palette.primary.main,
-    color: 'white',
-    fontWeight: 600,
-  },
-  '& .MuiDataGrid-row:nth-of-type(even)': {
-    backgroundColor: theme.palette.grey[50],
-  },
-  '& .MuiDataGrid-row': {
-    fontSize: '14px',
-  },
-  '& .MuiDataGrid-cell': {
-    padding: '8px 16px',
-    borderBottom: `1px solid ${theme.palette.divider}`,
-  },
+// 테이블 스타일
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+  boxShadow: 'none',
+  border: '1px solid #e0e0e0',
   '@media print': {
-    '& .MuiDataGrid-columnHeaders': {
-      backgroundColor: '#f0f0f0',
-      color: 'black',
-      fontWeight: 600,
-    },
+    width: '100% !important',
+    border: '1px solid #e0e0e0',
+    boxShadow: 'none',
+  },
+}));
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  padding: '12px 16px',
+  '@media print': {
+    padding: '8px 12px',
+    borderBottom: '1px solid #e0e0e0',
+  },
+}));
+
+const StyledTableHeadCell = styled(StyledTableCell)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  color: 'white',
+  fontWeight: 600,
+  '@media print': {
+    backgroundColor: '#f0f0f0 !important',
+    color: 'black !important',
+    fontWeight: 600,
   },
 }));
 
@@ -83,6 +93,41 @@ export default function PrintPickingList({
   const componentRef = useRef<any>(null);
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
+    pageStyle: `
+      @page {
+        size: A4;
+        margin: 15mm;
+      }
+      @media print {
+        html, body {
+          width: 210mm;
+          height: 297mm;
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          color-adjust: exact;
+        }
+        table {
+          width: 100% !important;
+          border-collapse: collapse;
+        }
+        th {
+          background-color: #f0f0f0 !important;
+          color: black !important;
+          font-weight: 600 !important;
+        }
+      }
+    `,
+    onBeforeGetContent: () => {
+      document.body.classList.add('printing');
+      return Promise.resolve();
+    },
+    onAfterPrint: () => {
+      document.body.classList.remove('printing');
+    },
   });
 
   const printGoback = () => {
@@ -93,13 +138,8 @@ export default function PrintPickingList({
     }
   };
 
-  // 데이터 포맷팅
-  const rows = data
-    .getSelectedRowModel()
-    .rows.map((row: any, index: number) => ({
-      id: index,
-      original: row.original,
-    }));
+  // 데이터 가져오기
+  const rows = data.getSelectedRowModel().rows.map((row: any) => row.original);
 
   // 프린트될 컴포넌트
   const ComponentToPrint = React.forwardRef<HTMLDivElement>((props, ref) => {
@@ -124,27 +164,92 @@ export default function PrintPickingList({
         <Divider sx={{ mb: 3 }} />
 
         <Box sx={{ width: '100%', mb: 2 }}>
-          <PrintDataGrid
-            rows={rows}
-            columns={printPickingListColumns as GridColDef[]}
-            autoHeight
-            hideFooter
-            disableColumnMenu
-            disableColumnFilter
-            disableColumnSelector
-            disableDensitySelector
-            disableRowSelectionOnClick
-            rowHeight={70}
-            columnHeaderHeight={56}
-            getCellClassName={() => 'print-cell'}
-            sx={{
-              '@media print': {
-                '& .MuiDataGrid-main': {
-                  width: '100%',
-                },
-              },
-            }}
-          />
+          <StyledTableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <StyledTableHeadCell align="center" width="100px">
+                    썸네일
+                  </StyledTableHeadCell>
+                  <StyledTableHeadCell width="150px">
+                    바코드/sku
+                  </StyledTableHeadCell>
+                  <StyledTableHeadCell>제목</StyledTableHeadCell>
+                  <StyledTableHeadCell align="center" width="80px">
+                    수량
+                  </StyledTableHeadCell>
+                  <StyledTableHeadCell width="120px">좌표</StyledTableHeadCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows &&
+                  rows.length > 0 &&
+                  rows[0] &&
+                  rows?.map((row: any, index: number) => (
+                    <TableRow key={index}>
+                      <StyledTableCell align="center">
+                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                          <Image
+                            alt="상품 이미지"
+                            unoptimized={true}
+                            src={row.thumbNailUrl}
+                            width={50}
+                            height={50}
+                            style={{ objectFit: 'contain' }}
+                          />
+                        </Box>
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                          <Typography sx={{ fontWeight: 500, lineHeight: 1.2 }}>
+                            {row.barcode || '-'}
+                          </Typography>
+                          <Typography
+                            sx={{
+                              fontSize: '0.8rem',
+                              color: '#666',
+                              lineHeight: 1.2,
+                            }}
+                          >
+                            {row.sku || '-'}
+                          </Typography>
+                        </Box>
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        <Typography sx={{ lineHeight: 1.2 }}>
+                          {row.title || '-'}
+                        </Typography>
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        <Typography sx={{ fontWeight: 'bold' }}>
+                          {row.qty || 0}
+                        </Typography>
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                          {row.coordinates && row.coordinates.length > 0 ? (
+                            row.coordinates.map((coordinate: any) => (
+                              <Typography
+                                key={coordinate.id}
+                                sx={{
+                                  padding: '2px 0',
+                                  lineHeight: 1.2,
+                                  fontWeight: 500,
+                                }}
+                              >
+                                {coordinate.name}
+                              </Typography>
+                            ))
+                          ) : (
+                            <Typography>-</Typography>
+                          )}
+                        </Box>
+                      </StyledTableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </StyledTableContainer>
         </Box>
 
         <Box

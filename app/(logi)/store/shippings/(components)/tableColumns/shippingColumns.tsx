@@ -1,96 +1,71 @@
 'use client';
-import { ColumnDef, SortingFn, sortingFns } from '@tanstack/react-table';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import React from 'react';
-import { compareItems } from '@tanstack/match-sorter-utils';
 import Link from 'next/link';
 
-export const shippingColumns: ColumnDef<any, any>[] = [
-  // {
-  //   id: 'select-col',
-  //   header: ({ table }) => (
-  //     <input
-  //       type="checkbox"
-  //       checked={table.getIsAllRowsSelected()}
-  //       // indeterminate={table.getIsSomeRowsSelected()}
-  //       onChange={table.getToggleAllRowsSelectedHandler()} //or getToggleAllPageRowsSelectedHandler
-  //     />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <input
-  //       type="checkbox"
-  //       checked={row.getIsSelected()}
-  //       disabled={!row.getCanSelect()}
-  //       onChange={row.getToggleSelectedHandler()}
-  //     />
-  //   ),
-  // },
+export const shippingColumns: GridColDef[] = [
   {
-    accessorFn: (row) => row.id,
-    id: 'id',
-    cell: (info) => (
-      <Link href={`/store/shippings/${info.getValue()}`}>
-        {info.getValue()}
-      </Link>
+    field: 'id',
+    headerName: 'ID',
+    width: 100,
+    renderCell: (params: GridRenderCellParams) => (
+      <Link href={`/store/shippings/${params.value}`}>{params.value}</Link>
     ),
-    header: () => <span>ID</span>,
-    footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.createdAt,
-    id: 'createdAt',
-    cell: (info) => info.getValue()?.slice(0, 10),
-    header: () => <span>발송일</span>,
-    footer: (props) => props.column.id,
+    field: 'createdAt',
+    headerName: '발송일',
+    width: 120,
+    valueFormatter: (params: any) => {
+      return params ? String(params).slice(0, 10) : '';
+    },
   },
   {
-    accessorFn: (row) => row.userNickname,
-    id: 'userNickname',
-    cell: (info) => info.getValue(),
-    header: () => <span>닉네임</span>,
-    footer: (props) => props.column.id,
+    field: 'userNickname',
+    headerName: '닉네임',
+    width: 150,
   },
   {
-    accessorFn: (row) => row.totalQty,
-    id: 'totalQty',
-    cell: (info) => info.getValue(),
-    header: () => <span>수량</span>,
-    footer: (props) => props.column.id,
+    field: 'totalQty',
+    headerName: '수량',
+    width: 100,
+    align: 'center',
+    headerAlign: 'center',
   },
   {
-    accessorFn: (row) => row.totalProductPrice,
-    id: 'totalProductPrice',
-    cell: (info) => info.getValue(),
-    header: () => <span>상품가격</span>,
-    footer: (props) => props.column.id,
+    field: 'totalProductPrice',
+    headerName: '총 상품가격',
+    width: 120,
+    align: 'right',
+    headerAlign: 'center',
+    valueFormatter: (params: any) => {
+      return params ? `${params.toLocaleString()}원` : '';
+    },
   },
   {
-    accessorFn: (row) => row.shippingFee,
-    id: 'shippingFee',
-    cell: (info) => info.getValue(),
-    header: () => <span>배송비</span>,
-    footer: (props) => props.column.id,
+    field: 'shippingFee',
+    headerName: '배송비',
+    width: 120,
+    align: 'right',
+    headerAlign: 'center',
+    valueFormatter: (params: any) => {
+      return params ? `${params.toLocaleString()}원` : '';
+    },
   },
   {
-    accessorFn: (row) => row.memo,
-    id: 'memo',
-    cell: (info) => info.getValue(),
-    header: () => <span>배송메모</span>,
-    footer: (props) => props.column.id,
+    field: 'shippingStatus',
+    headerName: '배송상태',
+    width: 120,
+    align: 'right',
+    headerAlign: 'center',
+    valueFormatter: (params: any) => {
+      return params ? `${params}` : '';
+    },
   },
-  // {
-  //   accessorFn: (row) => row.logiCategory.title,
-  //   id: 'logiCategory',
-  //   cell: (info) => info.getValue(),
-  //   header: () => <span>카테고리</span>,
-  //   footer: (props) => props.column.id,
-  // },
-  // {
-  //   accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-  //   id: 'fullName',
-  //   header: 'Full Name',
-  //   cell: (info) => info.getValue(),
-  //   footer: (props) => props.column.id,
-  //   filterFn: 'fuzzy',
-  //   sortingFn: fuzzySort,
-  // },
+  {
+    field: 'memo',
+    headerName: '배송메모',
+    width: 200,
+    flex: 1,
+  },
 ];

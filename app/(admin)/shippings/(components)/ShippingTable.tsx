@@ -11,7 +11,7 @@ export default function ShippingTable() {
     {
       field: 'id',
       headerName: 'ID',
-      flex: 1,
+      flex: 0.5,
       renderCell: (params: any) => (
         <a href={`/shippings/${params.value}`}>{params.value}</a>
       ),
@@ -51,7 +51,14 @@ export default function ShippingTable() {
       sortable: false,
       filterable: false,
       renderCell: (params: any) => (
-        <div style={{ display: 'flex' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
           <DeleteShippingButton info={{ row: { original: params.row } }} />
           <PayShippingButton info={{ row: { original: params.row } }} />
         </div>
@@ -59,10 +66,19 @@ export default function ShippingTable() {
     },
     {
       field: 'shippingStatus',
-      headerName: '',
+      headerName: '배송상태',
       flex: 1,
-      valueGetter: (params: any) =>
-        params.value === '결제완료' ? params.row.updatedAt?.slice(0, 10) : '',
+      valueGetter: (params: any) => {
+        return params;
+      },
+    },
+    {
+      field: 'updatedAt',
+      headerName: '배송/결제일',
+      flex: 1,
+      valueGetter: (params: any) => {
+        return params?.slice(0, 10) || '';
+      },
     },
   ];
 

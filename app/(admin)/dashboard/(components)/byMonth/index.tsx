@@ -24,7 +24,6 @@ export default function StatsByMonth() {
         fontWeight: 500,
         border: '1px solid',
         borderColor: 'divider',
-        m: 1,
         display: 'flex',
         flexDirection: 'column',
       }}

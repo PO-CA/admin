@@ -1,35 +1,48 @@
-.productsContainer {
-}
+/* 
+MUI로 대체된 스타일 가이드 
 
-.productContents {
-  display: flex;
-}
+.productsContainer → 
+<Container maxWidth="xl" component="main" sx={{ mt: 2, mb: 4 }}>
 
-.titleContainer {
-  background-color: white;
-  padding: 15px;
-  font-size: 14px;
-  font-weight: 500;
-  border: 1px solid rgb(219, 219, 219);
-  margin: 10px;
-  display: flex;
-}
+.productContents → 
+<Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3 }}>
 
-.inputContainer {
-  display: flex;
-  align-items: center;
-  margin: 10px 0px;
-  text-align: right;
-  font-size: 14px;
-}
+.titleContainer → 
+<Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
 
-.inputCell {
-  width: 300px;
-  height: 30px;
-  margin-left: 10px;
-  font-size: 14px;
-}
+.inputContainer → 
+<Box sx={{ display: 'flex', alignItems: 'center', my: 1.25, fontSize: 14 }}>
 
-.inputLabel {
-  width: 200px;
-}
+.inputCell → 
+<TextField sx={{ width: 300, height: 30, ml: 1.25, fontSize: 14 }}>
+
+.inputLabel → 
+<Box sx={{ width: 200 }}>
+
+이 CSS 파일은 MUI 스타일로 전환되어 더 이상 사용되지 않습니다.
+모든 스타일링은 컴포넌트 내부에서 MUI의 sx prop을 통해 직접 적용됩니다.
+
+MUI 컴포넌트 예시:
+- Container: 레이아웃 컨테이너
+- Box: 기본 레이아웃 컴포넌트
+- Typography: 텍스트 스타일링
+- Paper: 카드 형태의 컴포넌트
+
+sx prop 예시:
+sx={{ 
+  display: 'flex',
+  flexDirection: 'column',
+  padding: 2,  // 8px * 2 = 16px (MUI의 기본 단위는 8px)
+  backgroundColor: 'white',
+  border: '1px solid #dbdbdb',
+  margin: 1.25,  // 8px * 1.25 = 10px
+  fontSize: 14,
+  fontWeight: 500
+}}
+
+반응형 스타일링 예시:
+sx={{
+  flexDirection: { xs: 'column', md: 'row' },  // xs(모바일) 화면에서는 column, md(태블릿) 이상에서는 row
+  width: { xs: '100%', md: 'auto' }
+}}
+*/

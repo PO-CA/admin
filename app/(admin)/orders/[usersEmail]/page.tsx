@@ -18,7 +18,7 @@ export default function OrdersByUsersId({
 
   return (
     <Box sx={{ p: 3 }}>
-      <Box sx={{ mb: 4 }}>
+      <Box sx={{ mb: 10 }}>
         <Typography
           variant="h6"
           sx={{
@@ -40,7 +40,6 @@ export default function OrdersByUsersId({
             fontWeight: 500,
             border: '1px solid',
             borderColor: 'divider',
-            m: '0 10px',
             p: 2,
           }}
         >
@@ -48,7 +47,7 @@ export default function OrdersByUsersId({
         </Paper>
       </Box>
 
-      <Box sx={{ mb: 4 }}>
+      <Box sx={{ mb: 10 }}>
         <Typography
           variant="h6"
           sx={{
@@ -70,7 +69,6 @@ export default function OrdersByUsersId({
             fontWeight: 500,
             border: '1px solid',
             borderColor: 'divider',
-            m: '0 10px',
             p: 2,
           }}
         >
@@ -78,7 +76,7 @@ export default function OrdersByUsersId({
         </Paper>
       </Box>
 
-      <Box sx={{ mb: 4 }}>
+      <Box sx={{ mb: 10 }}>
         <Typography
           variant="h6"
           sx={{
@@ -100,7 +98,6 @@ export default function OrdersByUsersId({
             fontWeight: 500,
             border: '1px solid',
             borderColor: 'divider',
-            m: '0 10px',
             p: 2,
           }}
         >
@@ -108,7 +105,7 @@ export default function OrdersByUsersId({
         </Paper>
       </Box>
 
-      <Box sx={{ mb: 4 }}>
+      <Box sx={{ mb: 10 }}>
         <Typography
           variant="h6"
           sx={{
@@ -130,11 +127,10 @@ export default function OrdersByUsersId({
             fontWeight: 500,
             border: '1px solid',
             borderColor: 'divider',
-            m: '0 10px',
             p: 2,
           }}
         >
-          {/* <AddOrderProduct usersEmail={usersEmail} /> */}
+          <AddOrderProduct usersEmail={usersEmail} />
         </Paper>
       </Box>
 
@@ -160,11 +156,10 @@ export default function OrdersByUsersId({
             fontWeight: 500,
             border: '1px solid',
             borderColor: 'divider',
-            m: '0 10px',
             p: 2,
           }}
         >
-          {/* <UserShippings usersEmail={usersEmail} /> */}
+          <UserShippings usersEmail={usersEmail} />
         </Paper>
       </Box>
     </Box>

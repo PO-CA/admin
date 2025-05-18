@@ -1,92 +1,130 @@
 'use client';
-import { ColumnDef } from '@tanstack/react-table';
+import { GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 import AddOrderButton from './addOrderButton';
 import Image from 'next/image';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
-export const addOrderProductColumns: ColumnDef<any, any>[] = [
+export const addOrderProductColumns: GridColDef[] = [
   {
-    accessorFn: (row) => row.id,
-    id: 'id',
-    cell: (info) => {
-      return <AddOrderButton info={info} />;
+    field: 'actions',
+    headerName: '주문추가',
+    width: 220,
+    sortable: false,
+    filterable: false,
+    disableColumnMenu: true,
+    renderCell: (params) => {
+      return <AddOrderButton row={params.row} />;
     },
   },
   {
-    accessorFn: (row) => row.coordinateNames,
-    id: 'coordinateNames',
-    cell: (info) => info.getValue(),
-    header: () => <span>위치</span>,
-    footer: (props) => props.column.id,
+    field: 'coordinateNames',
+    headerName: '위치',
+    width: 120,
   },
   {
-    accessorFn: (row) => row.barcode,
-    id: 'barcode',
-    cell: (info) => (
-      <div>
-        <div>{info.getValue()}</div>
-      </div>
+    field: 'barcode',
+    headerName: '바코드',
+    width: 150,
+    renderCell: (params) => (
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+        }}
+      >
+        <Typography>{params.value}</Typography>
+      </Box>
     ),
-    header: () => <span>바코드</span>,
-    footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.sku,
-    id: 'sku',
-    cell: (info) => (
-      <div>
-        <div>{info.getValue()}</div>
-      </div>
+    field: 'sku',
+    headerName: 'SKU',
+    width: 120,
+    renderCell: (params) => (
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+        }}
+      >
+        <Typography>{params.value}</Typography>
+      </Box>
     ),
-    header: () => <span>sku</span>,
-    footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.thumbNailUrl,
-    id: 'thumbNailUrl',
-    cell: (info) => (
-      <div>
+    field: 'thumbNailUrl',
+    headerName: '썸네일',
+    width: 120,
+    sortable: false,
+    renderCell: (params) => (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+        }}
+      >
         <Image
           alt="썸네일"
           unoptimized={true}
-          src={info.getValue()}
-          width={100}
-          height={100}
+          src={params.value}
+          width={70}
+          height={70}
+          style={{ objectFit: 'contain' }}
         />
-        <div>상세페이지</div>
-      </div>
+      </Box>
     ),
-    header: () => <span>썸네일</span>,
-    footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.title,
-    id: 'title',
-    cell: (info) => info.getValue(),
-    header: () => <span>제목</span>,
-    footer: (props) => props.column.id,
+    field: 'title',
+    headerName: '제목',
+    width: 200,
+    flex: 1,
+    renderCell: (params) => (
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+        }}
+      >
+        <Typography sx={{ whiteSpace: 'normal', lineHeight: 1.2 }}>
+          {params.value}
+        </Typography>
+      </Box>
+    ),
   },
   {
-    accessorFn: (row) => row.dcPrice,
-    id: 'dcPrice',
-    cell: (info) => {
-      return info.getValue();
+    field: 'dcPrice',
+    headerName: '가격',
+    width: 100,
+    type: 'number',
+  },
+  {
+    field: 'stock',
+    headerName: '재고',
+    width: 80,
+    type: 'number',
+  },
+  {
+    field: 'releaseDate',
+    headerName: '출시일',
+    width: 120,
+    renderCell: (params) => {
+      const value = params.value;
+      if (value && typeof value === 'string') {
+        return value.slice(0, 10);
+      }
+      return value;
     },
-    header: () => <span>가격</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    accessorFn: (row) => row.stock,
-    id: 'stock',
-    cell: (info) => info.getValue(),
-    header: () => <span>재고</span>,
-    footer: (props) => props.column.id,
-  },
-  {
-    accessorFn: (row) => row.releaseDate,
-    id: 'releaseDate',
-    cell: (info) => info.getValue()?.slice(0, 10),
-    header: () => <span>출시일</span>,
-    footer: (props) => props.column.id,
   },
 ];

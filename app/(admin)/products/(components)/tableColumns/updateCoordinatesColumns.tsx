@@ -18,7 +18,15 @@ export const updateCoordinatesColumns = [
     filterable: false,
     renderCell: (params: any) => {
       return (
-        <div style={{ display: 'flex', gap: 4 }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: 4,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
           <CreateProductCoordinateButton row={params.row} />
           <DeleteProductCoordinateButton row={params.row} />
           <DeleteCoordinateButton row={params.row} />

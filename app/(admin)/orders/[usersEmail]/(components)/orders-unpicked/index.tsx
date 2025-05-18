@@ -9,7 +9,7 @@ import { orderItemsColumns } from '../tableColumns/orderItemsColumns';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 export default function OrdersUnpicked({ usersEmail }: any) {
   const {
@@ -22,7 +22,8 @@ export default function OrdersUnpicked({ usersEmail }: any) {
     mutateAsync: putToPickOrderItem,
     isPending: isPutToPickOrderItemPending,
   } = usePutToPickOrderItem();
-  const { mutateAsync: cancelOrderItem } = usePutToCancelOrderItem();
+  const { mutateAsync: cancelOrderItem, isPending: isCancelOrderItemPending } =
+    usePutToCancelOrderItem();
 
   const rows = (unpickedOrderItemsData || []).map((row: any, idx: number) => ({
     id: row.id || idx,
@@ -62,8 +63,9 @@ export default function OrdersUnpicked({ usersEmail }: any) {
           color="error"
           onClick={handleCancelOrders}
           size="small"
+          disabled={isCancelOrderItemPending}
         >
-          주문 삭제
+          {isCancelOrderItemPending ? '주문 삭제중...' : '주문 삭제'}
         </Button>
       </Stack>
 
@@ -77,9 +79,11 @@ export default function OrdersUnpicked({ usersEmail }: any) {
           },
         }}
         rows={rows}
-        columns={orderItemsColumns}
+        columns={orderItemsColumns as GridColDef[]}
         pageSizeOptions={[20, 50, 100]}
+        rowHeight={100}
         checkboxSelection
+        showToolbar
         onRowSelectionModelChange={(newSelectionModel) => {
           let selectedIds: number[] = [];
 

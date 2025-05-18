@@ -1,42 +1,59 @@
 'use client';
-import { ColumnDef } from '@tanstack/react-table';
+import { GridColDef } from '@mui/x-data-grid';
 import Link from 'next/link';
 import React from 'react';
 
-export const creditsColumns: ColumnDef<any, any>[] = [
+export const creditsColumns: GridColDef[] = [
   {
-    accessorFn: (row) => row.content,
-    id: 'content',
-    cell: (info) => info.getValue(),
-    header: () => <span>내용</span>,
-    footer: (props) => props.column.id,
+    field: 'content',
+    headerName: '내용',
+    flex: 1.5,
+    minWidth: 150,
   },
   {
-    accessorFn: (row) => row.plus,
-    id: 'plus',
-    cell: (info) => info.getValue(),
-    header: () => <span> ➕ </span>,
-    footer: (props) => props.column.id,
+    field: 'plus',
+    headerName: '➕',
+    width: 100,
+    align: 'right',
+    headerAlign: 'center',
+    valueFormatter: (params: any) => {
+      return params ? `${params.toLocaleString()}원` : '';
+    },
   },
   {
-    accessorFn: (row) => row.minus,
-    id: 'minus',
-    cell: (info) => info.getValue(),
-    header: () => <span> ➖ </span>,
-    footer: (props) => props.column.id,
+    field: 'minus',
+    headerName: '➖',
+    width: 100,
+    align: 'right',
+    headerAlign: 'center',
+    valueFormatter: (params: any) => {
+      return params ? `${params.toLocaleString()}원` : '';
+    },
   },
   {
-    accessorFn: (row) => row.balance,
-    id: 'balance',
-    cell: (info) => info.getValue(),
-    header: () => <span>잔액</span>,
-    footer: (props) => props.column.id,
+    field: 'balance',
+    headerName: '잔액',
+    width: 120,
+    align: 'right',
+    headerAlign: 'center',
+    valueFormatter: (params: any) => {
+      return params ? `${params.toLocaleString()}원` : '';
+    },
   },
   {
-    accessorFn: (row) => row.memo,
-    id: 'memo',
-    cell: (info) => info.getValue(),
-    header: () => <span>메모</span>,
-    footer: (props) => props.column.id,
+    field: 'memo',
+    headerName: '메모',
+    flex: 1,
+    minWidth: 120,
+  },
+  {
+    field: 'createdAt',
+    headerName: '날짜',
+    width: 120,
+    align: 'right',
+    headerAlign: 'center',
+    valueFormatter: (params: any) => {
+      return params ? params.slice(0, 10) : '';
+    },
   },
 ];

@@ -1,20 +1,9 @@
 'use client';
 import React from 'react';
 import { orderItemsColumns } from '../tableColumns/orderItemsColumns';
-import {
-  ColumnFiltersState,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
+import { Box } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
-import TanTable, { fuzzyFilter } from '@/components/table';
-import tableStyles from './table.module.css';
 import { useGetAllOrderByusersEmail } from '@/query/api/orders';
 import TableLoader from '@/components/tableLoader';
 
@@ -24,35 +13,10 @@ export default function UserOrders({ usersEmail }: any) {
     isLoading: isOrderItemsLoading,
     isSuccess: isOrderItemsSuccess,
   } = useGetAllOrderByusersEmail(usersEmail);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [globalFilter, setGlobalFilter] = useState('');
 
-  const table = useReactTable({
-    data: orderItemsData,
-    columns: orderItemsColumns,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
-    initialState: {
-      pagination: { pageSize: 20, pageIndex: 0 },
-    },
-    state: {
-      columnFilters,
-      globalFilter,
-    },
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: fuzzyFilter,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: false,
+  const [paginationModel, setPaginationModel] = useState({
+    pageSize: 20,
+    page: 0,
   });
 
   if (isOrderItemsLoading) {
@@ -64,15 +28,24 @@ export default function UserOrders({ usersEmail }: any) {
   }
 
   return (
-    <TanTable
-      table={table}
-      globalFilter={globalFilter}
-      setGlobalFilter={setGlobalFilter}
-      styles={tableStyles}
-      filter
-      sort
-      pagenation
-      search
-    />
+    <Box sx={{ width: '100%' }}>
+      <DataGrid
+        rows={orderItemsData || []}
+        columns={orderItemsColumns}
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        pageSizeOptions={[10, 20, 50, 100]}
+        initialState={{
+          pagination: {
+            paginationModel: { pageSize: 20, page: 0 },
+          },
+        }}
+        rowHeight={100}
+        showToolbar
+        disableRowSelectionOnClick
+        getRowId={(row) => row.id || row._id || Math.random().toString()}
+        density="standard"
+      />
+    </Box>
   );
 }

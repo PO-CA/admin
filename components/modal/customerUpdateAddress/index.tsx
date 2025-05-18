@@ -1,6 +1,16 @@
-import styles from './index.module.css';
 import useInput from '@/hooks/useInput';
 import { useUpdateAAddressByUsersEmail } from '@/query/query/address';
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Stack,
+  Paper,
+} from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import CloseIcon from '@mui/icons-material/Close';
+
 export function CustomerUpdateAddress({
   content,
   closeModal,
@@ -21,87 +31,133 @@ export function CustomerUpdateAddress({
     zipcode: addressInfo.zipcode,
   });
 
-  const { mutateAsync } = useUpdateAAddressByUsersEmail();
+  const { mutateAsync, isPending } = useUpdateAAddressByUsersEmail();
 
   return (
-    <div className={styles.alertModalContainer}>
-      <div className={styles.alertModalTitle}>{content}</div>
+    <Paper
+      elevation={0}
+      sx={{
+        p: 3,
+        width: '100%',
+        maxWidth: 500,
+        margin: '0 auto',
+        borderRadius: 2,
+        bgcolor: 'background.paper',
+      }}
+    >
+      <Typography
+        variant="h6"
+        fontWeight="bold"
+        sx={{ mb: 3, textAlign: 'center' }}
+      >
+        {content}
+      </Typography>
 
-      <div style={{ display: 'flex' }}>
-        <label>이름</label>
-        <input
-          type="text"
-          id="addressName"
-          value={updatedAddress.addressName}
-          onChange={onChange}
-        />
-      </div>
-      <div style={{ display: 'flex' }}>
-        <label>도시</label>
-        <input
-          type="text"
-          id="city"
-          value={updatedAddress.city}
-          onChange={onChange}
-        />
-      </div>
-      <div style={{ display: 'flex' }}>
-        <label>군구</label>
-        <input
-          type="text"
-          id="state"
-          value={updatedAddress.state}
-          onChange={onChange}
-        />
-      </div>
-      <div style={{ display: 'flex' }}>
-        <label>상세주소</label>
-        <input
-          id="street"
-          type="text"
-          value={updatedAddress.street}
-          onChange={onChange}
-        />
-      </div>
-      <div style={{ display: 'flex' }}>
-        <label>우편번호</label>
-        <input
-          type="text"
-          id="zipcode"
-          value={updatedAddress.zipcode}
-          onChange={onChange}
-        />
-      </div>
-      <div style={{ display: 'flex' }}>
-        <label>수령인</label>
-        <input
-          type="text"
-          id="receiverName"
-          value={updatedAddress.receiverName}
-          onChange={onChange}
-        />
-      </div>
-      <div style={{ display: 'flex' }}>
-        <label>연락처</label>
-        <input
-          type="text"
-          id="receiverPhoneNumber"
-          value={updatedAddress.receiverPhoneNumber}
-          onChange={onChange}
-        />
-      </div>
+      <Stack spacing={2}>
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Typography sx={{ width: 100, minWidth: 100 }}>이름</Typography>
+          <TextField
+            fullWidth
+            size="small"
+            id="addressName"
+            value={updatedAddress.addressName}
+            onChange={onChange as any}
+          />
+        </Stack>
 
-      <button
-        className={styles.modalButton}
-        onClick={() => {
-          mutateAsync(updatedAddress).then(() => closeModal());
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Typography sx={{ width: 100, minWidth: 100 }}>도시</Typography>
+          <TextField
+            fullWidth
+            size="small"
+            id="city"
+            value={updatedAddress.city}
+            onChange={onChange as any}
+          />
+        </Stack>
+
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Typography sx={{ width: 100, minWidth: 100 }}>군구</Typography>
+          <TextField
+            fullWidth
+            size="small"
+            id="state"
+            value={updatedAddress.state}
+            onChange={onChange as any}
+          />
+        </Stack>
+
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Typography sx={{ width: 100, minWidth: 100 }}>상세주소</Typography>
+          <TextField
+            fullWidth
+            size="small"
+            id="street"
+            value={updatedAddress.street}
+            onChange={onChange as any}
+          />
+        </Stack>
+
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Typography sx={{ width: 100, minWidth: 100 }}>우편번호</Typography>
+          <TextField
+            fullWidth
+            size="small"
+            id="zipcode"
+            value={updatedAddress.zipcode}
+            onChange={onChange as any}
+          />
+        </Stack>
+
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Typography sx={{ width: 100, minWidth: 100 }}>수령인</Typography>
+          <TextField
+            fullWidth
+            size="small"
+            id="receiverName"
+            value={updatedAddress.receiverName}
+            onChange={onChange as any}
+          />
+        </Stack>
+
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Typography sx={{ width: 100, minWidth: 100 }}>연락처</Typography>
+          <TextField
+            fullWidth
+            size="small"
+            id="receiverPhoneNumber"
+            value={updatedAddress.receiverPhoneNumber}
+            onChange={onChange as any}
+          />
+        </Stack>
+      </Stack>
+
+      <Box
+        sx={{
+          mt: 3,
+          display: 'flex',
+          justifyContent: 'center',
+          gap: 2,
         }}
       >
-        수정
-      </button>
-      <button className={styles.modalButton} onClick={closeModal}>
-        닫기
-      </button>
-    </div>
+        <Button
+          variant="contained"
+          startIcon={<SaveIcon />}
+          disabled={isPending}
+          onClick={() => {
+            mutateAsync(updatedAddress).then(() => closeModal());
+          }}
+        >
+          {isPending ? '저장 중...' : '수정'}
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<CloseIcon />}
+          onClick={closeModal}
+        >
+          닫기
+        </Button>
+      </Box>
+    </Paper>
   );
 }

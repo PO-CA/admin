@@ -1,75 +1,81 @@
 'use client';
-import { ColumnDef } from '@tanstack/react-table';
 import React from 'react';
 import Link from 'next/link';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import DeleteShippingButton from '../deleteShippingButton';
 import PayShippingButton from '../payShippingButton';
 
-export const shippingColumns: ColumnDef<any, any>[] = [
+export const shippingColumns: GridColDef[] = [
   {
-    accessorFn: (row) => row.id,
-    id: 'id',
-    cell: (info) => (
-      <Link href={`/shippings/${info.getValue()}`}>{info.getValue()}</Link>
+    field: 'id',
+    headerName: 'ID',
+    flex: 1,
+    renderCell: (params: GridRenderCellParams) => (
+      <Link href={`/shippings/${params.value}`}>{params.value}</Link>
     ),
-    header: () => <span>ID</span>,
-    footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.createdAt,
-    id: 'createdAt',
-    cell: (info) => info.getValue()?.slice(0, 10),
-    header: () => <span>발송일</span>,
-    footer: (props) => props.column.id,
+    field: 'createdAt',
+    headerName: '발송일',
+    flex: 1,
+    valueGetter: (params: any) => {
+      return params.slice(0, 10) || '';
+    },
   },
   {
-    accessorFn: (row) => row.userNickname,
-    id: 'userNickname',
-    cell: (info) => info.getValue(),
-    header: () => <span>닉네임</span>,
-    footer: (props) => props.column.id,
+    field: 'userNickname',
+    headerName: '닉네임',
+    flex: 1,
   },
   {
-    accessorFn: (row) => row.totalProductPrice,
-    id: 'totalProductPrice',
-    cell: (info) => info.getValue(),
-    header: () => <span>상품가격</span>,
-    footer: (props) => props.column.id,
+    field: 'totalProductPrice',
+    headerName: '상품가격',
+    flex: 1,
   },
   {
-    accessorFn: (row) => row.shippingFee,
-    id: 'shippingFee',
-    cell: (info) => info.getValue(),
-    header: () => <span>배송비</span>,
-    footer: (props) => props.column.id,
+    field: 'shippingFee',
+    headerName: '배송비',
+    flex: 1,
   },
   {
-    accessorFn: (row) => row.memo,
-    id: 'memo',
-    cell: (info) => info.getValue(),
-    header: () => <span>배송메모</span>,
-    footer: (props) => props.column.id,
+    field: 'memo',
+    headerName: '배송메모',
+    flex: 1,
   },
   {
-    // accessorFn: (row) => row.memo,
-    id: 'buttons',
-    cell: (info) => (
-      <div style={{ display: 'flex' }}>
-        <DeleteShippingButton info={info} />
-        <PayShippingButton info={info} />
+    field: 'buttons',
+    headerName: '',
+    flex: 1.5,
+    sortable: false,
+    filterable: false,
+    renderCell: (params: GridRenderCellParams) => (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+        }}
+      >
+        <DeleteShippingButton info={{ row: { original: params.row } }} />
+        <PayShippingButton info={{ row: { original: params.row } }} />
       </div>
     ),
-    header: () => <span></span>,
-    footer: (props) => props.column.id,
   },
   {
-    accessorFn: (row) => row.shippingStatus,
-    id: 'shippingStatus',
-    cell: (info) =>
-      info.getValue() === '결제완료'
-        ? info.row.original.updatedAt?.slice(0, 10)
-        : '',
-    header: () => <span></span>,
-    footer: (props) => props.column.id,
+    field: 'shippingStatus',
+    headerName: '배송상태',
+    flex: 1,
+    valueGetter: (params: any) => {
+      return params;
+    },
+  },
+  {
+    field: 'updatedAt',
+    headerName: '배송/결제일',
+    flex: 1,
+    valueGetter: (params: any) => {
+      return params?.slice(0, 10) || '';
+    },
   },
 ];

@@ -52,7 +52,6 @@ export default function StatsByUsers() {
         fontWeight: 500,
         border: '1px solid',
         borderColor: 'divider',
-        m: 1,
         display: 'flex',
         flexDirection: 'column',
       }}

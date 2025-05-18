@@ -1,61 +1,56 @@
 'use client';
-import { ColumnDef } from '@tanstack/react-table';
 import React from 'react';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import CustomerCellButtons from '../../(components)/tableColumns/CustomerCellButtons';
 
-export const addressColumns: ColumnDef<any, any>[] = [
+export const addressColumns: GridColDef[] = [
   {
-    accessorFn: (row) => row.addressName,
-    id: 'addressName',
-    cell: (info) => info.getValue(),
-    header: () => <span>배송지 이름</span>,
-    footer: (props) => props.column.id,
+    field: 'addressName',
+    headerName: '배송지 이름',
+    flex: 1,
   },
   {
-    id: 'buttons',
-    cell: (info) => <CustomerCellButtons info={info} />,
-    header: () => <span>기능</span>,
+    field: 'buttons',
+    headerName: '기능',
+    flex: 1,
+    sortable: false,
+    filterable: false,
+    renderCell: (params: GridRenderCellParams) => (
+      <CustomerCellButtons
+        info={{
+          row: { original: params.row },
+        }}
+      />
+    ),
   },
   {
-    accessorFn: (row) => row.city,
-    id: 'city',
-    cell: (info) => info.getValue(),
-    header: () => <span>도시</span>,
-    footer: (props) => props.column.id,
+    field: 'city',
+    headerName: '도시',
+    flex: 1,
   },
   {
-    accessorFn: (row) => row.state,
-    id: 'state',
-    cell: (info) => info.getValue(),
-    header: () => <span>군구</span>,
-    footer: (props) => props.column.id,
+    field: 'state',
+    headerName: '군구',
+    flex: 1,
   },
   {
-    accessorFn: (row) => row.street,
-    id: 'street',
-    cell: (info) => info.getValue(),
-    header: () => <span>상세주소</span>,
-    footer: (props) => props.column.id,
+    field: 'street',
+    headerName: '상세주소',
+    flex: 1.5,
   },
   {
-    accessorFn: (row) => row.zipcode,
-    id: 'zipcode',
-    cell: (info) => info.getValue(),
-    header: () => <span>우편번호</span>,
-    footer: (props) => props.column.id,
+    field: 'zipcode',
+    headerName: '우편번호',
+    flex: 0.8,
   },
   {
-    accessorFn: (row) => row.receiverName,
-    id: 'receiverName',
-    cell: (info) => info.getValue(),
-    header: () => <span>수령인</span>,
-    footer: (props) => props.column.id,
+    field: 'receiverName',
+    headerName: '수령인',
+    flex: 1,
   },
   {
-    accessorFn: (row) => row.receiverPhoneNumber,
-    id: 'receiverPhoneNumber',
-    cell: (info) => info.getValue(),
-    header: () => <span>연락처</span>,
-    footer: (props) => props.column.id,
+    field: 'receiverPhoneNumber',
+    headerName: '연락처',
+    flex: 1.2,
   },
 ];

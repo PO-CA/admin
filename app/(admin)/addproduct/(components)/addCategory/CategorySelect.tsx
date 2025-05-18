@@ -28,11 +28,11 @@ export default function CategorySelect({
         카테고리❗️
       </Typography>
       <FormControl size="small" sx={{ minWidth: 180 }}>
-        <InputLabel id="categoryId-label">카테고리 선택(필수)</InputLabel>
+        <InputLabel id="logiCategoryId">카테고리 선택(필수)</InputLabel>
         <Select
-          labelId="categoryId-label"
-          id="categoryId"
-          name="categoryId"
+          labelId="logiCategoryId"
+          id="logiCategoryId"
+          name="logiCategoryId"
           label="카테고리 선택(필수)"
           onChange={onChange}
           defaultValue=""

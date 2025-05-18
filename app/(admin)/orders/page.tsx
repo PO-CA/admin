@@ -28,7 +28,6 @@ export default function Orders() {
           fontWeight: 500,
           border: '1px solid',
           borderColor: 'divider',
-          m: '0 10px',
           p: 2,
         }}
       >

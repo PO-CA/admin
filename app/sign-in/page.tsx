@@ -6,7 +6,6 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Divider from '@mui/material/Divider';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import Link from '@mui/material/Link';
@@ -15,12 +14,6 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
-import ForgotPassword from './_components/ForgotPassword';
-import {
-  GoogleIcon,
-  FacebookIcon,
-  SitemarkIcon,
-} from './_components/CustomIcons';
 import AppTheme from '@/shared-theme/AppTheme';
 import ColorModeSelect from '@/shared-theme/ColorModeSelect';
 import { useSignIn } from '@/query/query/users';
@@ -73,13 +66,9 @@ export default function SignIn(props: any) {
   const [password, setPassword] = React.useState('');
   const [emailError, setEmailError] = React.useState('');
   const [passwordError, setPasswordError] = React.useState('');
-  const [open, setOpen] = React.useState(false);
 
-  const { mutateAsync: signIn } = useSignIn();
+  const { mutateAsync: signIn, isPending } = useSignIn();
   const router = useRouter();
-
-  const handleClickOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   const validateInputs = () => {
     let valid = true;
@@ -174,19 +163,22 @@ export default function SignIn(props: any) {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            <ForgotPassword open={open} handleClose={handleClose} />
-            <Button type="submit" fullWidth variant="contained">
-              Sign in
-            </Button>
-            <Link
-              component="button"
-              type="button"
-              onClick={handleClickOpen}
-              variant="body2"
-              sx={{ alignSelf: 'center' }}
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              disabled={isPending}
             >
-              Forgot your password?
-            </Link>
+              {isPending ? '로그인중...' : '로그인'}
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              fullWidth
+              onClick={() => router.push('/signup')}
+            >
+              회원가입
+            </Button>
           </Box>
           {/* <Divider>or</Divider> */}
           {/* <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>

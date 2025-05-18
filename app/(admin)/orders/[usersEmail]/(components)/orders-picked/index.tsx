@@ -16,7 +16,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -34,7 +34,6 @@ export default function OrdersPicked({ usersEmail }: any) {
   } = useGetAllPickedOrderByUsersEmail(usersEmail);
 
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-  console.log('selectedRows', selectedRows);
 
   const {
     mutateAsync: putToUnPickOrderItem,
@@ -175,9 +174,9 @@ export default function OrdersPicked({ usersEmail }: any) {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => {
+          onClick={async () => {
             if (selectedRows.length > 0) {
-              putToUnPickOrderItem(selectedRows);
+              await putToUnPickOrderItem(selectedRows);
             } else {
               alert('포장 해제할 주문을 선택해 주세요');
             }
@@ -191,9 +190,9 @@ export default function OrdersPicked({ usersEmail }: any) {
         <Button
           variant="contained"
           color="error"
-          onClick={() => {
+          onClick={async () => {
             if (selectedRows.length > 0) {
-              cancelOrderItem(selectedRows);
+              await cancelOrderItem(selectedRows);
             } else {
               alert('취소할 주문을 선택해 주세요');
             }
@@ -216,9 +215,11 @@ export default function OrdersPicked({ usersEmail }: any) {
           },
         }}
         rows={rows}
-        columns={orderItemsColumns}
+        rowHeight={100}
+        columns={orderItemsColumns as GridColDef[]}
         pageSizeOptions={[20, 50, 100]}
         checkboxSelection
+        showToolbar
         onRowSelectionModelChange={(newSelectionModel) => {
           // 새로운 처리 방식
           let selectedIds: number[] = [];
