@@ -25,6 +25,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 function Sidebar() {
   const { userEmail } = useAuth();
@@ -32,6 +33,7 @@ function Sidebar() {
     {},
   );
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   // Modal state for video recording
   const [openModal, setOpenModal] = React.useState(false);
@@ -100,6 +102,9 @@ function Sidebar() {
       const constraints = {
         video: {
           facingMode: { exact: 'environment' },
+          // iOS에서 전체화면 방지를 위한 추가 설정
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
         },
       };
 
@@ -112,12 +117,21 @@ function Sidebar() {
           '후면 카메라를 사용할 수 없어 기본 카메라로 전환합니다',
           'info',
         );
-        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          },
+        });
       }
 
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
+
+        // iOS에서 전체화면 방지
+        videoRef.current.setAttribute('playsinline', 'true');
+        videoRef.current.setAttribute('webkit-playsinline', 'true');
       }
 
       const mimeType = getSupportedMimeType();
@@ -440,13 +454,43 @@ function Sidebar() {
             setOpenModal(false);
           }}
           fullWidth
+          fullScreen={isMobile}
           maxWidth="sm"
           onFocus={handleModalFocus}
           TransitionProps={{
             onEntered: handleModalFocus,
           }}
+          PaperProps={{
+            sx: {
+              ...(isMobile && {
+                m: 0,
+                width: '100%',
+                height: '100%',
+                maxHeight: '100%',
+                maxWidth: '100%',
+                borderRadius: 0,
+              }),
+            },
+          }}
         >
-          <DialogTitle>배송 ID 입력 또는 스캔</DialogTitle>
+          <DialogTitle>
+            배송 ID 입력 또는 스캔
+            {isMobile && (
+              <IconButton
+                edge="end"
+                color="inherit"
+                onClick={() => {
+                  if (mediaRecorderRef.current && isRecording) {
+                    mediaRecorderRef.current.stop();
+                  }
+                  setOpenModal(false);
+                }}
+                sx={{ position: 'absolute', right: 8, top: 8 }}
+              >
+                <Box>×</Box>
+              </IconButton>
+            )}
+          </DialogTitle>
           <DialogContent>
             <Box display="flex" alignItems="center">
               <TextField
@@ -467,16 +511,40 @@ function Sidebar() {
             <video
               ref={videoRef}
               width="100%"
+              height={isMobile ? 'auto' : 'auto'}
               controls
               muted
-              style={{ marginTop: 16 }}
+              playsInline
+              webkit-playsinline="true"
+              style={{
+                marginTop: 16,
+                maxHeight: isMobile ? 'calc(100vh - 250px)' : 'auto',
+                objectFit: 'contain',
+                background: '#000',
+              }}
             />
           </DialogContent>
-          <DialogActions>
+          <DialogActions
+            sx={{
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              p: isMobile ? 2 : 1,
+              pb: isMobile ? 4 : 1,
+            }}
+          >
             <Button
               onClick={startRecording}
               disabled={isRecording}
               color="primary"
+              variant={isMobile ? 'contained' : 'text'}
+              sx={{
+                minWidth: '120px',
+                m: 0.5,
+                ...(isMobile && {
+                  py: 1.5,
+                  borderRadius: 2,
+                }),
+              }}
             >
               촬영 시작
             </Button>
@@ -485,6 +553,15 @@ function Sidebar() {
                 onClick={resumeRecording}
                 disabled={!isRecording || recordingState !== 'paused'}
                 color="primary"
+                variant={isMobile ? 'contained' : 'text'}
+                sx={{
+                  minWidth: '120px',
+                  m: 0.5,
+                  ...(isMobile && {
+                    py: 1.5,
+                    borderRadius: 2,
+                  }),
+                }}
               >
                 녹화 계속
               </Button>
@@ -493,7 +570,15 @@ function Sidebar() {
                 onClick={pauseRecording}
                 disabled={!isRecording || recordingState !== 'recording'}
                 color="primary"
-                sx={{ minWidth: '100px' }}
+                variant={isMobile ? 'contained' : 'text'}
+                sx={{
+                  minWidth: '120px',
+                  m: 0.5,
+                  ...(isMobile && {
+                    py: 1.5,
+                    borderRadius: 2,
+                  }),
+                }}
               >
                 일시정지
               </Button>
@@ -502,6 +587,15 @@ function Sidebar() {
               onClick={stopRecording}
               disabled={!isRecording}
               color="secondary"
+              variant={isMobile ? 'contained' : 'text'}
+              sx={{
+                minWidth: '120px',
+                m: 0.5,
+                ...(isMobile && {
+                  py: 1.5,
+                  borderRadius: 2,
+                }),
+              }}
             >
               촬영 종료
             </Button>
@@ -509,20 +603,32 @@ function Sidebar() {
               onClick={uploadRecording}
               disabled={isRecording || !videoBlob}
               color="success"
+              variant={isMobile ? 'contained' : 'text'}
+              sx={{
+                minWidth: '120px',
+                m: 0.5,
+                ...(isMobile && {
+                  py: 1.5,
+                  borderRadius: 2,
+                }),
+              }}
             >
               업로드
             </Button>
-            <Button
-              onClick={() => {
-                if (mediaRecorderRef.current && isRecording) {
-                  mediaRecorderRef.current.stop();
-                  setIsRecording(false);
-                }
-                setOpenModal(false);
-              }}
-            >
-              닫기
-            </Button>
+            {!isMobile && (
+              <Button
+                onClick={() => {
+                  if (mediaRecorderRef.current && isRecording) {
+                    mediaRecorderRef.current.stop();
+                    setIsRecording(false);
+                  }
+                  setOpenModal(false);
+                }}
+                sx={{ minWidth: '120px', m: 0.5 }}
+              >
+                닫기
+              </Button>
+            )}
           </DialogActions>
         </Dialog>
         <Dialog
