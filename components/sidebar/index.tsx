@@ -98,7 +98,7 @@ function Sidebar() {
         },
       };
 
-      let stream;
+      let stream: MediaStream;
       try {
         stream = await navigator.mediaDevices.getUserMedia(constraints);
       } catch (err) {
