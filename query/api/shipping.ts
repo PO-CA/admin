@@ -118,3 +118,45 @@ export const updateAShipping = async (shippingId: number) => {
 
   return data;
 };
+
+// Presigned URL 요청
+export const presignRes = async (shippingCode: string, videoBlob: Blob) => {
+  const { data } = await requests(
+    `${API_URL}/logi/shipping-videos/presign-by-barcode`,
+    {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      data: JSON.stringify({
+        barcodeForVideo: shippingCode,
+        fileName: `video_${shippingCode}_${Date.now()}.${videoBlob.type.includes('mp4') ? 'mp4' : 'webm'}`,
+        fileType: videoBlob.type,
+      }),
+    },
+  );
+
+  return data;
+};
+
+// 업로드 결과 등록
+export const registerRes = async (
+  shippingCode: string,
+  uploadFileUrl: string,
+) => {
+  try {
+    const { data } = await requests(
+      `${API_URL}/logi/shipping-videos/by-barcode`,
+      {
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify({
+          barcodeForVideo: shippingCode,
+          videoUrl: uploadFileUrl,
+        }),
+      },
+    );
+    return data;
+  } catch (error) {
+    console.error('비디오 등록 실패:', error);
+    return alert('비디오 등록 실패');
+  }
+};

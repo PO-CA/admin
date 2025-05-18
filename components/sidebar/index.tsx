@@ -25,6 +25,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from '@/providers/SnackbarProvider';
+import { registerRes, presignRes } from '@/query/api/shipping';
 
 function Sidebar() {
   const { showSnackbar } = useSnackbar();
@@ -37,7 +38,7 @@ function Sidebar() {
 
   // Modal state for video recording
   const [openModal, setOpenModal] = React.useState(false);
-  const [shippingId, setShippingId] = React.useState('');
+  const [shippingCode, setShippingCode] = React.useState('');
   const [videoBlob, setVideoBlob] = React.useState<Blob | null>(null);
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
   const mediaRecorderRef = React.useRef<MediaRecorder | null>(null);
@@ -236,8 +237,8 @@ function Sidebar() {
         return;
       }
 
-      if (!shippingId || shippingId.trim() === '') {
-        showSnackbar('배송 ID를 입력해주세요', 'warning');
+      if (!shippingCode || shippingCode.trim() === '') {
+        showSnackbar('배송 코드를 입력해주세요', 'warning');
         return;
       }
 
@@ -252,51 +253,32 @@ function Sidebar() {
         'bytes',
         `(${fileSizeInMB}MB)`,
       );
-
-      // Presigned URL 요청
-      const presignRes = await fetch('/api/shipping-videos/presign', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          shippingDetailId: shippingId,
-          fileName: `video_${shippingId}_${Date.now()}.${videoBlob.type.includes('mp4') ? 'mp4' : 'webm'}`,
-          fileType: videoBlob.type,
-        }),
-      });
-
-      if (!presignRes.ok) {
-        throw new Error('Presigned URL 생성 실패');
+      // 1. S3 업로드를 위한 presigned URL 가져오기
+      const presignedData = await presignRes(shippingCode, videoBlob);
+      console.log('presignedData', presignedData);
+      if (!presignedData) {
+        throw new Error('URL 생성 실패');
       }
 
-      const { presignedUrl, uploadFileUrl } = await presignRes.json();
-
-      const uploadRes = await fetch(presignedUrl, {
+      // 2. presigned URL로 직접 S3에 업로드
+      const uploadResult = await fetch(presignedData.presignedUrl, {
         method: 'PUT',
         body: videoBlob,
-        headers: { 'Content-Type': videoBlob.type },
+        headers: {
+          'Content-Type': videoBlob.type,
+        },
       });
 
-      if (!uploadRes.ok) {
+      if (!uploadResult.ok) {
         throw new Error('파일 업로드 실패');
       }
 
-      // 업로드 결과 등록
-      const registerRes = await fetch('/api/shipping-videos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          shippingDetailId: shippingId,
-          videoUrl: uploadFileUrl,
-        }),
-      });
-
-      if (!registerRes.ok) {
-        throw new Error('비디오 등록 실패');
-      }
+      // 3. 업로드 결과 등록
+      await registerRes(shippingCode, presignedData.uploadFileUrl);
 
       showSnackbar('영상이 성공적으로 업로드되었습니다', 'success');
       setOpenModal(false);
-      setShippingId('');
+      setShippingCode('');
       setVideoBlob(null);
     } catch (error) {
       console.error('업로드 오류:', error);
@@ -480,9 +462,9 @@ function Sidebar() {
               <TextField
                 fullWidth
                 margin="normal"
-                label="배송 ID"
-                value={shippingId}
-                onChange={(e) => setShippingId(e.target.value)}
+                label="배송 코드"
+                value={shippingCode}
+                onChange={(e) => setShippingCode(e.target.value)}
               />
               <IconButton
                 onClick={() => setOpenQrScanner(true)}
@@ -640,7 +622,7 @@ function Sidebar() {
               }}
               onScan={(data: { text: string } | null) => {
                 if (data?.text) {
-                  setShippingId(data.text);
+                  setShippingCode(data.text);
                   setOpenQrScanner(false);
                   showSnackbar('QR 코드를 성공적으로 스캔했습니다', 'success');
                 }
