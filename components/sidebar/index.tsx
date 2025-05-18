@@ -46,7 +46,12 @@ function Sidebar() {
     severity: 'info' as 'error' | 'info' | 'success' | 'warning',
   });
   const [isRecording, setIsRecording] = React.useState(false);
+  const [isPaused, setIsPaused] = React.useState(false);
   const [deviceSupportsCamera, setDeviceSupportsCamera] = React.useState(true);
+  const [recordingState, setRecordingState] = React.useState<
+    'inactive' | 'recording' | 'paused'
+  >('inactive');
+  const chunksRef = React.useRef<Blob[]>([]);
 
   // 디바이스 기능 감지
   React.useEffect(() => {
@@ -103,6 +108,10 @@ function Sidebar() {
         stream = await navigator.mediaDevices.getUserMedia(constraints);
       } catch (err) {
         // 후면 카메라가 없거나 접근 불가능한 경우 기본 카메라로 대체
+        showSnackbar(
+          '후면 카메라를 사용할 수 없어 기본 카메라로 전환합니다',
+          'info',
+        );
         stream = await navigator.mediaDevices.getUserMedia({ video: true });
       }
 
@@ -112,21 +121,34 @@ function Sidebar() {
       }
 
       const mimeType = getSupportedMimeType();
+      chunksRef.current = []; // 청크 배열 초기화
+
       const mediaRecorder = new MediaRecorder(stream, { mimeType });
       mediaRecorderRef.current = mediaRecorder;
-      const chunks: Blob[] = [];
 
-      mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
-      mediaRecorder.onstop = async () => {
-        const blob = new Blob(chunks, { type: mimeType });
-        setVideoBlob(blob);
-        stream.getTracks().forEach((track) => track.stop());
-        setIsRecording(false);
-        showSnackbar('촬영이 완료되었습니다', 'success');
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          chunksRef.current.push(e.data);
+        }
       };
 
-      mediaRecorder.start();
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunksRef.current, { type: mimeType });
+        setVideoBlob(blob);
+        stream.getTracks().forEach((track) => track.stop());
+        setRecordingState('inactive');
+        setIsRecording(false);
+        setIsPaused(false);
+        showSnackbar('촬영이 완료되었습니다', 'success');
+
+        // 디버깅 용도
+        console.log('녹화 종료됨, 비디오 크기:', blob.size, 'bytes');
+      };
+
+      // 일정 간격으로 데이터 수집 (더 안정적인 녹화를 위해)
+      mediaRecorder.start(1000); // 1초마다 데이터 수집
       setIsRecording(true);
+      setRecordingState('recording');
       showSnackbar('녹화가 시작되었습니다', 'info');
     } catch (error) {
       console.error('녹화 시작 오류:', error);
@@ -137,82 +159,106 @@ function Sidebar() {
     }
   };
 
-  const stopRecordingAndUpload = async () => {
-    if (!mediaRecorderRef.current || !isRecording) {
-      showSnackbar('녹화가 진행 중이지 않습니다', 'warning');
-      return;
+  const pauseRecording = () => {
+    if (
+      mediaRecorderRef.current &&
+      mediaRecorderRef.current.state === 'recording'
+    ) {
+      mediaRecorderRef.current.pause();
+      setIsPaused(true);
+      setRecordingState('paused');
+      showSnackbar('녹화가 일시정지되었습니다', 'info');
     }
+  };
 
-    try {
+  const resumeRecording = () => {
+    if (
+      mediaRecorderRef.current &&
+      mediaRecorderRef.current.state === 'paused'
+    ) {
+      mediaRecorderRef.current.resume();
+      setIsPaused(false);
+      setRecordingState('recording');
+      showSnackbar('녹화가 재개되었습니다', 'info');
+    }
+  };
+
+  const stopRecording = () => {
+    if (
+      mediaRecorderRef.current &&
+      (mediaRecorderRef.current.state === 'recording' ||
+        mediaRecorderRef.current.state === 'paused')
+    ) {
       mediaRecorderRef.current.stop();
-      showSnackbar('녹화가 종료되었습니다. 업로드 중...', 'info');
+      showSnackbar('녹화를 종료하는 중...', 'info');
+    } else {
+      showSnackbar('녹화가 진행 중이지 않습니다', 'warning');
+    }
+  };
 
-      // mediaRecorder.onstop 이벤트가 발생할 때까지 잠시 대기
-      setTimeout(async () => {
-        if (!videoBlob) {
-          showSnackbar('비디오 데이터를 찾을 수 없습니다', 'error');
-          return;
-        }
+  const uploadRecording = async () => {
+    try {
+      if (!videoBlob) {
+        showSnackbar('업로드할 비디오가 없습니다', 'error');
+        return;
+      }
 
-        if (!shippingId) {
-          showSnackbar('배송 ID를 입력해주세요', 'warning');
-          return;
-        }
+      if (!shippingId || shippingId.trim() === '') {
+        showSnackbar('배송 ID를 입력해주세요', 'warning');
+        return;
+      }
 
-        try {
-          // Presigned URL 요청
-          const presignRes = await fetch('/api/shipping-videos/presign', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              shippingDetailId: shippingId,
-              fileName: `video_${shippingId}_${Date.now()}.${videoBlob.type.includes('mp4') ? 'mp4' : 'webm'}`,
-              fileType: videoBlob.type,
-            }),
-          });
+      showSnackbar('비디오를 업로드하는 중...', 'info');
+      console.log('업로드 시작, 비디오 크기:', videoBlob.size, 'bytes');
 
-          if (!presignRes.ok) {
-            throw new Error('Presigned URL 생성 실패');
-          }
+      // Presigned URL 요청
+      const presignRes = await fetch('/api/shipping-videos/presign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          shippingDetailId: shippingId,
+          fileName: `video_${shippingId}_${Date.now()}.${videoBlob.type.includes('mp4') ? 'mp4' : 'webm'}`,
+          fileType: videoBlob.type,
+        }),
+      });
 
-          const { presignedUrl, uploadFileUrl } = await presignRes.json();
+      if (!presignRes.ok) {
+        throw new Error('Presigned URL 생성 실패');
+      }
 
-          const uploadRes = await fetch(presignedUrl, {
-            method: 'PUT',
-            body: videoBlob,
-            headers: { 'Content-Type': videoBlob.type },
-          });
+      const { presignedUrl, uploadFileUrl } = await presignRes.json();
 
-          if (!uploadRes.ok) {
-            throw new Error('파일 업로드 실패');
-          }
+      const uploadRes = await fetch(presignedUrl, {
+        method: 'PUT',
+        body: videoBlob,
+        headers: { 'Content-Type': videoBlob.type },
+      });
 
-          // 업로드 결과 등록
-          const registerRes = await fetch('/api/shipping-videos', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              shippingDetailId: shippingId,
-              videoUrl: uploadFileUrl,
-            }),
-          });
+      if (!uploadRes.ok) {
+        throw new Error('파일 업로드 실패');
+      }
 
-          if (!registerRes.ok) {
-            throw new Error('비디오 등록 실패');
-          }
+      // 업로드 결과 등록
+      const registerRes = await fetch('/api/shipping-videos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          shippingDetailId: shippingId,
+          videoUrl: uploadFileUrl,
+        }),
+      });
 
-          showSnackbar('영상이 성공적으로 업로드되었습니다', 'success');
-          setOpenModal(false);
-          setShippingId('');
-          setVideoBlob(null);
-        } catch (error) {
-          console.error('업로드 오류:', error);
-          showSnackbar('영상 업로드 중 오류가 발생했습니다', 'error');
-        }
-      }, 500);
+      if (!registerRes.ok) {
+        throw new Error('비디오 등록 실패');
+      }
+
+      showSnackbar('영상이 성공적으로 업로드되었습니다', 'success');
+      setOpenModal(false);
+      setShippingId('');
+      setVideoBlob(null);
     } catch (error) {
-      console.error('녹화 종료 오류:', error);
-      showSnackbar('녹화 종료 중 오류가 발생했습니다', 'error');
+      console.error('업로드 오류:', error);
+      showSnackbar('영상 업로드 중 오류가 발생했습니다', 'error');
     }
   };
 
@@ -386,12 +432,36 @@ function Sidebar() {
             >
               촬영 시작
             </Button>
+            {isPaused ? (
+              <Button
+                onClick={resumeRecording}
+                disabled={!isRecording || recordingState !== 'paused'}
+                color="primary"
+              >
+                녹화 계속
+              </Button>
+            ) : (
+              <Button
+                onClick={pauseRecording}
+                disabled={!isRecording || recordingState !== 'recording'}
+                color="primary"
+              >
+                일시정지
+              </Button>
+            )}
             <Button
-              onClick={stopRecordingAndUpload}
+              onClick={stopRecording}
               disabled={!isRecording}
               color="secondary"
             >
-              촬영 종료 및 업로드
+              촬영 종료
+            </Button>
+            <Button
+              onClick={uploadRecording}
+              disabled={isRecording || !videoBlob}
+              color="success"
+            >
+              업로드
             </Button>
             <Button
               onClick={() => {
@@ -419,6 +489,15 @@ function Sidebar() {
               onError={(err: Error) => {
                 console.error('QR 스캔 오류:', err);
                 showSnackbar('QR 스캔 중 오류가 발생했습니다', 'error');
+
+                // 오류가 발생하면 카메라 접근 실패를 알리고 대화상자 닫기
+                if (err.name === 'OverconstrainedError') {
+                  showSnackbar(
+                    '이 기기에는 후면 카메라가 없습니다. 카메라 설정을 확인해주세요.',
+                    'warning',
+                  );
+                  setTimeout(() => setOpenQrScanner(false), 3000);
+                }
               }}
               onScan={(data: { text: string } | null) => {
                 if (data?.text) {
@@ -430,7 +509,7 @@ function Sidebar() {
               style={{ width: '100%' }}
               constraints={{
                 video: {
-                  facingMode: { exact: 'environment' }, // 후면 카메라 사용
+                  facingMode: 'environment', // exact 제약 제거
                 },
               }}
             />
