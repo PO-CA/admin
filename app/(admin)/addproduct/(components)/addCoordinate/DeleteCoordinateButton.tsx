@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 
 export default function DeleteCoordinateButton({ row }: any) {
-  const { mutate: deleteACoordinate, isPending } = useDeleteACoordinate();
+  const { mutateAsync: deleteACoordinate, isPending } = useDeleteACoordinate();
   let coordinateId;
   if (row.original) {
     coordinateId = row.original.id;
@@ -19,7 +19,9 @@ export default function DeleteCoordinateButton({ row }: any) {
         variant="outlined"
         color="error"
         size="small"
-        onClick={() => deleteACoordinate(coordinateId)}
+        onClick={async () => {
+          await deleteACoordinate(coordinateId);
+        }}
         disabled={isPending}
         sx={{ fontWeight: 600, borderRadius: 2 }}
       >

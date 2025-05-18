@@ -1,81 +1,72 @@
 'use client';
-import TanTable, { fuzzyFilter } from '@/components/table';
 import React, { useState } from 'react';
-import { creditsColumns } from '../tableColumns/creditsColumns';
-import {
-  ColumnFiltersState,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
-import tableStyles from './table.module.css';
 import { useGetCreditsByUsersEmail } from '@/query/query/credit';
-import TableLoader from '@/components/tableLoader';
+import { DataGrid } from '@mui/x-data-grid';
 import AddCredit from '../addCredit';
+import Box from '@mui/material/Box';
 
 export default function Credits({ usersEmail }: { usersEmail: string }) {
-  const {
-    data: creditData,
-    isLoading: isCreditLoading,
-    isSuccess: isCreditSuccess,
-  } = useGetCreditsByUsersEmail(usersEmail);
+  const { data: creditData, isLoading: isCreditLoading } =
+    useGetCreditsByUsersEmail(usersEmail);
 
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [globalFilter, setGlobalFilter] = useState('');
-
-  const table = useReactTable({
-    data: creditData,
-    columns: creditsColumns,
-    filterFns: {
-      fuzzy: fuzzyFilter,
+  const columns = [
+    {
+      field: 'createdAt',
+      headerName: '날짜',
+      flex: 1,
+      valueGetter: (params: any) => params?.slice(0, 10),
     },
-    initialState: {
-      pagination: { pageSize: 20, pageIndex: 0 },
+    {
+      field: 'content',
+      headerName: '내용',
+      flex: 1,
     },
-    state: {
-      columnFilters,
-      globalFilter,
+    {
+      field: 'plus',
+      headerName: '➕',
+      flex: 1,
     },
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: fuzzyFilter,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: false,
-  });
+    {
+      field: 'minus',
+      headerName: '➖',
+      flex: 1,
+    },
+    {
+      field: 'balance',
+      headerName: '잔액',
+      flex: 1,
+    },
+    {
+      field: 'memo',
+      headerName: '메모',
+      flex: 1,
+    },
+  ];
 
-  if (isCreditLoading) {
-    return <TableLoader />;
-  }
-
-  if (!isCreditSuccess) {
-    return <div>Failed to load</div>;
-  }
+  const rows = (creditData || []).map((row: any, idx: number) => ({
+    id: row.id || idx,
+    ...row,
+  }));
 
   return (
-    <>
-      <TanTable
-        table={table}
-        globalFilter={globalFilter}
-        setGlobalFilter={setGlobalFilter}
-        styles={tableStyles}
-        search
-        filter
-        pagenation
+    <Box sx={{ width: '100%' }}>
+      <DataGrid
+        sx={{ height: 'auto', background: 'white', fontSize: 14 }}
+        rows={rows}
+        columns={columns}
+        loading={isCreditLoading}
+        disableRowSelectionOnClick
+        pageSizeOptions={[20, 50, 100]}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 20 },
+          },
+        }}
+        showToolbar
       />
-      <AddCredit />
-    </>
+      <Box sx={{ mt: 2 }}>
+        <AddCredit />
+      </Box>
+    </Box>
   );
 }

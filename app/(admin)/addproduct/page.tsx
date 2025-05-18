@@ -44,9 +44,7 @@ export default function AddProduct() {
     coordinateIds: [],
   });
   const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
-
   const { mutateAsync: createAProduct, isPending } = useCreateAProduct();
-
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     addProductData.coordinateIds = selectedRowIds;

@@ -42,31 +42,31 @@ export function CoordinateSelectRegister({
   }, []);
 
   useEffect(() => {
-    setSelectedRowIds(rowSelectionModel.map((id) => Number(id)));
+    if (rowSelectionModel.length > 0) {
+      setSelectedRowIds(rowSelectionModel.map((id) => Number(id)));
+    } else {
+      setSelectedRowIds([]);
+    }
   }, [rowSelectionModel, setSelectedRowIds]);
-
-  // 8.x 버전: rowSelectionModel은 { [id]: true } 형태의 객체
-  const rowSelectionModelObj = rowSelectionModel.reduce(
-    (acc, id) => {
-      acc[id] = true;
-      return acc;
-    },
-    {} as Record<string, boolean>,
-  );
 
   let dataGridProps: any = {
     checkboxSelection: true,
     disableRowSelectionOnClick: true,
-    rowSelectionModel: rowSelectionModelObj,
-    onRowSelectionModelChange: (newSelection: any) => {
-      // 8.x: 객체로 들어오면 key만 배열로 변환
-      if (newSelection && typeof newSelection === 'object') {
-        setRowSelectionModel(Object.keys(newSelection));
-      } else if (Array.isArray(newSelection)) {
-        setRowSelectionModel(newSelection);
-      } else {
-        setRowSelectionModel([]);
+    onRowSelectionModelChange: (newSelectionModel: any) => {
+      // DataGrid 8.x에서는 newSelectionModel이 객체 형태로 전달될 수 있음
+      let selectionArray: any[] = [];
+
+      if (Array.isArray(newSelectionModel)) {
+        // 배열인 경우 그대로 사용
+        selectionArray = newSelectionModel;
+      } else if (newSelectionModel && typeof newSelectionModel === 'object') {
+        // 객체인 경우 (type과 ids Set이 있는 형태)
+        if (newSelectionModel.ids && newSelectionModel.ids instanceof Set) {
+          // Set에서 배열로 변환
+          selectionArray = Array.from(newSelectionModel.ids);
+        }
       }
+      setRowSelectionModel(selectionArray.map((id) => String(id)));
     },
   };
 
@@ -109,6 +109,16 @@ export function CoordinateSelectEdit({
   const { rows, isCoordinateLoading, isCoordinateSuccess } =
     useCoordinateRows();
 
+  // 각 row에 productId 정보 추가
+  const enhancedRows = rows.map((row) => ({
+    ...row,
+    productId: productData?.id, // productData에서 id 추가
+    isChecked:
+      productData?.selectedCoordinateIds
+        ?.map(String)
+        .includes(String(row.id)) || false,
+  }));
+
   let dataGridProps: any = {};
   if (productData && Array.isArray(productData.selectedCoordinateIds)) {
     dataGridProps.getRowClassName = (params: any) =>
@@ -136,7 +146,7 @@ export function CoordinateSelectEdit({
       </Typography>
       <DataGrid
         sx={{ background: 'white', fontSize: 14 }}
-        rows={rows}
+        rows={enhancedRows}
         columns={columns}
         pageSizeOptions={[10, 20, 50]}
         {...dataGridProps}

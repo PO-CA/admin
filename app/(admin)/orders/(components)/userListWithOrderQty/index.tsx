@@ -54,6 +54,11 @@ export default function UserListWithOrderQty() {
         rows={rows}
         columns={columns}
         pageSizeOptions={[20, 50, 100]}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 20 },
+          },
+        }}
         loading={isUsersLoading}
         disableRowSelectionOnClick
         showToolbar

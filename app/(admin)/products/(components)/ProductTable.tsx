@@ -84,6 +84,11 @@ export default function ProductTable() {
         rowHeight={80}
         columns={columns}
         pageSizeOptions={[20, 50, 100]}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 20 },
+          },
+        }}
         loading={isLoading}
         disableRowSelectionOnClick
         showToolbar
