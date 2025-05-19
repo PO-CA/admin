@@ -182,7 +182,9 @@ export default function ProductCopy({
                   } as any);
                 }}
               />
-              <DeleteCategory categoryId={Number(productData.categoryId)} />
+              <DeleteCategory
+                categoryId={Number(productInputData.categoryId)}
+              />
             </Box>
             <AddCategory />
           </Paper>
