@@ -166,14 +166,14 @@ export default function ProductDetail({
                 onChange={(e: SelectChangeEvent) => {
                   onChange({
                     target: {
-                      name: e.target.name || 'logiCategoryId',
+                      name: e.target.name || 'categoryId',
                       value: e.target.value,
                     },
                   } as any);
                 }}
               />
               <DeleteCategory
-                categoryId={Number(productData.logiCategory?.id)}
+                categoryId={Number(productInputData.logiCategoryId)}
               />
             </Box>
             <AddCategory />
