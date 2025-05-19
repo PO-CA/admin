@@ -168,6 +168,9 @@ export default function OrdersPicked({ usersEmail }: any) {
                 }),
               }}
               usersData={usersData}
+              addressId={selectedOption || undefined}
+              usersEmail={usersEmail}
+              addressData={addressData}
             />
           )}
 

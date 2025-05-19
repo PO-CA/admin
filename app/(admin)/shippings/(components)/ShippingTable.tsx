@@ -1,87 +1,66 @@
 'use client';
+import React, { useState, useEffect } from 'react';
 import { useGetAllShippings } from '@/query/query/shippings';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import Link from 'next/link';
 import DeleteShippingButton from './deleteShippingButton';
 import PayShippingButton from './payShippingButton';
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Box,
+} from '@mui/material';
+import { shippingColumns } from './tableColumns/shippingColumns';
 
 export default function ShippingTable() {
   const { data: shippingData, isLoading } = useGetAllShippings();
+  const [videoDialog, setVideoDialog] = useState({
+    open: false,
+    videoUrl: '',
+  });
 
-  const columns = [
-    {
-      field: 'id',
-      headerName: 'ID',
-      flex: 0.5,
-      renderCell: (params: any) => (
-        <a href={`/shippings/${params.value}`}>{params.value}</a>
-      ),
-    },
-    {
-      field: 'createdAt',
-      headerName: '발송일',
-      flex: 1,
-      valueGetter: (params: any) => {
-        return params?.slice(0, 10);
-      },
-    },
-    {
-      field: 'userNickname',
-      headerName: '닉네임',
-      flex: 1,
-    },
-    {
-      field: 'totalProductPrice',
-      headerName: '상품가격',
-      flex: 1,
-    },
-    {
-      field: 'shippingFee',
-      headerName: '배송비',
-      flex: 1,
-    },
-    {
-      field: 'memo',
-      headerName: '배송메모',
-      flex: 1,
-    },
-    {
-      field: 'buttons',
-      headerName: '',
-      flex: 1.2,
-      sortable: false,
-      filterable: false,
-      renderCell: (params: any) => (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100%',
-          }}
-        >
-          <DeleteShippingButton info={{ row: { original: params.row } }} />
-          <PayShippingButton info={{ row: { original: params.row } }} />
-        </div>
-      ),
-    },
-    {
-      field: 'shippingStatus',
-      headerName: '배송상태',
-      flex: 1,
-      valueGetter: (params: any) => {
-        return params;
-      },
-    },
-    {
-      field: 'updatedAt',
-      headerName: '배송/결제일',
-      flex: 1,
-      valueGetter: (params: any) => {
-        return params?.slice(0, 10) || '';
-      },
-    },
-  ];
+  // 영상보기 버튼 클릭 이벤트 핸들러 설정
+  useEffect(() => {
+    // shippingColumns의 videoStatus 컬럼에 있는 영상재생 버튼에 클릭 이벤트 추가
+    const buttons = document.querySelectorAll('.video-play-button');
+    buttons.forEach((button) => {
+      const videoUrl = button.getAttribute('data-video-url');
+      if (videoUrl) {
+        button.addEventListener('click', () => handleOpenVideoDialog(videoUrl));
+      }
+    });
 
+    return () => {
+      // 이벤트 리스너 정리
+      buttons.forEach((button) => {
+        const videoUrl = button.getAttribute('data-video-url');
+        if (videoUrl) {
+          button.removeEventListener('click', () =>
+            handleOpenVideoDialog(videoUrl),
+          );
+        }
+      });
+    };
+  }, [shippingData]);
+
+  const handleOpenVideoDialog = (videoUrl: string) => {
+    setVideoDialog({
+      open: true,
+      videoUrl,
+    });
+  };
+
+  const handleCloseVideoDialog = () => {
+    setVideoDialog({
+      open: false,
+      videoUrl: '',
+    });
+  };
+
+  // 고유 데이터 ID로 행 데이터 설정
   const rows = (shippingData || []).map((row: any, idx: number) => ({
     id: row.id || idx,
     ...row,
@@ -92,12 +71,48 @@ export default function ShippingTable() {
       <DataGrid
         sx={{ height: 'auto', background: 'white', fontSize: 14 }}
         rows={rows}
-        columns={columns}
+        columns={shippingColumns}
         pageSizeOptions={[20, 50, 100]}
         loading={isLoading}
         disableRowSelectionOnClick
         showToolbar
+        onCellClick={(params) => {
+          if (
+            params.field === 'videoStatus' &&
+            params.row.videoStatus === '영상저장' &&
+            params.row.videoUrl
+          ) {
+            handleOpenVideoDialog(params.row.videoUrl);
+          }
+        }}
       />
+
+      {/* 비디오 다이얼로그 */}
+      <Dialog
+        open={videoDialog.open}
+        onClose={handleCloseVideoDialog}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>배송 영상</DialogTitle>
+        <DialogContent>
+          <Box sx={{ width: '100%', textAlign: 'center', pt: 2 }}>
+            {videoDialog.videoUrl && (
+              <video
+                controls
+                autoPlay
+                style={{ maxWidth: '100%', maxHeight: '70vh' }}
+                src={videoDialog.videoUrl}
+              />
+            )}
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseVideoDialog} color="primary">
+            닫기
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

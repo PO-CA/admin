@@ -6,6 +6,7 @@ import {
   getAllShippingsByShippingId,
   getAllShippingsByStatus,
   getAllShippingsByUsersEmail,
+  getShippingById,
   updateAShipping,
 } from '../api/shipping';
 import { CreateShippingDTO } from '@/types/createShippingDTO';
@@ -50,6 +51,17 @@ export function useGetAllShippingsByShippingId(shippingId: string) {
       return data;
     },
     enabled: !!shippingId,
+  });
+}
+
+export function useGetShippingById(shippingId: string, enabled = true) {
+  return useQuery({
+    queryKey: ['shipping', shippingId],
+    queryFn: async () => {
+      const data = await getShippingById(shippingId);
+      return data;
+    },
+    enabled: !!shippingId && enabled,
   });
 }
 
