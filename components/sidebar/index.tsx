@@ -147,12 +147,6 @@ function Sidebar() {
           `촬영 완료: ${fileSizeInMB}MB 비디오가 생성되었습니다`,
           'success',
         );
-        console.log(
-          '녹화 종료됨, 비디오 크기:',
-          fileSizeInBytes,
-          'bytes',
-          `(${fileSizeInMB}MB)`,
-        );
       };
 
       // 일정 간격으로 데이터 수집 (더 안정적인 녹화를 위해)
@@ -247,33 +241,16 @@ function Sidebar() {
       const fileSizeInMB = (fileSizeInBytes / (1024 * 1024)).toFixed(2);
 
       showSnackbar(`${fileSizeInMB}MB 비디오 업로드 중...`, 'info');
-      console.log(
-        '업로드 시작, 비디오 크기:',
-        fileSizeInBytes,
-        'bytes',
-        `(${fileSizeInMB}MB)`,
-      );
-      // 1. S3 업로드를 위한 presigned URL 가져오기
-      console.log('1, params', shippingCode, ',', videoBlob);
 
+      // 1. S3 업로드를 위한 presigned URL 가져오기
       const presignedData = await presignRes(shippingCode, videoBlob);
-      console.log('2, presignedData', presignedData);
-      showSnackbar(
-        `presignedData: ${JSON.stringify(presignedData)}`,
-        'success',
-      );
 
       // 2. presigned URL로 직접 S3에 업로드
-      console.log('3, params', presignedData, ',', videoBlob);
-      const uploadResult = await uploadRes(presignedData, videoBlob);
-      showSnackbar(`업로드 완료: ${JSON.stringify(uploadResult)}`, 'success');
-      console.log('4, uploadResult', uploadResult);
+      await uploadRes(presignedData, videoBlob);
 
       // 3. 업로드 결과 등록
-      console.log('5, params', shippingCode, ',', presignedData.uploadFileUrl);
-      const res = await registerRes(shippingCode, presignedData.uploadFileUrl);
-      console.log('6, res', res);
-      showSnackbar(`res: ${JSON.stringify(res)}`, 'success');
+      await registerRes(shippingCode, presignedData.uploadFileUrl);
+
       showSnackbar('영상이 성공적으로 업로드되었습니다', 'success');
       setOpenModal(false);
       setShippingCode('');
