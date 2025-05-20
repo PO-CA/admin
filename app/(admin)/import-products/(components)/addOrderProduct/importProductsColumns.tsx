@@ -21,7 +21,7 @@ export const importProductsColumns: GridColDef[] = [
   {
     field: 'stock',
     headerName: '재고',
-    width: 65,
+    width: 75,
     type: 'number',
   },
   {
@@ -109,16 +109,16 @@ export const importProductsColumns: GridColDef[] = [
   },
 
   {
-    field: 'dcPrice',
+    field: 'price',
     headerName: '가격',
-    width: 100,
+    flex: 1,
     type: 'number',
   },
 
   {
     field: 'releaseDate',
     headerName: '출시일',
-    width: 120,
+    flex: 1,
     renderCell: (params) => {
       const value = params.value;
       if (value && typeof value === 'string') {
