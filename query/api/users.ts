@@ -60,6 +60,14 @@ export const reIssue = async () => {
   return data;
 };
 
+export const deleteUser = async (userId: number) => {
+  const { data } = await requests({
+    method: 'post',
+    url: `/users/users/delete/${userId}`,
+  });
+  return data;
+};
+
 export const getAllUsersWithOrderItemsQty = async () => {
   const { data } = await requests(`${API_URL}/users/userswithorderitemsqty`, {
     method: 'GET',

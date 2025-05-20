@@ -1,5 +1,6 @@
 'use client';
 import {
+  deleteUser,
   getAllUsersWithOrderItemsQty,
   getUserDetailByUsersEmail,
   updateUsersInCharge,
@@ -99,6 +100,17 @@ export function useGetMyInfo() {
       return data;
     },
     retry: 0,
+  });
+}
+
+export function useDeleteUser() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (userId: number) => deleteUser(userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['usersOrders'] });
+    },
   });
 }
 
