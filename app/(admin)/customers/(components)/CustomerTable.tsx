@@ -8,7 +8,11 @@ import { DataGrid } from '@mui/x-data-grid';
 import Link from 'next/link';
 
 export default function CustomerTable() {
-  const { data: usersData, isLoading } = useGetAllUsersWithOrderItemsQty();
+  const {
+    data: usersData,
+    isLoading,
+    isFetching,
+  } = useGetAllUsersWithOrderItemsQty();
   const { mutateAsync: deleteUser, isPending } = useDeleteUser();
 
   const columns = [
@@ -43,7 +47,7 @@ export default function CustomerTable() {
         <Button
           variant="contained"
           color="error"
-          disabled={isPending}
+          disabled={isPending || isLoading || isFetching}
           onClick={async () => {
             if (confirm('삭제하시겠습니까?')) {
               await deleteUser(params.value);
@@ -68,7 +72,7 @@ export default function CustomerTable() {
         rows={rows}
         columns={columns}
         pageSizeOptions={[20, 50, 100]}
-        loading={isLoading}
+        loading={isLoading || isFetching}
         disableRowSelectionOnClick
         showToolbar
       />
