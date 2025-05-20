@@ -11,7 +11,7 @@ export default function ProductTable() {
     {
       field: 'id',
       headerName: 'ID',
-      flex: 0.7,
+      flex: 0.5,
       renderCell: (params: any) => (
         <Link href={`/products/${params.value}`}>{params.value}</Link>
       ),
@@ -33,8 +33,8 @@ export default function ProductTable() {
     },
     {
       field: 'title',
-      headerName: '제목',
-      flex: 1,
+      headerName: '앨범명',
+      width: 400,
     },
     {
       field: 'artist',
@@ -62,12 +62,12 @@ export default function ProductTable() {
     {
       field: 'price',
       headerName: '가격',
-      flex: 1,
+      flex: 0.7,
     },
     {
       field: 'stock',
       headerName: '수량',
-      flex: 1,
+      flex: 0.7,
     },
   ];
 

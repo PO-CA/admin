@@ -9,7 +9,7 @@ export const productColumns: GridColDef[] = [
   {
     field: 'thumbNailUrl',
     headerName: '썸네일',
-    width: 120,
+    width: 100,
     sortable: false,
     renderCell: (params: GridRenderCellParams) => (
       <Box sx={{ textAlign: 'center' }}>
@@ -38,7 +38,7 @@ export const productColumns: GridColDef[] = [
     field: 'title',
     headerName: '제목',
     flex: 1,
-    minWidth: 200,
+    minWidth: 400,
   },
   {
     field: 'deadlineDate',
