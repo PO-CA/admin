@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useGetNotice } from '@/query/query/notice';
+import { useGetBoard } from '@/query/query/board';
 import Link from 'next/link';
 import {
   Container,
@@ -17,10 +17,10 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
-export default function NoticeDetailPage() {
+export default function BoardDetailPage() {
   const { id } = useParams() as { id: string };
   const router = useRouter();
-  const { data: notice, isLoading } = useGetNotice(Number(id));
+  const { data: board, isLoading } = useGetBoard(Number(id));
 
   if (isLoading) {
     return (
@@ -33,7 +33,7 @@ export default function NoticeDetailPage() {
     );
   }
 
-  if (!notice) {
+  if (!board) {
     return (
       <Container maxWidth="lg" sx={{ mt: 5 }}>
         <Paper elevation={3} sx={{ p: 5, textAlign: 'center' }}>
@@ -45,7 +45,7 @@ export default function NoticeDetailPage() {
             startIcon={<ArrowBackIcon />}
             sx={{ mt: 3 }}
             component={Link}
-            href="/store/notice"
+            href="/board"
           >
             목록으로 돌아가기
           </Button>
@@ -54,8 +54,8 @@ export default function NoticeDetailPage() {
     );
   }
 
-  const formattedDate = notice.createdAt
-    ? new Date(notice.createdAt).toLocaleString('ko-KR', {
+  const formattedDate = board.createdAt
+    ? new Date(board.createdAt).toLocaleString('ko-KR', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
@@ -70,16 +70,16 @@ export default function NoticeDetailPage() {
       <Box sx={{ mb: 2 }}>
         <Breadcrumbs aria-label="breadcrumb">
           <Link
-            href="/store"
+            href="/dashboard"
             style={{ color: 'inherit', textDecoration: 'none' }}
           >
             홈
           </Link>
           <Link
-            href="/store/notice"
+            href="/board"
             style={{ color: 'inherit', textDecoration: 'none' }}
           >
-            공지사항
+            게시판
           </Link>
           <Typography color="text.primary">상세보기</Typography>
         </Breadcrumbs>
@@ -93,8 +93,8 @@ export default function NoticeDetailPage() {
             component="h1"
             sx={{ fontWeight: 700, mb: 2 }}
           >
-            {notice.title}
-            {!notice.visible && (
+            {board.title}
+            {!board.visible && (
               <Chip
                 label="숨김"
                 size="small"
@@ -128,7 +128,7 @@ export default function NoticeDetailPage() {
           }}
         >
           <Typography variant="body1" sx={{ lineHeight: 1.8 }}>
-            {notice.content}
+            {board.content}
           </Typography>
         </Box>
 
@@ -139,7 +139,7 @@ export default function NoticeDetailPage() {
           <Button
             variant="contained"
             startIcon={<ArrowBackIcon />}
-            onClick={() => router.push('/store/notice')}
+            onClick={() => router.push('/board')}
           >
             목록으로
           </Button>

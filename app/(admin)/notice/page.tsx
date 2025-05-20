@@ -1,94 +1,153 @@
 'use client';
-import React from 'react';
-import { useGetNotices, useDeleteNotice } from '@/query/query/notice';
+import React, { useState } from 'react';
+import { useDeleteNotice, useGetNotices } from '@/query/query/notice';
 import Link from 'next/link';
+// MUI components
+import {
+  Container,
+  Paper,
+  Typography,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Box,
+  Pagination,
+  Divider,
+  Chip,
+  LinearProgress,
+  styled,
+} from '@mui/material';
+
+// 스타일이 적용된 테이블 헤더 셀
+const StyledTableHeadCell = styled(TableCell)(({ theme }) => ({
+  backgroundColor: theme.palette.grey[100],
+  fontWeight: 'bold',
+}));
 
 export default function AdminNoticePage() {
   const { data: notices, isLoading } = useGetNotices();
-  const { mutate: deleteNotice, isPending: isDeleting } = useDeleteNotice();
 
-  if (isLoading) return <div style={{ padding: 32 }}>로딩중...</div>;
+  // 페이지네이션 상태 관리
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 10; // 페이지당 표시할 항목 수
+
+  // 페이지 변경 핸들러
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    setPage(value);
+  };
+
+  if (isLoading) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 5 }}>
+        <Paper elevation={3} sx={{ p: 2, mb: 2 }}>
+          <LinearProgress />
+          <Box sx={{ p: 5, textAlign: 'center' }}>로딩중...</Box>
+        </Paper>
+      </Container>
+    );
+  }
+  // 페이지네이션 적용
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const displayedNotices = notices.slice(startIndex, endIndex);
+
+  // 총 페이지 수 계산
+  const totalPages = Math.ceil(notices.length / rowsPerPage);
 
   return (
-    <div
-      style={{
-        maxWidth: 700,
-        margin: '40px auto',
-        background: '#fff',
-        borderRadius: 8,
-        boxShadow: '0 2px 8px #eee',
-        padding: 32,
-      }}
-    >
-      <h2
-        style={{
-          fontSize: 28,
-          fontWeight: 700,
-          marginBottom: 24,
-          borderBottom: '1px solid #eee',
-          paddingBottom: 12,
-        }}
-      >
-        공지사항 관리
-      </h2>
-      <div style={{ marginBottom: 24, textAlign: 'right' }}>
-        <Link
-          href="/notice/create"
-          style={{ color: '#1976d2', fontWeight: 500 }}
-        >
-          + 새 공지 작성
-        </Link>
-      </div>
-      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-        {notices?.map((notice: any) => (
-          <li
-            key={notice.id}
-            style={{
-              borderBottom: '1px solid #f0f0f0',
-              padding: '16px 0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <div>
-              <Link
-                href={`/notice/${notice.id}`}
-                style={{
-                  textDecoration: 'none',
-                  color: '#222',
-                  fontSize: 18,
-                  fontWeight: 500,
-                }}
-              >
-                <b>{notice.title}</b>{' '}
-                {notice.visible ? (
-                  ''
-                ) : (
-                  <span style={{ color: '#aaa', fontSize: 14 }}>(숨김)</span>
-                )}
-              </Link>
-            </div>
-            <button
-              onClick={() => {
-                if (window.confirm('정말 삭제하시겠습니까?'))
-                  deleteNotice(notice.id);
-              }}
-              disabled={isDeleting}
-              style={{
-                color: '#fff',
-                background: '#d32f2f',
-                border: 'none',
-                borderRadius: 4,
-                padding: '6px 14px',
-                cursor: 'pointer',
-              }}
-            >
-              삭제
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Container maxWidth="lg" sx={{ my: 4 }}>
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h4" component="h1" sx={{ fontWeight: 700, mb: 1 }}>
+          공지사항
+        </Typography>
+        {/* <Typography variant="body2" color="text.secondary">
+          중요한 안내사항을 확인하세요
+        </Typography> */}
+      </Box>
+
+      <Paper elevation={3} sx={{ borderRadius: 2, overflow: 'hidden' }}>
+        {/* 로딩 상태 표시 */}
+        {isLoading && <LinearProgress />}
+
+        <TableContainer>
+          <Table sx={{ minWidth: 650 }}>
+            <TableHead>
+              <TableRow>
+                <StyledTableHeadCell align="center" width={80}>
+                  번호
+                </StyledTableHeadCell>
+                <StyledTableHeadCell>제목</StyledTableHeadCell>
+                <StyledTableHeadCell align="center" width={150}>
+                  등록일
+                </StyledTableHeadCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {displayedNotices.length > 0 ? (
+                displayedNotices.map((notice: any, idx: number) => (
+                  <TableRow
+                    key={notice.id}
+                    hover
+                    sx={{
+                      cursor: 'pointer',
+                      '&:last-child td, &:last-child th': { border: 0 },
+                    }}
+                    component={Link as any}
+                    href={`/notice/${notice.id}`}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <TableCell align="center">{notice.id}</TableCell>
+                    <TableCell>
+                      {notice.title}{' '}
+                      {!notice.visible && (
+                        <Chip
+                          label="숨김"
+                          size="small"
+                          variant="outlined"
+                          color="default"
+                          sx={{ ml: 1, height: 20, fontSize: '0.7rem' }}
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell align="center">
+                      {notice.createdAt.slice(0, 10)}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={3} align="center" sx={{ py: 5 }}>
+                    <Typography color="text.secondary">
+                      등록된 공지사항이 없습니다.
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <Divider />
+
+        {/* 페이지네이션 */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            color="primary"
+            size="large"
+            showFirstButton
+            showLastButton
+          />
+        </Box>
+      </Paper>
+    </Container>
   );
 }

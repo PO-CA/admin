@@ -11,6 +11,7 @@ import {
   updateAProduct,
   creatProductsBulk,
   updateProductsBulk,
+  increaseStock,
 } from '../api/product';
 import { ProductData } from '@/types/productData';
 import { UpdateProductData } from '@/types/updateProductData';
@@ -127,5 +128,14 @@ export function useUpdateProductsBulk(options?: any) {
     mutationFn: (payload: any) => updateProductsBulk(payload),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['products'] }),
     ...options,
+  });
+}
+
+export function useIncreaseStock() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: any) => increaseStock(payload),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['products'] }),
   });
 }

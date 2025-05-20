@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { useGetNotices } from '@/query/query/notice';
+import { useDeleteNotice, useGetNotices } from '@/query/query/notice';
 import Link from 'next/link';
 // MUI components
 import {
@@ -20,6 +20,7 @@ import {
   LinearProgress,
   styled,
 } from '@mui/material';
+import { useGetBoards } from '@/query/query/board';
 
 // 스타일이 적용된 테이블 헤더 셀
 const StyledTableHeadCell = styled(TableCell)(({ theme }) => ({
@@ -27,8 +28,8 @@ const StyledTableHeadCell = styled(TableCell)(({ theme }) => ({
   fontWeight: 'bold',
 }));
 
-export default function NoticePage() {
-  const { data: notices, isLoading } = useGetNotices();
+export default function AdminBoardPage() {
+  const { data: boards, isLoading } = useGetBoards();
 
   // 페이지네이션 상태 관리
   const [page, setPage] = useState(1);
@@ -52,23 +53,19 @@ export default function NoticePage() {
       </Container>
     );
   }
-
-  // visible이 true인 공지만 보여줌
-  const visibleNotices = notices?.filter((notice: any) => notice.visible) || [];
-
   // 페이지네이션 적용
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
-  const displayedNotices = visibleNotices.slice(startIndex, endIndex);
+  const displayedBoards = boards.slice(startIndex, endIndex);
 
   // 총 페이지 수 계산
-  const totalPages = Math.ceil(visibleNotices.length / rowsPerPage);
+  const totalPages = Math.ceil(boards.length / rowsPerPage);
 
   return (
     <Container maxWidth="lg" sx={{ my: 4 }}>
       <Box sx={{ mb: 3 }}>
         <Typography variant="h4" component="h1" sx={{ fontWeight: 700, mb: 1 }}>
-          공지사항
+          스텝 게시판
         </Typography>
         {/* <Typography variant="body2" color="text.secondary">
           중요한 안내사항을 확인하세요
@@ -93,23 +90,23 @@ export default function NoticePage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {displayedNotices.length > 0 ? (
-                displayedNotices.map((notice: any, idx: number) => (
+              {displayedBoards.length > 0 ? (
+                displayedBoards.map((board: any, idx: number) => (
                   <TableRow
-                    key={notice.id}
+                    key={board.id}
                     hover
                     sx={{
                       cursor: 'pointer',
                       '&:last-child td, &:last-child th': { border: 0 },
                     }}
                     component={Link as any}
-                    href={`/store/notice/${notice.id}`}
+                    href={`/board/${board.id}`}
                     style={{ textDecoration: 'none', color: 'inherit' }}
                   >
-                    <TableCell align="center">{notice.id}</TableCell>
+                    <TableCell align="center">{board.id}</TableCell>
                     <TableCell>
-                      {notice.title}{' '}
-                      {!notice.visible && (
+                      {board.title}{' '}
+                      {!board.visible && (
                         <Chip
                           label="숨김"
                           size="small"
@@ -120,7 +117,7 @@ export default function NoticePage() {
                       )}
                     </TableCell>
                     <TableCell align="center">
-                      {notice.createdAt.slice(0, 10)}
+                      {board.createdAt.slice(0, 10)}
                     </TableCell>
                   </TableRow>
                 ))
@@ -128,7 +125,7 @@ export default function NoticePage() {
                 <TableRow>
                   <TableCell colSpan={3} align="center" sx={{ py: 5 }}>
                     <Typography color="text.secondary">
-                      등록된 공지사항이 없습니다.
+                      등록된 게시글이 없습니다.
                     </Typography>
                   </TableCell>
                 </TableRow>

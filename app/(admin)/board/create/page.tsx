@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import { useCreateNotice } from '@/query/query/notice';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -19,15 +18,16 @@ import {
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useCreateBoard } from '@/query/query/board';
 
-export default function AdminNoticeCreatePage() {
-  const { mutate: createNotice, isPending } = useCreateNotice();
+export default function AdminBoardCreatePage() {
+  const { mutate: createBoard, isPending } = useCreateBoard();
   const router = useRouter();
   const [form, setForm] = useState({ title: '', content: '', visible: true });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    createNotice(form, { onSuccess: () => router.push('/notice') });
+    createBoard(form, { onSuccess: () => router.push('/board') });
   };
 
   return (
@@ -42,10 +42,10 @@ export default function AdminNoticeCreatePage() {
             관리자
           </Link>
           <Link
-            href="/notice"
+            href="/board"
             style={{ color: 'inherit', textDecoration: 'none' }}
           >
-            공지사항 관리
+            게시판 관리
           </Link>
           <Typography color="text.primary">새 글 작성</Typography>
         </Breadcrumbs>
@@ -54,7 +54,7 @@ export default function AdminNoticeCreatePage() {
       <Paper elevation={3} sx={{ borderRadius: 2, overflow: 'hidden' }}>
         <Box sx={{ p: 3, borderBottom: 1, borderColor: 'divider' }}>
           <Typography variant="h5" component="h1" sx={{ fontWeight: 700 }}>
-            공지사항 작성
+            게시판 작성
           </Typography>
         </Box>
 
@@ -123,7 +123,7 @@ export default function AdminNoticeCreatePage() {
             variant="text"
             startIcon={<ArrowBackIcon />}
             component={Link}
-            href="/notice"
+            href="/board"
           >
             목록으로
           </Button>

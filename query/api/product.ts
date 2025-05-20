@@ -208,3 +208,25 @@ export const updateProductsBulk = async (payload: any[]) => {
 
   return data;
 };
+
+export const increaseStock = async (payload: {
+  productId: number;
+  quantity: number;
+}) => {
+  const { data } = await requests(`${API_URL}/logi/products/increase-stock`, {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    data: payload,
+  });
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  alert('재고 증가를 성공했습니다');
+
+  return data;
+};

@@ -16,6 +16,7 @@ export const menus = [
     subMenus: [
       { href: '/products', text: '상품목록' },
       { href: '/addproduct', text: '상품추가' },
+      { href: '/import-products', text: '상품입고' },
     ],
   },
   {
@@ -28,6 +29,9 @@ export const menus = [
     subMenus: [
       { href: '/notice', text: '공지사항 목록' },
       { href: '/notice/create', text: '공지사항 추가' },
+      { href: '/board', text: '스탭 게시판' },
+      { href: '/board/create', text: '글 작성' },
+      { href: '/release-schedule', text: '일정 관리' },
     ],
   },
 ];
