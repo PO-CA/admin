@@ -12,7 +12,7 @@ export default function CancelCompleteShippingButton({ info }: any) {
     cancelCompleteShippingItem(info.row.original.id);
   };
 
-  if (info.row.original.shippingStatus === '결제완료') return null;
+  if (info.row.original.shippingStatus !== '결제완료') return null;
 
   return (
     <Button
