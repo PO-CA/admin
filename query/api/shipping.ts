@@ -135,6 +135,27 @@ export const updateAShipping = async (shippingId: number) => {
   return data;
 };
 
+export const cancelCompleteAShipping = async (shippingId: number) => {
+  const { data } = await requests(
+    `${API_URL}/logi/shipping/cancel-complete/${shippingId}`,
+    {
+      method: 'put',
+      headers: { 'Content-Type': 'application/json' },
+    },
+  );
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  alert('취소 완료를 성공했습니다');
+
+  return data;
+};
+
 // Presigned URL 요청
 export const presignRes = async (shippingCode: string, videoBlob: Blob) => {
   const { data } = await requests(
