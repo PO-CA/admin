@@ -88,7 +88,7 @@ export default function UserShippings({ usersEmail }: { usersEmail: string }) {
   }
 
   return (
-    <Box sx={{ width: '100%', height: 600 }}>
+    <Box sx={{ width: '100%' }}>
       <DataGrid
         rows={rows}
         columns={shippingColumns}

@@ -85,7 +85,7 @@ export default function Credits({ usersEmail }: { usersEmail: string }) {
         variant="contained"
         color="primary"
         size="small"
-        sx={{ fontWeight: 600, borderRadius: 2 }}
+        sx={{ fontWeight: 600, borderRadius: 2, marginBottom: 2 }}
         onClick={handleDown}
         disabled={isCreditLoading}
       >
