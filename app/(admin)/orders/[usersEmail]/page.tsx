@@ -19,20 +19,22 @@ export default function OrdersByUsersId({
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ mb: 10 }}>
-        <Typography
-          variant="h6"
-          sx={{
-            background: 'white',
-            p: 2,
-            fontWeight: 500,
-            border: '1px solid',
-            borderColor: 'divider',
-            mb: 2,
-            fontSize: 18,
-          }}
-        >
-          유저-크레딧
-        </Typography>
+        <Box>
+          <Typography
+            variant="h6"
+            sx={{
+              background: 'white',
+              p: 2,
+              fontWeight: 500,
+              border: '1px solid',
+              borderColor: 'divider',
+              mb: 2,
+              fontSize: 18,
+            }}
+          >
+            유저-크레딧
+          </Typography>
+        </Box>
         <Paper
           sx={{
             background: 'white',
