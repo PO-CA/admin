@@ -8,12 +8,18 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import dynamic from 'next/dynamic';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+
 const Plot = dynamic(() => import('react-plotly.js'), {
   ssr: false,
   loading: () => null,
 });
 
 export default function StatsTotal() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   const {
     data: totalSell,
     isLoading: isTotalSellLoading,
@@ -32,10 +38,10 @@ export default function StatsTotal() {
     isSuccess: isTop5Success,
   } = useGetTop5();
   return (
-    <Box sx={{ display: 'flex', gap: 2 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <Paper
         sx={{
-          width: '30%',
+          width: '100%',
           p: 2,
           fontSize: 14,
           fontWeight: 500,
@@ -68,7 +74,7 @@ export default function StatsTotal() {
       </Paper>
       <Paper
         sx={{
-          width: '70%',
+          width: '100%',
           p: 2,
           fontSize: 14,
           fontWeight: 500,
@@ -86,14 +92,27 @@ export default function StatsTotal() {
           isTop5Success &&
           top5data &&
           top5data.map((item: any, i: number) => (
-            <Box key={i} sx={{ display: 'flex', gap: 1, mb: 0.5 }}>
-              <Typography sx={{ minWidth: 120 }}>
+            <Box
+              key={i}
+              sx={{
+                display: 'flex',
+                gap: 1,
+                mb: 0.5,
+                p: isMobile ? 1 : 0,
+                flexDirection: isMobile ? 'column' : 'row',
+                border: isMobile ? '1px solid' : 'none',
+                borderColor: isMobile ? 'divider' : 'none',
+                borderRadius: isMobile ? 1 : 0,
+                justifyContent: isMobile ? 'center' : 'space-between',
+              }}
+            >
+              <Typography sx={{ minWidth: 120, flex: 5.5, fontSize: 14 }}>
                 앨범명 : {item.title}
               </Typography>
-              <Typography sx={{ minWidth: 160 }}>
+              <Typography sx={{ minWidth: 160, flex: 2.5, fontSize: 14 }}>
                 총 매출액 : {item.totalSell.toLocaleString()} 원
               </Typography>
-              <Typography>
+              <Typography sx={{ flex: 2, fontSize: 14 }}>
                 총 판매수량 : {item.totalQty.toLocaleString()} 개
               </Typography>
             </Box>

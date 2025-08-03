@@ -35,12 +35,12 @@ export const orderItemsColumns = [
   {
     field: 'title',
     headerName: '제목',
-    flex: 1,
+    width: 200,
   },
   {
     field: 'barcode',
     headerName: '바코드/SKU',
-    flex: 1,
+    width: 200,
     renderCell: (params: any) => {
       const barcodeValue = params.row.barcode;
       const skuValue = params.row.sku;
@@ -84,7 +84,7 @@ export const orderItemsColumns = [
   {
     field: 'price',
     headerName: '판매가',
-    flex: 1,
+    width: 200,
     align: 'center',
     headerAlign: 'center',
     renderCell: (params: any) => (
@@ -104,7 +104,7 @@ export const orderItemsColumns = [
   {
     field: 'qty',
     headerName: '판매수량',
-    flex: 1,
+    width: 200,
     align: 'center',
     headerAlign: 'center',
     renderCell: (params: any) => (
@@ -124,7 +124,7 @@ export const orderItemsColumns = [
   {
     field: 'coordinates',
     headerName: '좌표',
-    flex: 1,
+    width: 100,
     renderCell: (params: any) => (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         {params.value?.map((coordinate: any) => (
@@ -136,11 +136,11 @@ export const orderItemsColumns = [
   {
     field: 'totalPrice',
     headerName: '총액',
-    flex: 1,
+    width: 100,
   },
   {
     field: 'addressName',
     headerName: '배송지',
-    flex: 1,
+    width: 100,
   },
 ];

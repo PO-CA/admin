@@ -9,8 +9,12 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 export default function StatsByInCharge() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const {
     data: inChargesData,
     isLoading: isInChargesLoading,
@@ -91,7 +95,18 @@ export default function StatsByInCharge() {
             inChargesData &&
             selectedInCharge &&
             selectedData && (
-              <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: 2,
+                  mt: 2,
+                  flexDirection: isMobile ? 'column' : 'row',
+                  border: isMobile ? '1px solid' : 'none',
+                  borderColor: isMobile ? 'divider' : 'none',
+                  borderRadius: isMobile ? 1 : 0,
+                  overflowY: 'scroll',
+                }}
+              >
                 {selectedData.map((item: any, i: number) => (
                   <Box key={i} sx={{ mr: 2 }}>
                     <Typography>{item.month} 월</Typography>

@@ -44,33 +44,39 @@ export default function Credits({ usersEmail }: { usersEmail: string }) {
     {
       field: 'createdAt',
       headerName: '날짜',
-      flex: 1,
+      // flex: 1,
+      width: 100,
       valueGetter: (params: any) => params?.slice(0, 10),
     },
     {
       field: 'content',
       headerName: '내용',
-      flex: 1,
+      // flex: 1,
+      width: 200,
     },
     {
       field: 'plus',
       headerName: '➕',
-      flex: 1,
+      // flex: 1,
+      width: 100,
     },
     {
       field: 'minus',
       headerName: '➖',
-      flex: 1,
+      // flex: 1,
+      width: 100,
     },
     {
       field: 'balance',
       headerName: '잔액',
-      flex: 1,
+      // flex: 1,
+      width: 100,
     },
     {
       field: 'memo',
       headerName: '메모',
-      flex: 1,
+      // flex: 1,
+      width: 200,
     },
   ];
 

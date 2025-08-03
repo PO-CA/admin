@@ -1,5 +1,15 @@
 .contentContainer {
-  display: flex;
+  /* display: flex; */
+  margin-left: 200px;
   background-color: rgb(226, 226, 226);
+  min-height: 100vh;
   /* height: 100vh; */
+}
+
+/* 모바일 반응형 */
+@media (max-width: 900px) {
+  .contentContainer {
+    flex-direction: column;
+    margin-left: 0; /* 모바일에서는 margin-left 제거 */
+  }
 }

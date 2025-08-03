@@ -16,6 +16,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import MenuIcon from '@mui/icons-material/Menu';
 import { menus } from '@/constants/menus';
 import { pocaMenus } from '@/constants/poca-menus';
 import Link from 'next/link';
@@ -27,14 +28,25 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from '@/providers/SnackbarProvider';
 import { registerRes, presignRes, uploadRes } from '@/query/api/shipping';
 
-function Sidebar() {
+interface SidebarProps {
+  mobileOpen?: boolean;
+  setMobileOpen?: (open: boolean) => void;
+}
+
+function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
   const { showSnackbar } = useSnackbar();
   const { userEmail } = useAuth();
   const [openMenus, setOpenMenus] = React.useState<{ [key: string]: boolean }>(
     {},
   );
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [localMobileOpen, setLocalMobileOpen] = React.useState(false);
+
+  // 외부에서 전달된 mobileOpen 상태를 사용하거나 로컬 상태 사용
+  const currentMobileOpen =
+    mobileOpen !== undefined ? mobileOpen : localMobileOpen;
+  const setCurrentMobileOpen = setMobileOpen || setLocalMobileOpen;
 
   // Modal state for video recording
   const [openModal, setOpenModal] = React.useState(false);
@@ -278,6 +290,7 @@ function Sidebar() {
             <Link href={menu.href} passHref legacyBehavior>
               <ListItemButton
                 component="a"
+                onClick={() => isMobile && setCurrentMobileOpen(false)}
                 sx={{
                   color: theme.palette.text.primary,
                   borderRadius: theme.shape.borderRadius,
@@ -331,6 +344,7 @@ function Sidebar() {
                     <Link href={sub.href} passHref legacyBehavior>
                       <ListItemButton
                         component="a"
+                        onClick={() => isMobile && setCurrentMobileOpen(false)}
                         sx={{
                           color: theme.palette.text.secondary,
                           borderRadius: theme.shape.borderRadius,
@@ -358,22 +372,9 @@ function Sidebar() {
       return null;
     });
 
-  return (
-    <Drawer
-      variant="permanent"
-      sx={{
-        width: 200,
-        flexShrink: 0,
-        [`& .MuiDrawer-paper`]: {
-          width: 200,
-          boxSizing: 'border-box',
-          background: theme.palette.background.paper,
-          color: theme.palette.text.primary,
-          borderRight: `1px solid ${theme.palette.divider}`,
-        },
-      }}
-    >
-      <List>
+  const drawerContent = (
+    <>
+      <List sx={{ pt: isMobile ? 8 : 0 }}>
         {renderMenus(menus)}
         {showPocaMenus && renderMenus(pocaMenus)}
       </List>
@@ -617,6 +618,51 @@ function Sidebar() {
           </DialogActions>
         </Dialog>
       </Box>
+    </>
+  );
+
+  if (isMobile) {
+    return (
+      <Drawer
+        variant="temporary"
+        open={currentMobileOpen}
+        onClose={() => setCurrentMobileOpen(false)}
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile.
+        }}
+        sx={{
+          display: { xs: 'block', md: 'none' },
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
+            width: { xs: '100%', sm: 280 },
+            background: theme.palette.background.paper,
+            color: theme.palette.text.primary,
+            borderRight: `1px solid ${theme.palette.divider}`,
+          },
+        }}
+      >
+        {drawerContent}
+      </Drawer>
+    );
+  }
+
+  return (
+    <Drawer
+      variant="permanent"
+      sx={{
+        display: { xs: 'none', md: 'block' },
+        width: 200,
+        flexShrink: 0,
+        '& .MuiDrawer-paper': {
+          width: 200,
+          boxSizing: 'border-box',
+          background: theme.palette.background.paper,
+          color: theme.palette.text.primary,
+          borderRight: `1px solid ${theme.palette.divider}`,
+        },
+      }}
+    >
+      {drawerContent}
     </Drawer>
   );
 }
