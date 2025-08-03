@@ -8,6 +8,9 @@ import { useIsAdmin } from '@/hooks/useIAdmin';
 import Header from '@/components/header';
 import { pocaMenus } from '@/constants/poca-menus';
 import Box from '@mui/material/Box';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import { useState } from 'react';
 
 export default function RootLayout({
   children,
@@ -15,17 +18,34 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const { isAuthenticated, myInfoLoading, userEmail } = useAuth();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useIsAdmin();
+
+  const handleMenuClick = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
 
   return (
     !myInfoLoading &&
     isAuthenticated && (
       <>
-        <Header />
+        <Header onMenuClick={handleMenuClick} />
         <div className={styles.contentContainer}>
-          <Sidebar />
-          <Box sx={{ flex: 1, pt: '72px' }}>{children}</Box>
+          <Sidebar
+            mobileOpen={mobileMenuOpen}
+            setMobileOpen={setMobileMenuOpen}
+          />
+          <Box
+            sx={{
+              flex: 1,
+              pt: '72px',
+            }}
+          >
+            {children}
+          </Box>
         </div>
       </>
     )

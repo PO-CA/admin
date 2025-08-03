@@ -3,14 +3,18 @@ import { useCreateCreditByUsersEmail } from '@/query/query/credit';
 import { CreateCreditByUsersEmailDTO } from '@/types/createCreditByUsersEmailDTO';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { useMediaQuery } from '@mui/material';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
+import { useTheme } from '@mui/material/styles';
 
 export default function AddCredit() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { mutateAsync: createCredit, isPending } =
     useCreateCreditByUsersEmail();
   const pathName = usePathname();
@@ -45,8 +49,12 @@ export default function AddCredit() {
       <Typography variant="subtitle2" sx={{ mb: 1 }}>
         크레딧 추가
       </Typography>
-      <Stack direction="row" spacing={2} alignItems="flex-end">
-        <Box>
+      <Stack
+        direction={isMobile ? 'column' : 'row'}
+        spacing={2}
+        alignItems="flex-end"
+      >
+        <Box sx={{ width: isMobile ? '100%' : '40%' }}>
           <Typography
             variant="caption"
             sx={{ mb: 0.5, display: 'block', textAlign: 'center' }}
@@ -57,7 +65,7 @@ export default function AddCredit() {
             size="small"
             placeholder="내역"
             value={addCredit.content}
-            sx={{ width: '500px' }}
+            sx={{ width: '100%' }}
             onChange={(e) =>
               setAddCredit({
                 ...addCredit,
@@ -67,7 +75,7 @@ export default function AddCredit() {
           />
         </Box>
 
-        <Box>
+        <Box sx={{ width: isMobile ? '100%' : '10%' }}>
           <Typography
             variant="caption"
             sx={{ mb: 0.5, display: 'block', textAlign: 'center' }}
@@ -78,7 +86,7 @@ export default function AddCredit() {
             type="number"
             size="small"
             value={addCredit.minus}
-            sx={{ width: '120px' }}
+            sx={{ width: '100%' }}
             onChange={(e) =>
               setAddCredit({
                 ...addCredit,
@@ -88,7 +96,7 @@ export default function AddCredit() {
           />
         </Box>
 
-        <Box>
+        <Box sx={{ width: isMobile ? '100%' : '10%' }}>
           <Typography
             variant="caption"
             sx={{ mb: 0.5, display: 'block', textAlign: 'center' }}
@@ -99,7 +107,7 @@ export default function AddCredit() {
             type="number"
             size="small"
             value={addCredit.plus}
-            sx={{ width: '120px' }}
+            sx={{ width: '100%' }}
             onChange={(e) =>
               setAddCredit({
                 ...addCredit,
@@ -109,7 +117,7 @@ export default function AddCredit() {
           />
         </Box>
 
-        <Box>
+        <Box sx={{ width: isMobile ? '100%' : '20%' }}>
           <Typography
             variant="caption"
             sx={{ mb: 0.5, display: 'block', textAlign: 'center' }}
@@ -119,7 +127,7 @@ export default function AddCredit() {
           <TextField
             size="small"
             value={addCredit.memo}
-            sx={{ width: '120px' }}
+            sx={{ width: '100%' }}
             onChange={(e) =>
               setAddCredit({
                 ...addCredit,
@@ -133,7 +141,7 @@ export default function AddCredit() {
           variant="contained"
           color="primary"
           disabled={isPending}
-          sx={{ height: 40 }}
+          sx={{ height: 40, width: isMobile ? '100%' : '10%' }}
           onClick={() => {
             if (addCredit.content.length < 1) {
               alert('내역를 입력해 주세요');

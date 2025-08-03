@@ -15,7 +15,7 @@ export const shippingColumns: GridColDef[] = [
   {
     field: 'id',
     headerName: 'ID',
-    flex: 0.5,
+    width: 100,
     renderCell: (params: GridRenderCellParams) => (
       <Link href={`/shippings/${params.value}`}>{params.value}</Link>
     ),
@@ -23,7 +23,7 @@ export const shippingColumns: GridColDef[] = [
   {
     field: 'createdAt',
     headerName: '발송일',
-    flex: 1,
+    width: 100,
     valueGetter: (params: any) => {
       return params.slice(0, 10) || '';
     },
@@ -31,27 +31,27 @@ export const shippingColumns: GridColDef[] = [
   {
     field: 'userNickname',
     headerName: '닉네임',
-    flex: 1,
+    width: 100,
   },
   {
     field: 'totalProductPrice',
     headerName: '상품가격',
-    flex: 0.7,
+    width: 100,
   },
   {
     field: 'shippingFee',
     headerName: '배송비',
-    flex: 0.7,
+    width: 100,
   },
   {
     field: 'memo',
     headerName: '배송메모',
-    flex: 1,
+    width: 200,
   },
   {
     field: 'buttons',
     headerName: '',
-    flex: 1.5,
+    width: 200,
     sortable: false,
     filterable: false,
     renderCell: (params: GridRenderCellParams) => (
@@ -74,7 +74,7 @@ export const shippingColumns: GridColDef[] = [
   {
     field: 'shippingStatus',
     headerName: '배송상태',
-    flex: 0.6,
+    width: 100,
     valueGetter: (params: any) => {
       return params;
     },
@@ -82,7 +82,7 @@ export const shippingColumns: GridColDef[] = [
   {
     field: 'updatedAt',
     headerName: '배송/결제일',
-    flex: 1,
+    width: 100,
     valueGetter: (params: any) => {
       return params?.slice(0, 10) || '';
     },
@@ -90,7 +90,7 @@ export const shippingColumns: GridColDef[] = [
   {
     field: 'videoStatus',
     headerName: '영상',
-    flex: 1,
+    width: 100,
     renderCell: (params: any) => {
       return params.value === '영상저장' ? (
         <div>

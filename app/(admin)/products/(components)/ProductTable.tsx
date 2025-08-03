@@ -11,7 +11,7 @@ export default function ProductTable() {
     {
       field: 'id',
       headerName: 'ID',
-      flex: 0.5,
+      width: 50,
       renderCell: (params: any) => (
         <Link href={`/products/${params.value}`}>{params.value}</Link>
       ),
@@ -19,7 +19,7 @@ export default function ProductTable() {
     {
       field: 'buttons',
       headerName: '기능',
-      flex: 1,
+      width: 100,
       sortable: false,
       filterable: false,
       renderCell: (params: any) => (
@@ -29,32 +29,32 @@ export default function ProductTable() {
     {
       field: 'coordinateNames',
       headerName: '위치',
-      flex: 1,
+      width: 50,
     },
     {
       field: 'title',
       headerName: '앨범명',
-      width: 400,
+      width: 500,
     },
     {
       field: 'artist',
       headerName: '가수',
-      flex: 1,
+      width: 100,
     },
     {
       field: 'sku',
       headerName: 'sku',
-      flex: 1,
+      width: 100,
     },
     {
       field: 'barcode',
       headerName: '바코드',
-      flex: 1,
+      width: 200,
     },
     {
       field: 'logiCategory',
       headerName: '카테고리',
-      flex: 1,
+      width: 100,
       valueGetter: (params: any) => {
         return params?.title;
       },
@@ -62,12 +62,12 @@ export default function ProductTable() {
     {
       field: 'price',
       headerName: '가격',
-      flex: 0.7,
+      width: 100,
     },
     {
       field: 'stock',
       headerName: '수량',
-      flex: 0.7,
+      width: 100,
     },
   ];
 

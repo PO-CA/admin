@@ -30,18 +30,36 @@ tfoot th {
   display: flex;
   flex-direction: column;
   padding: 20px 0 40px 0;
+  overflow-x: auto; /* 가로 스크롤 허용 */
 }
 
 .topPanal {
   display: flex;
   align-items: center;
   margin-bottom: 15px;
+  flex-wrap: wrap; /* 모바일에서 줄바꿈 */
+  gap: 10px;
+}
+
+.leftTopPanal {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.rightTopPanal {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
 }
 
 .searchInput {
   width: 200px;
   height: 30px;
   margin-right: 10px;
+  min-width: 150px; /* 최소 너비 설정 */
 }
 
 .selactInput {
@@ -61,6 +79,8 @@ tfoot th {
   border: 1px solid lightgray;
   border-collapse: collapse;
   padding: 3px 12px;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  min-width: 80px; /* 최소 너비 설정 */
 }
 
 .tableRow {
@@ -68,6 +88,8 @@ tfoot th {
   border-collapse: collapse;
   padding: 5px 12px;
   text-align: center;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  min-width: 80px; /* 최소 너비 설정 */
 }
 
 .tableRow:nth-child(1) {
@@ -84,27 +106,115 @@ tfoot th {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap; /* 모바일에서 줄바꿈 */
+  gap: 5px;
 }
 
 .paginationButton {
   width: 30px;
   height: 30px;
   margin: 2px;
+  min-width: 44px; /* 터치 영역 최소화 */
+  min-height: 44px;
 }
 
 .paginationText {
   margin: 0px 10px;
+  font-size: 14px;
 }
 
 .paginationInputContainer {
   display: flex;
   align-items: center;
   font-size: 14px;
+  gap: 5px;
 }
+
 .paginationInput {
   width: 50px;
   height: 30px;
   margin: 2px;
   font-size: 14px;
   text-align: center;
+  min-width: 44px; /* 터치 영역 최소화 */
+  min-height: 44px;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .tableContainer {
+    padding: 10px 0 20px 0;
+    margin-bottom: 30px;
+  }
+
+  .topPanal {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .leftTopPanal {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rightTopPanal {
+    justify-content: center;
+  }
+
+  .searchInput {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .totalRowcount {
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .tableHeader,
+  .tableRow {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+
+  .paginationPanel {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .paginationText {
+    margin: 0;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .tableContainer {
+    padding: 5px 0 10px 0;
+  }
+
+  .tableHeader,
+  .tableRow {
+    padding: 6px 4px;
+    font-size: 11px;
+  }
+
+  .searchInput {
+    height: 40px; /* 터치 영역 확대 */
+  }
+
+  .selactInput {
+    height: 40px; /* 터치 영역 확대 */
+  }
+
+  .paginationButton {
+    width: 40px;
+    height: 40px;
+  }
+
+  .paginationInput {
+    width: 60px;
+    height: 40px;
+  }
 }

@@ -7,7 +7,7 @@ import CustomerTable from './(components)/CustomerTable';
 
 export default function Customers() {
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: 1 }}>
       <Typography
         variant="h6"
         sx={{
@@ -30,7 +30,7 @@ export default function Customers() {
           border: '1px solid',
           borderColor: 'divider',
           m: '0 10px',
-          p: 2,
+          p: 1,
         }}
       >
         <CustomerTable />

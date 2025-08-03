@@ -11,7 +11,8 @@ export default function UserListWithOrderQty() {
     {
       field: 'nickname',
       headerName: '회사명',
-      flex: 1,
+      // flex: 3,
+      width: 200,
       renderCell: (params: any) => (
         <a href={`/orders/${params.row.userEmail}`}>{params.value}</a>
       ),
@@ -19,7 +20,8 @@ export default function UserListWithOrderQty() {
     {
       field: 'userEmail',
       headerName: '이메일',
-      flex: 1.5,
+      // flex: 4,
+      width: 200,
       renderCell: (params: any) => (
         <a href={`/orders/${params.value}`}>{params.value}</a>
       ),
@@ -27,17 +29,20 @@ export default function UserListWithOrderQty() {
     {
       field: 'unpaidShippingQty',
       headerName: '미결제',
-      flex: 0.7,
+      // flex: 1,
+      width: 100,
     },
     {
       field: 'logiOrderItemsQty',
       headerName: '[앨범]주문건',
-      flex: 0.7,
+      // flex: 1,
+      width: 100,
     },
     {
       field: 'logiOrderItemsTotalQty',
       headerName: '[앨범]총수량',
-      flex: 0.7,
+      // flex: 1,
+      width: 100,
     },
   ];
 

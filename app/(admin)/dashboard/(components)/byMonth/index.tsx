@@ -5,8 +5,12 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 export default function StatsByMonth() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear);
   const {
@@ -49,7 +53,17 @@ export default function StatsByMonth() {
         </Select>
       </Box>
       {!isMonthLoading && isMonthSuccess && monthData && (
-        <Box sx={{ display: 'flex', gap: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 2,
+            flexDirection: isMobile ? 'column' : 'row',
+            border: isMobile ? '1px solid' : 'none',
+            borderColor: isMobile ? 'divider' : 'none',
+            borderRadius: isMobile ? 1 : 0,
+            overflowY: 'scroll',
+          }}
+        >
           {monthData.map((item: any, i: number) => (
             <Box key={i} sx={{ mr: 2 }}>
               <Typography>{item.month} 월</Typography>

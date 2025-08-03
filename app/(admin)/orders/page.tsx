@@ -6,7 +6,7 @@ import UserListWithOrderQty from './(components)/userListWithOrderQty';
 
 export default function Orders() {
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: 1 }}>
       <Typography
         variant="h6"
         sx={{

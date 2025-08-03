@@ -111,14 +111,14 @@ export const importProductsColumns: GridColDef[] = [
   {
     field: 'price',
     headerName: '가격',
-    flex: 1,
+    width: 100,
     type: 'number',
   },
 
   {
     field: 'releaseDate',
     headerName: '출시일',
-    flex: 1,
+    width: 100,
     renderCell: (params) => {
       const value = params.value;
       if (value && typeof value === 'string') {

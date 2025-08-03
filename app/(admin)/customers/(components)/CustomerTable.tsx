@@ -19,7 +19,7 @@ export default function CustomerTable() {
     {
       field: 'userEmail',
       headerName: '이메일',
-      flex: 1,
+      width: 200,
       renderCell: (params: any) => (
         <Link href={`/customers/${params.value}`}>{params.value}</Link>
       ),
@@ -27,22 +27,22 @@ export default function CustomerTable() {
     {
       field: 'nickname',
       headerName: '회사명',
-      flex: 1,
+      width: 200,
     },
     {
       field: 'userLevel',
       headerName: '권한',
-      flex: 1,
+      width: 100,
     },
     {
       field: 'inCharge',
       headerName: '담당자',
-      flex: 1,
+      width: 100,
     },
     {
       field: 'id',
       headerName: '삭제',
-      flex: 1,
+      width: 100,
       renderCell: (params: any) => (
         <Button
           variant="contained"
