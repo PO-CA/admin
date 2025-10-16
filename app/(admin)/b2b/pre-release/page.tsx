@@ -13,9 +13,34 @@ function PreReleaseOrderTable() {
 
   const columns: GridColDef[] = [
     {
-      field: 'productId',
-      headerName: '앨범 ID',
-      flex: 0.5,
+      field: 'deadlineDate',
+      headerName: '마감일',
+      flex: 0.8,
+      renderCell: (params: any) => {
+        return params.value
+          ? new Date(params.value).toLocaleDateString('ko-KR')
+          : '';
+      },
+    },
+    {
+      field: 'releaseDate',
+      headerName: '출시일',
+      flex: 0.8,
+      renderCell: (params: any) => {
+        return params.value
+          ? new Date(params.value).toLocaleDateString('ko-KR')
+          : '';
+      },
+    },
+    {
+      field: 'barcode',
+      headerName: '바코드',
+      flex: 1,
+    },
+    {
+      field: 'artist',
+      headerName: '아티스트',
+      flex: 1,
     },
     {
       field: 'productTitle',
@@ -45,6 +70,10 @@ function PreReleaseOrderTable() {
     versionId: item.versionId,
     versionName: item.versionName,
     totalQty: item.totalQty,
+    deadlineDate: item.deadlineDate,
+    releaseDate: item.releaseDate,
+    barcode: item.barcode,
+    artist: item.artist,
   }));
 
   return (

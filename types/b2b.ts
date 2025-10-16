@@ -4,6 +4,7 @@ export interface PreReleaseOrderSummary {
   versionId: number;
   versionName: string;
   totalQty: number;
+  deadlineDate: string;
   releaseDate: string;
   barcode: string;
   artist: string;

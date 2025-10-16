@@ -13,9 +13,14 @@ function ReleasedOrderTable() {
 
   const columns: GridColDef[] = [
     {
-      field: 'productId',
-      headerName: '앨범 ID',
-      flex: 0.5,
+      field: 'barcode',
+      headerName: '바코드',
+      flex: 1,
+    },
+    {
+      field: 'artist',
+      headerName: '아티스트',
+      flex: 1,
     },
     {
       field: 'productTitle',
@@ -23,8 +28,16 @@ function ReleasedOrderTable() {
       flex: 2,
     },
     {
+      field: 'version',
+      headerName: '버전',
+      flex: 0.7,
+      renderCell: () => {
+        return '';
+      },
+    },
+    {
       field: 'totalQty',
-      headerName: '총 수량',
+      headerName: '수량',
       flex: 0.7,
       type: 'number',
       renderCell: (params: any) => {
@@ -38,6 +51,9 @@ function ReleasedOrderTable() {
     productId: item.productId,
     productTitle: item.productTitle,
     totalQty: item.totalQty,
+    barcode: item.barcode,
+    artist: item.artist,
+    version: '',
   }));
 
   return (

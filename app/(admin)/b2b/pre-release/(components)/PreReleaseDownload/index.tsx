@@ -13,8 +13,11 @@ export default function PreReleaseDownload({
 }) {
   const handleDown = useCallback(() => {
     const excelData = [
-      ['출시일', '바코드', '아티스트', '앨범명', '버전', '수량'],
+      ['마감일', '출시일', '바코드', '아티스트', '앨범명', '버전', '수량'],
       ...data.map((item: any) => [
+        item.deadlineDate
+          ? new Date(item.deadlineDate).toLocaleDateString('ko-KR')
+          : '',
         item.releaseDate
           ? new Date(item.releaseDate).toLocaleDateString('ko-KR')
           : '',
