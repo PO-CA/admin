@@ -17,6 +17,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import type { SelectChangeEvent } from '@mui/material/Select';
 import { updateCoordinatesColumns } from '../(components)/tableColumns/updateCoordinatesColumns';
+import VersionManagement from './(components)/VersionManagement';
 
 export default function ProductDetail({
   params,
@@ -193,6 +194,7 @@ export default function ProductDetail({
             />
             <AddCoordinate />
           </Paper>
+          <VersionManagement productId={Number(productId)} />
           <ProductInput addProductData={productInputData} onChange={onChange} />
         </form>
       </Paper>

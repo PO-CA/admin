@@ -14,7 +14,9 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 import type { SelectChangeEvent } from '@mui/material/Select';
+import { useRouter } from 'next/navigation';
 
 export default function AddProduct() {
   const {
@@ -45,6 +47,8 @@ export default function AddProduct() {
   });
   const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
   const { mutateAsync: createAProduct, isPending } = useCreateAProduct();
+  const router = useRouter();
+
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     addProductData.coordinateIds = selectedRowIds;
@@ -63,9 +67,20 @@ export default function AddProduct() {
       addProductData.deadlineDate,
     ).toISOString();
 
-    createAProduct(addProductData).then(() => {
+    createAProduct(addProductData).then((response) => {
       setSelectedRowIds([]);
       reset();
+
+      // 상품 생성 후 상세 페이지로 이동할지 물어보기
+      if (
+        confirm(
+          '상품이 생성되었습니다. 버전을 추가하려면 상품 상세 페이지로 이동하시겠습니까?',
+        )
+      ) {
+        if (response?.id) {
+          router.push(`/products/${response.id}`);
+        }
+      }
     });
   };
 
@@ -94,6 +109,9 @@ export default function AddProduct() {
           borderColor: 'divider',
         }}
       >
+        <Alert severity="info" sx={{ mb: 2 }}>
+          버전 관리는 상품 등록 후 상품 상세 페이지에서 가능합니다.
+        </Alert>
         <form onSubmit={onSubmit}>
           <Button
             type="submit"
