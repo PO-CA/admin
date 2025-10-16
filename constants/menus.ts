@@ -25,6 +25,13 @@ export const menus = [
     // href: '/customers',
   },
   {
+    text: 'B2B(테스트중)',
+    subMenus: [
+      { href: '/b2b/pre-release', text: '신보주문목록' },
+      { href: '/b2b/old-release', text: '구보주문목록' },
+    ],
+  },
+  {
     text: '공지사항',
     subMenus: [
       { href: '/notice', text: '공지사항 목록' },
