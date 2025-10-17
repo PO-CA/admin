@@ -1,6 +1,9 @@
 'use client';
+import { useState } from 'react';
 import CartList from '../(components)/cartList/cartList';
 import ProductList from '../(components)/productList/productList';
+import PreReleaseProductList from '../(components)/preReleaseProductList';
+import PreReleaseCartList from '../(components)/preReleaseCartList';
 import {
   Box,
   Paper,
@@ -10,6 +13,8 @@ import {
   ListItemText,
   Divider,
   Chip,
+  Tabs,
+  Tab,
 } from '@mui/material';
 import { useGetNotices } from '@/query/query/notice';
 import Link from 'next/link';
@@ -141,24 +146,63 @@ const RecentNotices = () => {
 };
 
 export default function Store() {
+  const [tab, setTab] = useState<'released' | 'pre-release'>('released');
+
   return (
     <Box sx={{ mt: 2, mb: 4 }}>
-      {/* 공지사항 컴포넌트 추가 */}
+      {/* 공지사항 컴포넌트 */}
       <RecentNotices />
 
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
-        }}
-      >
-        <Box sx={{ width: '65%' }}>
-          <ProductList />
-        </Box>
-        <Box sx={{ width: '35%' }}>
-          <CartList />
-        </Box>
+      {/* 탭 추가 */}
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3, mx: 20 }}>
+        <Tabs
+          value={tab}
+          onChange={(e, newValue) => setTab(newValue)}
+          sx={{
+            '& .MuiTab-root': {
+              fontSize: '1rem',
+              fontWeight: 600,
+            },
+          }}
+        >
+          <Tab label="구보 (일반 주문)" value="released" />
+          <Tab label="신보 (예약 발주)" value="pre-release" />
+        </Tabs>
       </Box>
+
+      {/* 구보 탭 */}
+      {tab === 'released' && (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+          }}
+        >
+          <Box sx={{ width: '65%' }}>
+            <ProductList />
+          </Box>
+          <Box sx={{ width: '35%' }}>
+            <CartList />
+          </Box>
+        </Box>
+      )}
+
+      {/* 신보 탭 */}
+      {tab === 'pre-release' && (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+          }}
+        >
+          <Box sx={{ width: '65%' }}>
+            <PreReleaseProductList />
+          </Box>
+          <Box sx={{ width: '35%' }}>
+            <PreReleaseCartList />
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 }

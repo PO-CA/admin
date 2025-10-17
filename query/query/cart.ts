@@ -8,6 +8,8 @@ import {
   createACartItem,
   deleteACartItem,
   getUsersAllCarts,
+  getReleasedCartItems,
+  getPreReleaseCartItems,
 } from '../api/cart';
 import { CreateCartItemDTO } from '@/types/createCartItemDTO';
 
@@ -26,6 +28,30 @@ export function useGetUsersAllCarts(userId: number | null) {
     queryKey: ['cartitems', `${userId}`],
     queryFn: async () => {
       const data = await getUsersAllCarts(userId);
+      return data;
+    },
+    enabled: !!userId,
+  });
+}
+
+// 구보 장바구니 조회 hook
+export function useGetReleasedCarts(userId: number | null) {
+  return useQuery({
+    queryKey: ['cartitems', 'released', `${userId}`],
+    queryFn: async () => {
+      const data = await getReleasedCartItems(userId);
+      return data;
+    },
+    enabled: !!userId,
+  });
+}
+
+// 신보 장바구니 조회 hook
+export function useGetPreReleaseCarts(userId: number | null) {
+  return useQuery({
+    queryKey: ['cartitems', 'pre-release', `${userId}`],
+    queryFn: async () => {
+      const data = await getPreReleaseCartItems(userId);
       return data;
     },
     enabled: !!userId,

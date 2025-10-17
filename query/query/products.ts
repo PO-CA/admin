@@ -7,11 +7,14 @@ import {
   getAllProductAveragePriceByProductId,
   getAllProducts,
   getUsersAllProducts,
+  getUsersReleasedProducts,
+  getUsersPreReleaseProducts,
   getUsersAllProductsForAddOrder,
   updateAProduct,
   creatProductsBulk,
   updateProductsBulk,
   increaseStock,
+  getProductVersions,
 } from '../api/product';
 import { ProductData } from '@/types/productData';
 import { UpdateProductData } from '@/types/updateProductData';
@@ -56,6 +59,43 @@ export function useGetUsersAllproducts(userId: number | null) {
       return data;
     },
     enabled: !!userId,
+  });
+}
+
+// 구보 상품 조회 hook
+export function useGetUsersReleasedProducts(userId: number | null) {
+  return useQuery({
+    queryKey: ['products', 'released', `${userId}`],
+    queryFn: async () => {
+      const data = await getUsersReleasedProducts(userId);
+      return data;
+    },
+    enabled: !!userId,
+  });
+}
+
+// 신보 상품 조회 hook
+export function useGetUsersPreReleaseProducts(userId: number | null) {
+  return useQuery({
+    queryKey: ['products', 'pre-release', `${userId}`],
+    queryFn: async () => {
+      const data = await getUsersPreReleaseProducts(userId);
+      return data;
+    },
+    enabled: !!userId,
+  });
+}
+
+// 상품 버전 조회 hook
+export function useGetProductVersions(productId: number | null) {
+  return useQuery({
+    queryKey: ['product-versions', `${productId}`],
+    queryFn: async () => {
+      if (!productId) return [];
+      const data = await getProductVersions(productId);
+      return data;
+    },
+    enabled: !!productId,
   });
 }
 

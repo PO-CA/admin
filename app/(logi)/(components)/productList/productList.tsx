@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { productColumns } from '../tableColumns/productColumns';
-import { useGetUsersAllproducts } from '@/query/query/products';
+import { useGetUsersReleasedProducts } from '@/query/query/products';
 import { useAuth } from '@/hooks/useAuth';
 import {
   Box,
@@ -18,7 +18,7 @@ export default function ProductList() {
     data: productsData,
     isLoading: isProductsLoading,
     isSuccess: isProductsSuccess,
-  } = useGetUsersAllproducts(userId || null);
+  } = useGetUsersReleasedProducts(userId || null);
 
   // 데이터를 DataGrid가 요구하는 형식으로 변환
   const rows = React.useMemo(() => {
@@ -48,7 +48,7 @@ export default function ProductList() {
   return (
     <Container sx={{}}>
       <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
-        상품-목록
+        상품 목록 (구보)
       </Typography>
 
       <Paper sx={{}}>

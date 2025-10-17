@@ -72,6 +72,44 @@ export const getUsersAllProducts = async (userId: number | null) => {
   return data;
 };
 
+// 구보 상품 조회
+export const getUsersReleasedProducts = async (userId: number | null) => {
+  const { data } = await requests(
+    `${API_URL}/logi/products/released/${userId}`,
+    {
+      method: 'get',
+    },
+  );
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  return data;
+};
+
+// 신보 상품 조회
+export const getUsersPreReleaseProducts = async (userId: number | null) => {
+  const { data } = await requests(
+    `${API_URL}/logi/products/pre-release/${userId}`,
+    {
+      method: 'get',
+    },
+  );
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  return data;
+};
+
 export const getUsersAllProductsForAddOrder = async (
   usersEmail: string | null,
 ) => {
@@ -228,5 +266,24 @@ export const increaseStock = async (payload: {
   }
   alert('재고 증가를 성공했습니다');
 
+  return data;
+};
+
+// 상품 버전 목록 조회
+export const getProductVersions = async (productId: number) => {
+  const { data } = await requests(
+    `${API_URL}/logi/product/versions/product/${productId}`,
+    {
+      method: 'get',
+    },
+  );
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
   return data;
 };

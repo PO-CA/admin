@@ -17,6 +17,44 @@ export const getUsersAllCarts = async (userId: number | null) => {
   return data;
 };
 
+// 구보 장바구니 조회
+export const getReleasedCartItems = async (userId: number | null) => {
+  const { data } = await requests(
+    `${API_URL}/logi/cartitem/released/${userId}`,
+    {
+      method: 'get',
+    },
+  );
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  return data;
+};
+
+// 신보 장바구니 조회
+export const getPreReleaseCartItems = async (userId: number | null) => {
+  const { data } = await requests(
+    `${API_URL}/logi/cartitem/pre-release/${userId}`,
+    {
+      method: 'get',
+    },
+  );
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  return data;
+};
+
 export const createACartItem = async (payload: CreateCartItemDTO) => {
   const { data } = await requests(`${API_URL}/logi/cartitem`, {
     method: 'post',
