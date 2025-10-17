@@ -122,6 +122,25 @@ export const orderItemsColumns = [
     ),
   },
   {
+    field: 'versions',
+    headerName: '버전',
+    flex: 1,
+    renderCell: (params: any) => {
+      if (!params.value || params.value.length === 0) {
+        return <div>-</div>;
+      }
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {params.value?.map((version: any) => (
+            <div key={version.id} style={{ padding: '2px 0' }}>
+              {version.versionName}: {version.qty}개
+            </div>
+          ))}
+        </div>
+      );
+    },
+  },
+  {
     field: 'coordinates',
     headerName: '좌표',
     flex: 1,
