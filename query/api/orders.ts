@@ -183,3 +183,23 @@ export const createOrderItemsInCart = async (payload: CreateOrderItemDTO) => {
   }
   return data;
 };
+
+// 신보 주문 생성 (장바구니에서)
+export const createPreReleaseOrder = async (payload: CreateOrderItemDTO) => {
+  const { data } = await requests(
+    `${API_URL}/logi/orderitems/pre-release/${payload.userId}/${payload.addressId}`,
+    {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+    },
+  );
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  alert('신보 주문이 완료되었습니다!');
+  return data;
+};

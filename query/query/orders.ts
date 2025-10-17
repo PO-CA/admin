@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createAOrderItem,
   createOrderItemsInCart,
+  createPreReleaseOrder,
   getAllPickedOrderByUsersEmail,
   getAllUnpickedOrderByUsersEmail,
   putFixedPriceOrderItem,
@@ -113,5 +114,17 @@ export function useCreateOrderItemsInCart() {
       createOrderItemsInCart(payload),
 
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cartitems'] }),
+  });
+}
+
+// 신보 주문 생성 (장바구니에서)
+export function useCreatePreReleaseOrder() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: CreateOrderItemDTO) => createPreReleaseOrder(payload),
+
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['cartitems', 'pre-release'] }),
   });
 }

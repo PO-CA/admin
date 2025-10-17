@@ -4,6 +4,7 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useGetPreReleaseCarts } from '@/query/query/cart';
 import { useAuth } from '@/hooks/useAuth';
 import { useGetAddressByUsersEmail } from '@/query/query/address';
+import { useCreatePreReleaseOrder } from '@/query/query/orders';
 import DeleteCartButton from '../deleteCartButton';
 import Addresses from '../cartList/addresses';
 import {
@@ -30,6 +31,9 @@ export default function PreReleaseCartList() {
     isLoading: isAddressLoading,
     isSuccess: isAddressSuccess,
   } = useGetAddressByUsersEmail(userEmail);
+
+  const { mutateAsync: createPreReleaseOrder, isPending } =
+    useCreatePreReleaseOrder();
 
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
 
@@ -189,19 +193,31 @@ export default function PreReleaseCartList() {
             variant="contained"
             color="primary"
             startIcon={<ShoppingCartCheckoutIcon />}
-            disabled={!selectedOption}
+            disabled={!selectedOption || isPending}
             onClick={async () => {
               if (!selectedOption) {
                 alert('배송지를 선택해 주세요.');
                 return;
               }
-              alert('신보 주문 기능은 현재 개발 중입니다. 곧 사용 가능합니다.');
-              // TODO: 신보 주문 API 구현 필요
-              // await createPreReleaseOrder({ userId, addressId: selectedOption });
+
+              if (!userId) {
+                alert('로그인이 필요합니다.');
+                return;
+              }
+
+              try {
+                await createPreReleaseOrder({
+                  userId: userId,
+                  addressId: selectedOption,
+                });
+              } catch (error) {
+                console.error('신보 주문 실패:', error);
+                alert('주문에 실패했습니다. 다시 시도해주세요.');
+              }
             }}
             sx={{ height: 40 }}
           >
-            주문하기 (개발중)
+            {isPending ? '주문중...' : '주문하기'}
           </Button>
 
           <FormControl sx={{ minWidth: 200, maxWidth: '100%' }}>
