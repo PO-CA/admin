@@ -16,6 +16,7 @@ export interface ProductData {
   y: number;
   z: number;
   barcode: string;
+  catId?: string;
   releaseDate: string | number;
   deadlineDate: string | number;
   coordinateIds: any;

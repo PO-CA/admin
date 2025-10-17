@@ -13,8 +13,9 @@ export default function ReleasedDownload({
 }) {
   const handleDown = useCallback(() => {
     const excelData = [
-      ['바코드', '아티스트', '앨범명', '버전', '수량'],
+      ['Cat ID', '바코드', '아티스트', '앨범명', '버전', '수량'],
       ...data.map((item: any) => [
+        item.catId || '',
         item.barcode || '',
         item.artist || '',
         item.productTitle || '',

@@ -17,6 +17,7 @@ export interface UpdateProductData {
   y: number;
   z: number;
   barcode: string;
+  catId?: string;
   releaseDate: string | number;
   deadlineDate: string | number;
 }

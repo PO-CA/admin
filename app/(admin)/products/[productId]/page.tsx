@@ -56,6 +56,7 @@ export default function ProductDetail({
     y: 0,
     z: 0,
     barcode: '',
+    catId: '',
     releaseDate: '',
     deadlineDate: '',
   });
@@ -81,6 +82,7 @@ export default function ProductDetail({
         y: productData.y || 0,
         z: productData.z || 0,
         barcode: productData.barcode || '',
+        catId: productData.catId || '',
         releaseDate: productData.releaseDate || '',
         deadlineDate: productData.deadlineDate || '',
       });

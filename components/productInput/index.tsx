@@ -17,6 +17,11 @@ const addProductColumns = [
   },
   {
     inputType: 'text',
+    labelName: 'Cat ID',
+    keyName: 'catId',
+  },
+  {
+    inputType: 'text',
     labelName: '상품 이름❗️',
     keyName: 'title',
   },

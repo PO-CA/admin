@@ -13,6 +13,11 @@ function PreReleaseOrderTable() {
 
   const columns: GridColDef[] = [
     {
+      field: 'catId',
+      headerName: 'Cat ID',
+      flex: 0.8,
+    },
+    {
       field: 'deadlineDate',
       headerName: '마감일',
       flex: 0.8,
@@ -73,6 +78,7 @@ function PreReleaseOrderTable() {
     deadlineDate: item.deadlineDate,
     releaseDate: item.releaseDate,
     barcode: item.barcode,
+    catId: item.catId,
     artist: item.artist,
   }));
 

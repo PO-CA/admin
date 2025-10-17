@@ -13,6 +13,11 @@ function ReleasedOrderTable() {
 
   const columns: GridColDef[] = [
     {
+      field: 'catId',
+      headerName: 'Cat ID',
+      flex: 0.8,
+    },
+    {
       field: 'barcode',
       headerName: '바코드',
       flex: 1,
@@ -52,6 +57,7 @@ function ReleasedOrderTable() {
     productTitle: item.productTitle,
     totalQty: item.totalQty,
     barcode: item.barcode,
+    catId: item.catId,
     artist: item.artist,
     version: '',
   }));

@@ -7,6 +7,7 @@ export interface PreReleaseOrderSummary {
   deadlineDate: string;
   releaseDate: string;
   barcode: string;
+  catId?: string;
   artist: string;
 }
 
@@ -15,5 +16,6 @@ export interface ReleasedOrderSummary {
   productTitle: string;
   totalQty: number;
   barcode: string;
+  catId?: string;
   artist: string;
 }
