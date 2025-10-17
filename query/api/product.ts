@@ -272,7 +272,7 @@ export const increaseStock = async (payload: {
 // 상품 버전 목록 조회
 export const getProductVersions = async (productId: number) => {
   const { data } = await requests(
-    `${API_URL}/logi/product/versions/product/${productId}`,
+    `${API_URL}/logi/product-versions/product/${productId}`,
     {
       method: 'get',
     },
