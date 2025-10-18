@@ -13,13 +13,14 @@ export default function ProductListDownload({
 }) {
   const handleDown = useCallback(() => {
     const data = [
-      ['SKU', '바코드', '상품이름', '수량', '가격'],
+      ['SKU', '바코드', '상품이름', '수량', '가격', '좌표'],
       ...productsData.map((item: any) => [
         item.sku,
         item.barcode,
         item.title,
         item.stock,
         item.price,
+        item.coordinateNames,
       ]),
     ];
 
