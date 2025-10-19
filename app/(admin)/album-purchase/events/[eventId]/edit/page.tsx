@@ -1,21 +1,29 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import MenuItem from '@mui/material/MenuItem';
+import CircularProgress from '@mui/material/CircularProgress';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import {
   useGetEventDetail,
   useUpdateEvent,
 } from '@/query/query/album-purchase/events';
 import type { EventStatus, EventPurchaseType } from '@/types/albumPurchase';
-import styles from './page.module.css';
+import { useSnackbar } from '../../../_components/useSnackbar';
 
-export default function EditEventPage() {
-  const params = useParams();
+function EditEventForm({ eventId }: { eventId: number }) {
   const router = useRouter();
-  const eventId = Number(params.eventId);
-
   const { data: event, isLoading } = useGetEventDetail(eventId);
   const updateMutation = useUpdateEvent();
+  const { showSnackbar, SnackbarComponent } = useSnackbar();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -86,67 +94,76 @@ export default function EditEventPage() {
           eventPurchaseType: formData.eventPurchaseType,
         },
       });
-      alert('행사가 수정되었습니다.');
-      router.push(`/album-purchase/events/${eventId}`);
-    } catch (error) {
-      console.error('행사 수정 실패:', error);
-      alert('행사 수정에 실패했습니다.');
+      showSnackbar('행사가 수정되었습니다.', 'success');
+      setTimeout(() => router.push(`/album-purchase/events/${eventId}`), 1500);
+    } catch (error: any) {
+      showSnackbar(error?.message || '행사 수정에 실패했습니다.', 'error');
     }
   };
 
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>행사 수정</h1>
-
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.section}>
-          <h2>기본 정보</h2>
-          <div className={styles.formGroup}>
-            <label>행사명</label>
-            <input
-              type="text"
+    <Box>
+      <SnackbarComponent />
+      <form onSubmit={handleSubmit}>
+        {/* 기본 정보 */}
+        <Paper sx={{ p: 3, mb: 3 }}>
+          <Typography
+            variant="h6"
+            sx={{ mb: 2, fontSize: 18, fontWeight: 600 }}
+          >
+            기본 정보
+          </Typography>
+          <Stack spacing={2}>
+            <TextField
+              fullWidth
+              label="행사명"
+              required
               value={formData.title}
               onChange={(e) =>
                 setFormData({ ...formData, title: e.target.value })
               }
-              className={styles.input}
-              required
             />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label>행사 설명</label>
-            <textarea
+            <TextField
+              fullWidth
+              label="행사 설명"
+              multiline
+              rows={3}
               value={formData.eventDescription}
               onChange={(e) =>
                 setFormData({ ...formData, eventDescription: e.target.value })
               }
-              className={styles.textarea}
-              rows={3}
             />
-          </div>
-
-          <div className={styles.formRow}>
-            <div className={styles.formGroup}>
-              <label>행사일</label>
-              <input
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                gap: 2,
+              }}
+            >
+              <TextField
+                fullWidth
+                label="행사일"
                 type="date"
+                required
                 value={formData.eventDate}
                 onChange={(e) =>
                   setFormData({ ...formData, eventDate: e.target.value })
                 }
-                className={styles.input}
-                required
+                InputLabelProps={{ shrink: true }}
               />
-            </div>
-            <div className={styles.formGroup}>
-              <label>도착 마감일</label>
-              <input
+              <TextField
+                fullWidth
+                label="도착 마감일"
                 type="date"
+                required
                 value={formData.deadlineForArrivalDate}
                 onChange={(e) =>
                   setFormData({
@@ -154,79 +171,93 @@ export default function EditEventPage() {
                     deadlineForArrivalDate: e.target.value,
                   })
                 }
-                className={styles.input}
-                required
+                InputLabelProps={{ shrink: true }}
               />
-            </div>
-          </div>
-        </div>
+            </Box>
+          </Stack>
+        </Paper>
 
-        <div className={styles.section}>
-          <h2>가격 정보</h2>
-          <div className={styles.formRow}>
-            <div className={styles.formGroup}>
-              <label>앨범만</label>
-              <input
-                type="number"
-                value={formData.purchaseAlbumPrice}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    purchaseAlbumPrice: e.target.value,
-                  })
-                }
-                className={styles.input}
-                required
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label>포토카드만</label>
-              <input
-                type="number"
-                value={formData.photocardPrice}
-                onChange={(e) =>
-                  setFormData({ ...formData, photocardPrice: e.target.value })
-                }
-                className={styles.input}
-                required
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label>앨범 + 포토카드</label>
-              <input
-                type="number"
-                value={formData.purchaseAlbumAndPhotocardPrice}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    purchaseAlbumAndPhotocardPrice: e.target.value,
-                  })
-                }
-                className={styles.input}
-                required
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label>기타 가격</label>
-              <input
-                type="number"
-                value={formData.etcPrice}
-                onChange={(e) =>
-                  setFormData({ ...formData, etcPrice: e.target.value })
-                }
-                className={styles.input}
-                required
-              />
-            </div>
-          </div>
-        </div>
+        {/* 가격 정보 */}
+        <Paper sx={{ p: 3, mb: 3 }}>
+          <Typography
+            variant="h6"
+            sx={{ mb: 2, fontSize: 18, fontWeight: 600 }}
+          >
+            매입 가격
+          </Typography>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: 'repeat(4, 1fr)' },
+              gap: 2,
+            }}
+          >
+            <TextField
+              fullWidth
+              label="앨범만"
+              type="number"
+              required
+              value={formData.purchaseAlbumPrice}
+              onChange={(e) =>
+                setFormData({ ...formData, purchaseAlbumPrice: e.target.value })
+              }
+            />
+            <TextField
+              fullWidth
+              label="포토카드만"
+              type="number"
+              required
+              value={formData.photocardPrice}
+              onChange={(e) =>
+                setFormData({ ...formData, photocardPrice: e.target.value })
+              }
+            />
+            <TextField
+              fullWidth
+              label="앨범 + 포토카드"
+              type="number"
+              required
+              value={formData.purchaseAlbumAndPhotocardPrice}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  purchaseAlbumAndPhotocardPrice: e.target.value,
+                })
+              }
+            />
+            <TextField
+              fullWidth
+              label="기타"
+              type="number"
+              required
+              value={formData.etcPrice}
+              onChange={(e) =>
+                setFormData({ ...formData, etcPrice: e.target.value })
+              }
+            />
+          </Box>
+        </Paper>
 
-        <div className={styles.section}>
-          <h2>상태 설정</h2>
-          <div className={styles.formRow}>
-            <div className={styles.formGroup}>
-              <label>행사 상태</label>
-              <select
+        {/* 상태 설정 */}
+        <Paper sx={{ p: 3, mb: 3 }}>
+          <Typography
+            variant="h6"
+            sx={{ mb: 2, fontSize: 18, fontWeight: 600 }}
+          >
+            상태 설정
+          </Typography>
+          <Stack spacing={2}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                gap: 2,
+              }}
+            >
+              <TextField
+                fullWidth
+                select
+                label="행사 상태"
                 value={formData.eventStatus}
                 onChange={(e) =>
                   setFormData({
@@ -234,15 +265,14 @@ export default function EditEventPage() {
                     eventStatus: e.target.value as EventStatus,
                   })
                 }
-                className={styles.select}
               >
-                <option value="AVAILABLE_FOR_PURCHASE">매입 가능</option>
-                <option value="DISCONTINUED">매입 중단</option>
-              </select>
-            </div>
-            <div className={styles.formGroup}>
-              <label>매입 타입</label>
-              <select
+                <MenuItem value="AVAILABLE_FOR_PURCHASE">매입 가능</MenuItem>
+                <MenuItem value="DISCONTINUED">매입 중단</MenuItem>
+              </TextField>
+              <TextField
+                fullWidth
+                select
+                label="매입 타입"
                 value={formData.eventPurchaseType}
                 onChange={(e) =>
                   setFormData({
@@ -250,53 +280,96 @@ export default function EditEventPage() {
                     eventPurchaseType: e.target.value as EventPurchaseType,
                   })
                 }
-                className={styles.select}
               >
-                <option value="ONLY_ALBUM">앨범만</option>
-                <option value="ONLY_PHOTOCARD">포토카드만</option>
-                <option value="ALBUM_AND_PHOTOCARD">앨범 + 포토카드</option>
-                <option value="ETC">기타</option>
-              </select>
-            </div>
-          </div>
-
-          <div className={styles.checkboxGroup}>
-            <label className={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                checked={formData.isVisible}
-                onChange={(e) =>
-                  setFormData({ ...formData, isVisible: e.target.checked })
+                <MenuItem value="ONLY_ALBUM">앨범만</MenuItem>
+                <MenuItem value="ONLY_PHOTOCARD">포토카드만</MenuItem>
+                <MenuItem value="ALBUM_AND_PHOTOCARD">앨범 + 포토카드</MenuItem>
+                <MenuItem value="ETC">기타</MenuItem>
+              </TextField>
+            </Box>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formData.isVisible}
+                    onChange={(e) =>
+                      setFormData({ ...formData, isVisible: e.target.checked })
+                    }
+                  />
                 }
+                label="공개"
               />
-              공개
-            </label>
-            <label className={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                checked={formData.isFinished}
-                onChange={(e) =>
-                  setFormData({ ...formData, isFinished: e.target.checked })
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formData.isFinished}
+                    onChange={(e) =>
+                      setFormData({ ...formData, isFinished: e.target.checked })
+                    }
+                  />
                 }
+                label="종료"
               />
-              종료
-            </label>
-          </div>
-        </div>
+            </Box>
+          </Stack>
+        </Paper>
 
-        <div className={styles.actions}>
-          <button type="submit" className={styles.submitButton}>
-            수정 완료
-          </button>
-          <button
-            type="button"
+        {/* 버튼 */}
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={updateMutation.isPending}
+            startIcon={
+              updateMutation.isPending && (
+                <CircularProgress size={20} color="inherit" />
+              )
+            }
+          >
+            {updateMutation.isPending ? '수정 중...' : '수정 완료'}
+          </Button>
+          <Button
+            variant="outlined"
             onClick={() => router.back()}
-            className={styles.cancelButton}
+            disabled={updateMutation.isPending}
           >
             취소
-          </button>
-        </div>
+          </Button>
+        </Box>
       </form>
-    </div>
+    </Box>
+  );
+}
+
+export default function EditEventPage() {
+  const params = useParams();
+  const eventId = Number(params.eventId);
+
+  return (
+    <Box sx={{ p: 3 }}>
+      <Typography
+        variant="h6"
+        sx={{
+          background: 'white',
+          p: 2,
+          fontWeight: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          mb: 2,
+          fontSize: 18,
+        }}
+      >
+        행사 수정
+      </Typography>
+      <Suspense
+        fallback={
+          <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+            <CircularProgress />
+          </Box>
+        }
+      >
+        <EditEventForm eventId={eventId} />
+      </Suspense>
+    </Box>
   );
 }
