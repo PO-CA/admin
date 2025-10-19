@@ -2,18 +2,30 @@
 
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import CircularProgress from '@mui/material/CircularProgress';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 import {
   useGetRequestDetail,
   useAcceptRequest,
   useRejectRequest,
   useProposePrice,
 } from '@/query/query/album-purchase/requests';
-import styles from './page.module.css';
+import { useSnackbar } from '../../_components/useSnackbar';
 
 export default function RequestDetailPage() {
   const params = useParams();
   const router = useRouter();
   const requestId = Number(params.requestId);
+  const { showSnackbar, SnackbarComponent } = useSnackbar();
 
   const { data: request, isLoading } = useGetRequestDetail(requestId);
   const acceptMutation = useAcceptRequest();
@@ -26,51 +38,74 @@ export default function RequestDetailPage() {
 
   const handleAccept = async () => {
     if (confirm('이 매입 신청을 수락하시겠습니까?')) {
-      await acceptMutation.mutateAsync({
-        requestId,
-        requestData: { reviewerNote: '수락됨' },
-      });
-      alert('수락되었습니다.');
-      router.refresh();
+      try {
+        await acceptMutation.mutateAsync({
+          requestId,
+          requestData: { reviewerNote: '수락됨' },
+        });
+        showSnackbar('수락되었습니다.', 'success');
+        setTimeout(() => router.refresh(), 1000);
+      } catch (error: any) {
+        showSnackbar(error?.message || '수락에 실패했습니다.', 'error');
+      }
     }
   };
 
   const handleReject = async () => {
     if (!rejectionReason.trim()) {
-      alert('거절 사유를 입력해주세요.');
+      showSnackbar('거절 사유를 입력해주세요.', 'warning');
       return;
     }
     if (confirm('이 매입 신청을 거절하시겠습니까?')) {
-      await rejectMutation.mutateAsync({
-        requestId,
-        requestData: { rejectionReason },
-      });
-      alert('거절되었습니다.');
-      router.refresh();
+      try {
+        await rejectMutation.mutateAsync({
+          requestId,
+          requestData: { rejectionReason },
+        });
+        showSnackbar('거절되었습니다.', 'success');
+        setTimeout(() => router.refresh(), 1000);
+      } catch (error: any) {
+        showSnackbar(error?.message || '거절에 실패했습니다.', 'error');
+      }
     }
   };
 
   const handlePropose = async () => {
     if (!proposedPrice.trim()) {
-      alert('제안 가격을 입력해주세요.');
+      showSnackbar('제안 가격을 입력해주세요.', 'warning');
       return;
     }
     if (confirm('가격을 제안하시겠습니까?')) {
-      await proposeMutation.mutateAsync({
-        requestId,
-        requestData: {
-          proposedPrice: Number(proposedPrice),
-          proposalNote,
-          proposedBy: 'admin',
-        },
-      });
-      alert('가격이 제안되었습니다.');
-      router.refresh();
+      try {
+        await proposeMutation.mutateAsync({
+          requestId,
+          requestData: {
+            proposedPrice: Number(proposedPrice),
+            proposalNote,
+            proposedBy: 'admin',
+          },
+        });
+        showSnackbar('가격이 제안되었습니다.', 'success');
+        setTimeout(() => router.refresh(), 1000);
+      } catch (error: any) {
+        showSnackbar(error?.message || '가격 제안에 실패했습니다.', 'error');
+      }
     }
   };
 
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '400px',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (!request) {
@@ -78,172 +113,282 @@ export default function RequestDetailPage() {
   }
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>매입 신청 상세</h1>
+    <Box sx={{ p: 3 }}>
+      <SnackbarComponent />
+      <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
+        매입 신청 상세
+      </Typography>
 
       {/* 신청 정보 */}
-      <div className={styles.section}>
-        <h2>신청 정보</h2>
-        <div className={styles.infoGrid}>
-          <div className={styles.infoItem}>
-            <label>신청 ID</label>
-            <span>{request.requestId}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <label>상태</label>
-            <span className={styles.status}>{request.status}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <label>총 평가 금액</label>
-            <span>₩{request.totalEvaluatedPrice.toLocaleString()}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <label>총 수량</label>
-            <span>{request.totalEvaluatedStock}</span>
-          </div>
-        </div>
-      </div>
+      <Paper sx={{ p: 3, mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, fontSize: 18, fontWeight: 600 }}>
+          신청 정보
+        </Typography>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
+            gap: 2,
+          }}
+        >
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              신청 ID
+            </Typography>
+            <Typography variant="body1" fontWeight={500}>
+              {request.requestId}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              상태
+            </Typography>
+            <Typography variant="body1" fontWeight={500}>
+              {request.status}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              총 평가 금액
+            </Typography>
+            <Typography variant="body1" fontWeight={500}>
+              ₩{request.totalEvaluatedPrice.toLocaleString()}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              총 수량
+            </Typography>
+            <Typography variant="body1" fontWeight={500}>
+              {request.totalEvaluatedStock}
+            </Typography>
+          </Box>
+        </Box>
+      </Paper>
 
       {/* 신청자 정보 */}
-      <div className={styles.section}>
-        <h2>신청자 정보</h2>
-        <div className={styles.infoGrid}>
-          <div className={styles.infoItem}>
-            <label>이름</label>
-            <span>{request.userName}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <label>이메일</label>
-            <span>{request.userEmail}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <label>연락처</label>
-            <span>{request.phoneNumber}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <label>주소</label>
-            <span>
+      <Paper sx={{ p: 3, mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, fontSize: 18, fontWeight: 600 }}>
+          신청자 정보
+        </Typography>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
+            gap: 2,
+          }}
+        >
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              이름
+            </Typography>
+            <Typography variant="body1" fontWeight={500}>
+              {request.userName}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              이메일
+            </Typography>
+            <Typography variant="body1" fontWeight={500}>
+              {request.userEmail}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              연락처
+            </Typography>
+            <Typography variant="body1" fontWeight={500}>
+              {request.phoneNumber}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              주소
+            </Typography>
+            <Typography variant="body1" fontWeight={500}>
               {request.address} {request.addressDetail} ({request.zipcode})
-            </span>
-          </div>
-          <div className={styles.infoItem}>
-            <label>은행</label>
-            <span>{request.bankName}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <label>계좌번호</label>
-            <span>{request.bankAccountNumber}</span>
-          </div>
-        </div>
-      </div>
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              은행
+            </Typography>
+            <Typography variant="body1" fontWeight={500}>
+              {request.bankName}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              계좌번호
+            </Typography>
+            <Typography variant="body1" fontWeight={500}>
+              {request.bankAccountNumber}
+            </Typography>
+          </Box>
+        </Box>
+      </Paper>
 
       {/* 아이템 목록 */}
-      <div className={styles.section}>
-        <h2>아이템 목록</h2>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>순서</th>
-              <th>음반명</th>
-              <th>아티스트</th>
-              <th>ISBN</th>
-              <th>평가 가격</th>
-            </tr>
-          </thead>
-          <tbody>
+      <Paper sx={{ p: 3, mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, fontSize: 18, fontWeight: 600 }}>
+          아이템 목록
+        </Typography>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>순서</TableCell>
+              <TableCell>음반명</TableCell>
+              <TableCell>아티스트</TableCell>
+              <TableCell>ISBN</TableCell>
+              <TableCell align="right">평가 가격</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {request.items.map((item) => (
-              <tr key={item.requestItemId}>
-                <td>{item.itemOrder}</td>
-                <td>{item.albumTitle}</td>
-                <td>{item.albumArtist}</td>
-                <td>{item.albumIsbn}</td>
-                <td>₩{item.evaluatedPrice.toLocaleString()}</td>
-              </tr>
+              <TableRow key={item.requestItemId}>
+                <TableCell>{item.itemOrder}</TableCell>
+                <TableCell>{item.albumTitle}</TableCell>
+                <TableCell>{item.albumArtist}</TableCell>
+                <TableCell>{item.albumIsbn}</TableCell>
+                <TableCell align="right">
+                  ₩{item.evaluatedPrice.toLocaleString()}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </Paper>
 
       {/* 배송 정보 */}
       {request.shippings && request.shippings.length > 0 && (
-        <div className={styles.section}>
-          <h2>배송 정보</h2>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>송장번호</th>
-                <th>택배사</th>
-                <th>수량</th>
-                <th>수령 여부</th>
-                <th>수령일</th>
-                <th>수령자</th>
-              </tr>
-            </thead>
-            <tbody>
+        <Paper sx={{ p: 3, mb: 3 }}>
+          <Typography
+            variant="h6"
+            sx={{ mb: 2, fontSize: 18, fontWeight: 600 }}
+          >
+            배송 정보
+          </Typography>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>송장번호</TableCell>
+                <TableCell>택배사</TableCell>
+                <TableCell>수량</TableCell>
+                <TableCell>수령 여부</TableCell>
+                <TableCell>수령일</TableCell>
+                <TableCell>수령자</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {request.shippings.map((shipping) => (
-                <tr key={shipping.shippingId}>
-                  <td>{shipping.trackingNumber}</td>
-                  <td>{shipping.shippingCompany}</td>
-                  <td>{shipping.actualQuantity}</td>
-                  <td>{shipping.isReceived ? '완료' : '대기'}</td>
-                  <td>
+                <TableRow key={shipping.shippingId}>
+                  <TableCell>{shipping.trackingNumber}</TableCell>
+                  <TableCell>{shipping.shippingCompany}</TableCell>
+                  <TableCell>{shipping.actualQuantity}</TableCell>
+                  <TableCell>{shipping.isReceived ? '완료' : '대기'}</TableCell>
+                  <TableCell>
                     {shipping.receivedAt
                       ? new Date(shipping.receivedAt).toLocaleString()
                       : '-'}
-                  </td>
-                  <td>{shipping.receivedBy || '-'}</td>
-                </tr>
+                  </TableCell>
+                  <TableCell>{shipping.receivedBy || '-'}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </Paper>
       )}
 
       {/* 가격조정 필요 상태일 때 액션 */}
       {request.status === 'NEED_NEGOTIATION' && (
-        <div className={styles.section}>
-          <h2>매입 신청 처리</h2>
+        <Paper sx={{ p: 3 }}>
+          <Typography
+            variant="h6"
+            sx={{ mb: 2, fontSize: 18, fontWeight: 600 }}
+          >
+            매입 신청 처리
+          </Typography>
 
-          <div className={styles.actionGroup}>
-            <button onClick={handleAccept} className={styles.acceptButton}>
-              수락
-            </button>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Button
+              variant="contained"
+              onClick={handleAccept}
+              disabled={acceptMutation.isPending}
+              sx={{
+                background: '#4caf50',
+                '&:hover': { background: '#45a049' },
+              }}
+              startIcon={
+                acceptMutation.isPending && (
+                  <CircularProgress size={16} color="inherit" />
+                )
+              }
+            >
+              {acceptMutation.isPending ? '처리 중...' : '수락'}
+            </Button>
 
-            <div className={styles.rejectGroup}>
-              <input
-                type="text"
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <TextField
+                fullWidth
                 placeholder="거절 사유"
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
-                className={styles.input}
+                size="small"
               />
-              <button onClick={handleReject} className={styles.rejectButton}>
-                거절
-              </button>
-            </div>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleReject}
+                disabled={rejectMutation.isPending}
+                startIcon={
+                  rejectMutation.isPending && (
+                    <CircularProgress size={16} color="inherit" />
+                  )
+                }
+                sx={{ minWidth: 120 }}
+              >
+                {rejectMutation.isPending ? '처리 중...' : '거절'}
+              </Button>
+            </Box>
 
-            <div className={styles.proposeGroup}>
-              <input
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <TextField
                 type="number"
                 placeholder="제안 가격"
                 value={proposedPrice}
                 onChange={(e) => setProposedPrice(e.target.value)}
-                className={styles.input}
+                size="small"
+                sx={{ width: 150 }}
               />
-              <input
-                type="text"
+              <TextField
+                fullWidth
                 placeholder="제안 메모"
                 value={proposalNote}
                 onChange={(e) => setProposalNote(e.target.value)}
-                className={styles.input}
+                size="small"
               />
-              <button onClick={handlePropose} className={styles.proposeButton}>
-                가격 제안
-              </button>
-            </div>
-          </div>
-        </div>
+              <Button
+                variant="contained"
+                onClick={handlePropose}
+                disabled={proposeMutation.isPending}
+                sx={{
+                  background: '#ff9800',
+                  '&:hover': { background: '#e68900' },
+                  minWidth: 120,
+                }}
+                startIcon={
+                  proposeMutation.isPending && (
+                    <CircularProgress size={16} color="inherit" />
+                  )
+                }
+              >
+                {proposeMutation.isPending ? '처리 중...' : '가격 제안'}
+              </Button>
+            </Box>
+          </Box>
+        </Paper>
       )}
-    </div>
+    </Box>
   );
 }

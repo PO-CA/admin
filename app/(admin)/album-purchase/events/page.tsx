@@ -8,6 +8,7 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import CircularProgress from '@mui/material/CircularProgress';
 import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -16,24 +17,38 @@ import {
   useGetEvents,
   useDeleteEvent,
 } from '@/query/query/album-purchase/events';
+import { useSnackbar } from '../_components/useSnackbar';
 
 function EventsTable({
   filters,
+  onSuccess,
+  onError,
 }: {
   filters: {
     albumPurchaseId?: number;
     isVisible?: boolean;
     isFinished?: boolean;
   };
+  onSuccess: (msg: string) => void;
+  onError: (msg: string) => void;
 }) {
   const { data: events, isLoading, refetch } = useGetEvents(filters);
   const deleteEventMutation = useDeleteEvent();
   const router = useRouter();
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const handleDelete = async (id: number) => {
     if (confirm('이 행사를 삭제하시겠습니까?')) {
-      await deleteEventMutation.mutateAsync(id);
-      refetch();
+      setDeletingId(id);
+      try {
+        await deleteEventMutation.mutateAsync(id);
+        onSuccess('행사가 삭제되었습니다.');
+        refetch();
+      } catch (error: any) {
+        onError(error?.message || '삭제에 실패했습니다.');
+      } finally {
+        setDeletingId(null);
+      }
     }
   };
 
@@ -122,9 +137,16 @@ function EventsTable({
         />,
         <GridActionsCellItem
           key="delete"
-          icon={<DeleteIcon />}
+          icon={
+            deletingId === params.id ? (
+              <CircularProgress size={16} />
+            ) : (
+              <DeleteIcon />
+            )
+          }
           label="삭제"
           onClick={() => handleDelete(params.id)}
+          disabled={deletingId === params.id}
         />,
       ],
     },
@@ -162,6 +184,7 @@ function EventsTable({
 
 export default function EventsPage() {
   const router = useRouter();
+  const { showSnackbar, SnackbarComponent } = useSnackbar();
   const [filters, setFilters] = useState<{
     albumPurchaseId?: number;
     isVisible?: boolean;
@@ -170,6 +193,7 @@ export default function EventsPage() {
 
   return (
     <Box sx={{ p: 3 }}>
+      <SnackbarComponent />
       <Typography
         variant="h6"
         sx={{
@@ -246,8 +270,18 @@ export default function EventsPage() {
           p: 2,
         }}
       >
-        <Suspense fallback={<div>로딩 중...</div>}>
-          <EventsTable filters={filters} />
+        <Suspense
+          fallback={
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+              <CircularProgress />
+            </Box>
+          }
+        >
+          <EventsTable
+            filters={filters}
+            onSuccess={(msg) => showSnackbar(msg, 'success')}
+            onError={(msg) => showSnackbar(msg, 'error')}
+          />
         </Suspense>
       </Paper>
     </Box>

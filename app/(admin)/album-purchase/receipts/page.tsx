@@ -1,15 +1,28 @@
 'use client';
 
 import { useState } from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import CircularProgress from '@mui/material/CircularProgress';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Radio from '@mui/material/Radio';
 import {
   useScanReceipt,
   useGetUnmatchedReceipts,
   useMatchUnmatchedReceipt,
   useSearchRequests,
 } from '@/query/query/album-purchase/receipts';
-import styles from './page.module.css';
+import { useSnackbar } from '../_components/useSnackbar';
 
 export default function ReceiptsPage() {
+  const { showSnackbar, SnackbarComponent } = useSnackbar();
   const [trackingNumber, setTrackingNumber] = useState('');
   const [shippingCompany, setShippingCompany] = useState('');
   const [receivedBy, setReceivedBy] = useState('admin');
@@ -30,7 +43,7 @@ export default function ReceiptsPage() {
   const handleScan = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!trackingNumber || !shippingCompany) {
-      alert('송장번호와 택배사를 입력해주세요.');
+      showSnackbar('송장번호와 택배사를 입력해주세요.', 'warning');
       return;
     }
 
@@ -42,22 +55,22 @@ export default function ReceiptsPage() {
       });
 
       if (result.matched) {
-        alert(`매칭 성공! 매입 신청 ID: ${result.requestId}`);
+        showSnackbar(`매칭 성공! 매입 신청 ID: ${result.requestId}`, 'success');
       } else {
-        alert('매칭되는 신청이 없습니다. 미매칭 수령 건으로 등록되었습니다.');
+        showSnackbar('미매칭 수령 건으로 등록되었습니다.', 'info');
       }
 
       setTrackingNumber('');
       setShippingCompany('');
       refetchUnmatched();
-    } catch (error) {
-      console.error('스캔 실패:', error);
+    } catch (error: any) {
+      showSnackbar(error?.message || '스캔에 실패했습니다.', 'error');
     }
   };
 
   const handleMatch = async () => {
     if (!selectedUnmatchedId || !selectedRequestId) {
-      alert('미매칭 수령 건과 매입 신청을 선택해주세요.');
+      showSnackbar('미매칭 수령 건과 매입 신청을 선택해주세요.', 'warning');
       return;
     }
 
@@ -69,144 +82,188 @@ export default function ReceiptsPage() {
           matchedBy: 'admin',
         },
       });
-      alert('매칭 완료!');
+      showSnackbar('매칭 완료!', 'success');
       setSelectedUnmatchedId(null);
       setSelectedRequestId(null);
       setSearchKeyword('');
       refetchUnmatched();
-    } catch (error) {
-      console.error('매칭 실패:', error);
+    } catch (error: any) {
+      showSnackbar(error?.message || '매칭에 실패했습니다.', 'error');
     }
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>수령 처리</h1>
+    <Box sx={{ p: 3 }}>
+      <SnackbarComponent />
+      <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
+        수령 처리
+      </Typography>
 
       {/* 송장 스캔 */}
-      <div className={styles.section}>
-        <h2>송장 스캔</h2>
-        <form onSubmit={handleScan} className={styles.scanForm}>
-          <input
-            type="text"
+      <Paper sx={{ p: 3, mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, fontSize: 18, fontWeight: 600 }}>
+          송장 스캔
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={handleScan}
+          sx={{ display: 'flex', gap: 2 }}
+        >
+          <TextField
             placeholder="송장번호"
             value={trackingNumber}
             onChange={(e) => setTrackingNumber(e.target.value)}
-            className={styles.input}
+            size="small"
+            sx={{ flex: 1 }}
           />
-          <input
-            type="text"
+          <TextField
             placeholder="택배사"
             value={shippingCompany}
             onChange={(e) => setShippingCompany(e.target.value)}
-            className={styles.input}
+            size="small"
+            sx={{ flex: 1 }}
           />
-          <input
-            type="text"
+          <TextField
             placeholder="수령자"
             value={receivedBy}
             onChange={(e) => setReceivedBy(e.target.value)}
-            className={styles.input}
+            size="small"
+            sx={{ flex: 1 }}
           />
-          <button type="submit" className={styles.scanButton}>
-            스캔
-          </button>
-        </form>
-      </div>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={scanMutation.isPending}
+            startIcon={
+              scanMutation.isPending && (
+                <CircularProgress size={16} color="inherit" />
+              )
+            }
+            sx={{ minWidth: 120 }}
+          >
+            {scanMutation.isPending ? '처리 중...' : '스캔'}
+          </Button>
+        </Box>
+      </Paper>
 
       {/* 미매칭 수령 건 */}
-      <div className={styles.section}>
-        <h2>미매칭 수령 건</h2>
+      <Paper sx={{ p: 3, mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, fontSize: 18, fontWeight: 600 }}>
+          미매칭 수령 건 ({unmatchedReceipts?.length || 0}건)
+        </Typography>
         {unmatchedReceipts && unmatchedReceipts.length > 0 ? (
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>선택</th>
-                <th>ID</th>
-                <th>송장번호</th>
-                <th>택배사</th>
-                <th>수령일</th>
-                <th>수령자</th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell padding="checkbox">선택</TableCell>
+                <TableCell>ID</TableCell>
+                <TableCell>송장번호</TableCell>
+                <TableCell>택배사</TableCell>
+                <TableCell>수령일</TableCell>
+                <TableCell>수령자</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {unmatchedReceipts.map((receipt) => (
-                <tr key={receipt.id}>
-                  <td>
-                    <input
-                      type="radio"
-                      name="unmatched"
+                <TableRow key={receipt.id} hover>
+                  <TableCell padding="checkbox">
+                    <Radio
                       checked={selectedUnmatchedId === receipt.id}
                       onChange={() => setSelectedUnmatchedId(receipt.id)}
                     />
-                  </td>
-                  <td>{receipt.id}</td>
-                  <td>{receipt.trackingNumber}</td>
-                  <td>{receipt.shippingCompany}</td>
-                  <td>{new Date(receipt.receivedAt).toLocaleString()}</td>
-                  <td>{receipt.receivedBy}</td>
-                </tr>
+                  </TableCell>
+                  <TableCell>{receipt.id}</TableCell>
+                  <TableCell>{receipt.trackingNumber}</TableCell>
+                  <TableCell>{receipt.shippingCompany}</TableCell>
+                  <TableCell>
+                    {new Date(receipt.receivedAt).toLocaleString()}
+                  </TableCell>
+                  <TableCell>{receipt.receivedBy}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         ) : (
-          <p className={styles.noData}>미매칭 수령 건이 없습니다.</p>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ textAlign: 'center', py: 4 }}
+          >
+            미매칭 수령 건이 없습니다.
+          </Typography>
         )}
-      </div>
+      </Paper>
 
       {/* 매칭할 신청 검색 */}
       {selectedUnmatchedId && (
-        <div className={styles.section}>
-          <h2>매칭할 신청 검색</h2>
-          <input
-            type="text"
+        <Paper sx={{ p: 3, mb: 3 }}>
+          <Typography
+            variant="h6"
+            sx={{ mb: 2, fontSize: 18, fontWeight: 600 }}
+          >
+            매칭할 신청 검색
+          </Typography>
+          <TextField
+            fullWidth
             placeholder="신청자 이름, 이메일, 연락처로 검색"
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
-            className={styles.input}
+            size="small"
+            sx={{ mb: 2 }}
           />
 
           {searchResults && searchResults.length > 0 && (
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>선택</th>
-                  <th>신청 ID</th>
-                  <th>신청자</th>
-                  <th>이메일</th>
-                  <th>연락처</th>
-                  <th>행사명</th>
-                </tr>
-              </thead>
-              <tbody>
+            <Table size="small" sx={{ mb: 2 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell padding="checkbox">선택</TableCell>
+                  <TableCell>신청 ID</TableCell>
+                  <TableCell>신청자</TableCell>
+                  <TableCell>이메일</TableCell>
+                  <TableCell>연락처</TableCell>
+                  <TableCell>행사명</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
                 {searchResults.map((request) => (
-                  <tr key={request.requestId}>
-                    <td>
-                      <input
-                        type="radio"
-                        name="request"
+                  <TableRow key={request.requestId} hover>
+                    <TableCell padding="checkbox">
+                      <Radio
                         checked={selectedRequestId === request.requestId}
                         onChange={() => setSelectedRequestId(request.requestId)}
                       />
-                    </td>
-                    <td>{request.requestId}</td>
-                    <td>{request.userName}</td>
-                    <td>{request.userEmail}</td>
-                    <td>{request.phoneNumber}</td>
-                    <td>{request.eventTitle}</td>
-                  </tr>
+                    </TableCell>
+                    <TableCell>{request.requestId}</TableCell>
+                    <TableCell>{request.userName}</TableCell>
+                    <TableCell>{request.userEmail}</TableCell>
+                    <TableCell>{request.phoneNumber}</TableCell>
+                    <TableCell>{request.eventTitle}</TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           )}
 
           {selectedRequestId && (
-            <button onClick={handleMatch} className={styles.matchButton}>
-              매칭하기
-            </button>
+            <Button
+              variant="contained"
+              onClick={handleMatch}
+              disabled={matchMutation.isPending}
+              startIcon={
+                matchMutation.isPending && (
+                  <CircularProgress size={16} color="inherit" />
+                )
+              }
+              sx={{
+                background: '#4caf50',
+                '&:hover': { background: '#45a049' },
+              }}
+            >
+              {matchMutation.isPending ? '매칭 중...' : '매칭하기'}
+            </Button>
           )}
-        </div>
+        </Paper>
       )}
-    </div>
+    </Box>
   );
 }

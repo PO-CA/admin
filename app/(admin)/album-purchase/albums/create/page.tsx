@@ -10,10 +10,13 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useSnackbar } from '../../_components/useSnackbar';
 
 export default function CreateAlbumPage() {
   const router = useRouter();
   const createMutation = useCreateAlbum();
+  const { showSnackbar, SnackbarComponent } = useSnackbar();
 
   const [formData, setFormData] = useState({
     // 앨범 기본 정보
@@ -95,15 +98,16 @@ export default function CreateAlbumPage() {
           ? Number(formData.limitPeriodDate)
           : undefined,
       });
-      alert('앨범과 디폴트 행사가 등록되었습니다.');
-      router.push('/album-purchase/albums');
-    } catch (error) {
-      console.error('앨범 등록 실패:', error);
+      showSnackbar('앨범과 디폴트 행사가 등록되었습니다.', 'success');
+      setTimeout(() => router.push('/album-purchase/albums'), 1500);
+    } catch (error: any) {
+      showSnackbar(error?.message || '앨범 등록에 실패했습니다.', 'error');
     }
   };
 
   return (
     <Box sx={{ p: 3 }}>
+      <SnackbarComponent />
       <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
         앨범 등록 (디폴트 행사 자동 생성)
       </Typography>
@@ -410,11 +414,22 @@ export default function CreateAlbumPage() {
             type="submit"
             variant="contained"
             size="large"
+            disabled={createMutation.isPending}
+            startIcon={
+              createMutation.isPending && (
+                <CircularProgress size={20} color="inherit" />
+              )
+            }
             sx={{ background: '#4caf50', '&:hover': { background: '#45a049' } }}
           >
-            등록
+            {createMutation.isPending ? '등록 중...' : '등록'}
           </Button>
-          <Button variant="outlined" size="large" onClick={() => router.back()}>
+          <Button
+            variant="outlined"
+            size="large"
+            onClick={() => router.back()}
+            disabled={createMutation.isPending}
+          >
             취소
           </Button>
         </Box>

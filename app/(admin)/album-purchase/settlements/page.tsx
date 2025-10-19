@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Chip from '@mui/material/Chip';
+import CircularProgress from '@mui/material/CircularProgress';
 import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import {
@@ -17,6 +18,7 @@ import {
   useCreateSettlements,
 } from '@/query/query/album-purchase/settlements';
 import type { SettlementStatus } from '@/types/albumPurchase';
+import { useSnackbar } from '../_components/useSnackbar';
 
 const statusLabels: Record<SettlementStatus, string> = {
   PENDING: '정산대기',
@@ -209,6 +211,7 @@ function SettlementsTable({
 }
 
 export default function SettlementsPage() {
+  const { showSnackbar, SnackbarComponent } = useSnackbar();
   const [statusFilter, setStatusFilter] = useState<
     SettlementStatus | undefined
   >();
@@ -220,7 +223,7 @@ export default function SettlementsPage() {
 
   const handleCreateSettlements = async () => {
     if (selectedRequestIds.length === 0) {
-      alert('정산할 신청을 선택해주세요.');
+      showSnackbar('정산할 신청을 선택해주세요.', 'warning');
       return;
     }
 
@@ -230,17 +233,18 @@ export default function SettlementsPage() {
           requestIds: selectedRequestIds,
           processedBy: 'admin',
         });
-        alert('정산이 생성되었습니다.');
+        showSnackbar('정산이 생성되었습니다.', 'success');
         setSelectedRequestIds([]);
         refetchEligible();
-      } catch (error) {
-        console.error('정산 생성 실패:', error);
+      } catch (error: any) {
+        showSnackbar(error?.message || '정산 생성에 실패했습니다.', 'error');
       }
     }
   };
 
   return (
     <Box sx={{ p: 3 }}>
+      <SnackbarComponent />
       <Typography
         variant="h6"
         sx={{
@@ -273,16 +277,31 @@ export default function SettlementsPage() {
             <Button
               variant="contained"
               onClick={handleCreateSettlements}
-              disabled={selectedRequestIds.length === 0}
+              disabled={
+                selectedRequestIds.length === 0 || createMutation.isPending
+              }
+              startIcon={
+                createMutation.isPending && (
+                  <CircularProgress size={16} color="inherit" />
+                )
+              }
               sx={{
                 background: '#4caf50',
                 '&:hover': { background: '#45a049' },
               }}
             >
-              정산 생성 ({selectedRequestIds.length}건)
+              {createMutation.isPending
+                ? '생성 중...'
+                : `정산 생성 (${selectedRequestIds.length}건)`}
             </Button>
           </Box>
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense
+            fallback={
+              <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+                <CircularProgress />
+              </Box>
+            }
+          >
             <EligibleRequestsTable
               selectedRequestIds={selectedRequestIds}
               onSelectionChange={setSelectedRequestIds}
@@ -323,7 +342,13 @@ export default function SettlementsPage() {
             <MenuItem value="COMPLETED">정산완료</MenuItem>
           </TextField>
         </Box>
-        <Suspense fallback={<div>로딩 중...</div>}>
+        <Suspense
+          fallback={
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+              <CircularProgress />
+            </Box>
+          }
+        >
           <SettlementsTable statusFilter={statusFilter} />
         </Suspense>
       </Paper>

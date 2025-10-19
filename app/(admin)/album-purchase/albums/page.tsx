@@ -1,10 +1,11 @@
 'use client';
 
-import { Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -13,16 +14,32 @@ import {
   useDeleteAlbum,
 } from '@/query/query/album-purchase/albums';
 import { useRouter } from 'next/navigation';
+import { useSnackbar } from '../_components/useSnackbar';
 
-function AlbumsTable() {
+function AlbumsTable({
+  onSuccess,
+  onError,
+}: {
+  onSuccess: (msg: string) => void;
+  onError: (msg: string) => void;
+}) {
   const { data, isLoading, refetch } = useGetAlbums();
   const deleteMutation = useDeleteAlbum();
   const router = useRouter();
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const handleDelete = async (id: number) => {
     if (confirm('이 앨범을 삭제하시겠습니까?')) {
-      await deleteMutation.mutateAsync(id);
-      refetch();
+      setDeletingId(id);
+      try {
+        await deleteMutation.mutateAsync(id);
+        onSuccess('앨범이 삭제되었습니다.');
+        refetch();
+      } catch (error: any) {
+        onError(error?.message || '삭제에 실패했습니다.');
+      } finally {
+        setDeletingId(null);
+      }
     }
   };
 
@@ -101,9 +118,16 @@ function AlbumsTable() {
         />,
         <GridActionsCellItem
           key="delete"
-          icon={<DeleteIcon />}
+          icon={
+            deletingId === params.id ? (
+              <CircularProgress size={16} />
+            ) : (
+              <DeleteIcon />
+            )
+          }
           label="삭제"
           onClick={() => handleDelete(params.id)}
+          disabled={deletingId === params.id}
         />,
       ],
     },
@@ -141,9 +165,11 @@ function AlbumsTable() {
 
 export default function AlbumsPage() {
   const router = useRouter();
+  const { showSnackbar, SnackbarComponent } = useSnackbar();
 
   return (
     <Box sx={{ p: 3 }}>
+      <SnackbarComponent />
       <Typography
         variant="h6"
         sx={{
@@ -178,8 +204,17 @@ export default function AlbumsPage() {
           p: 2,
         }}
       >
-        <Suspense fallback={<div>로딩 중...</div>}>
-          <AlbumsTable />
+        <Suspense
+          fallback={
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+              <CircularProgress />
+            </Box>
+          }
+        >
+          <AlbumsTable
+            onSuccess={(msg) => showSnackbar(msg, 'success')}
+            onError={(msg) => showSnackbar(msg, 'error')}
+          />
         </Suspense>
       </Paper>
     </Box>

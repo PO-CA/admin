@@ -12,11 +12,14 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import Autocomplete from '@mui/material/Autocomplete';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useSnackbar } from '../../_components/useSnackbar';
 
 export default function CreateEventPage() {
   const router = useRouter();
   const { data: albums } = useGetAlbums();
   const createMutation = useCreateEvent();
+  const { showSnackbar, SnackbarComponent } = useSnackbar();
 
   const [selectedAlbum, setSelectedAlbum] = useState<any>(null);
   const [formData, setFormData] = useState({
@@ -47,7 +50,7 @@ export default function CreateEventPage() {
     e.preventDefault();
 
     if (!selectedAlbum) {
-      alert('앨범을 선택해주세요.');
+      showSnackbar('앨범을 선택해주세요.', 'warning');
       return;
     }
 
@@ -77,15 +80,16 @@ export default function CreateEventPage() {
         eventStatus: formData.eventStatus as any,
         eventPurchaseType: formData.eventPurchaseType as any,
       });
-      alert('행사가 등록되었습니다.');
-      router.push('/album-purchase/events');
-    } catch (error) {
-      console.error('행사 등록 실패:', error);
+      showSnackbar('행사가 등록되었습니다.', 'success');
+      setTimeout(() => router.push('/album-purchase/events'), 1500);
+    } catch (error: any) {
+      showSnackbar(error?.message || '행사 등록에 실패했습니다.', 'error');
     }
   };
 
   return (
     <Box sx={{ p: 3 }}>
+      <SnackbarComponent />
       <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
         행사 등록
       </Typography>
@@ -298,12 +302,22 @@ export default function CreateEventPage() {
             type="submit"
             variant="contained"
             size="large"
-            disabled={!selectedAlbum}
+            disabled={!selectedAlbum || createMutation.isPending}
+            startIcon={
+              createMutation.isPending && (
+                <CircularProgress size={20} color="inherit" />
+              )
+            }
             sx={{ background: '#4caf50', '&:hover': { background: '#45a049' } }}
           >
-            등록
+            {createMutation.isPending ? '등록 중...' : '등록'}
           </Button>
-          <Button variant="outlined" size="large" onClick={() => router.back()}>
+          <Button
+            variant="outlined"
+            size="large"
+            onClick={() => router.back()}
+            disabled={createMutation.isPending}
+          >
             취소
           </Button>
         </Box>
