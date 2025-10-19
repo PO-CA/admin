@@ -14,7 +14,7 @@ export const getEvents = async (params?: {
   albumPurchaseId?: number;
   isVisible?: boolean;
   isFinished?: boolean;
-}) => {
+}): Promise<AlbumPurchaseEventList[]> => {
   const { data } = await requests({
     method: 'get',
     url: BASE_URL,
@@ -24,16 +24,20 @@ export const getEvents = async (params?: {
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data as AlbumPurchaseEventList[];
 };
 
 // 행사 상세 조회
-export const getEventDetail = async (eventId: number) => {
+export const getEventDetail = async (
+  eventId: number,
+): Promise<AlbumPurchaseEventDetail> => {
   const { data } = await requests({
     method: 'get',
     url: `${BASE_URL}/${eventId}`,
@@ -42,16 +46,20 @@ export const getEventDetail = async (eventId: number) => {
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data as AlbumPurchaseEventDetail;
 };
 
 // 행사 등록
-export const createEvent = async (requestData: CreateEventRequest) => {
+export const createEvent = async (
+  requestData: CreateEventRequest,
+): Promise<any> => {
   const { data } = await requests({
     method: 'post',
     url: `${BASE_URL}/create`,
@@ -61,9 +69,11 @@ export const createEvent = async (requestData: CreateEventRequest) => {
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data;
@@ -73,7 +83,7 @@ export const createEvent = async (requestData: CreateEventRequest) => {
 export const updateEvent = async (
   eventId: number,
   requestData: UpdateEventRequest,
-) => {
+): Promise<any> => {
   const { data } = await requests({
     method: 'put',
     url: `${BASE_URL}/${eventId}`,
@@ -83,16 +93,18 @@ export const updateEvent = async (
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data;
 };
 
 // 행사 삭제
-export const deleteEvent = async (eventId: number) => {
+export const deleteEvent = async (eventId: number): Promise<any> => {
   const { data } = await requests({
     method: 'delete',
     url: `${BASE_URL}/${eventId}`,
@@ -101,9 +113,11 @@ export const deleteEvent = async (eventId: number) => {
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data;

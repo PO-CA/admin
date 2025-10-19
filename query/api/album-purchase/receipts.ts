@@ -12,7 +12,9 @@ import type {
 const BASE_URL = `${API_URL}/logi/album-purchase/admin/receipt`;
 
 // 송장 스캔
-export const scanReceipt = async (requestData: ScanReceiptRequest) => {
+export const scanReceipt = async (
+  requestData: ScanReceiptRequest,
+): Promise<ScanReceiptResponse> => {
   const { data } = await requests({
     method: 'post',
     url: `${BASE_URL}/scan`,
@@ -22,16 +24,20 @@ export const scanReceipt = async (requestData: ScanReceiptRequest) => {
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data as ScanReceiptResponse;
 };
 
 // 수령 건 목록 조회
-export const getReceipts = async (params?: { isReceived?: boolean }) => {
+export const getReceipts = async (params?: {
+  isReceived?: boolean;
+}): Promise<ShippingInfo[]> => {
   const { data } = await requests({
     method: 'get',
     url: `${BASE_URL}/list`,
@@ -41,16 +47,20 @@ export const getReceipts = async (params?: { isReceived?: boolean }) => {
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data as ShippingInfo[];
 };
 
 // 미매칭 수령 건 목록
-export const getUnmatchedReceipts = async () => {
+export const getUnmatchedReceipts = async (): Promise<
+  UnmatchedReceiptDetail[]
+> => {
   const { data } = await requests({
     method: 'get',
     url: `${BASE_URL}/unmatched`,
@@ -59,9 +69,11 @@ export const getUnmatchedReceipts = async () => {
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data as UnmatchedReceiptDetail[];
@@ -71,7 +83,7 @@ export const getUnmatchedReceipts = async () => {
 export const matchUnmatchedReceipt = async (
   unmatchedReceiptId: number,
   requestData: MatchReceiptRequest,
-) => {
+): Promise<any> => {
   const { data } = await requests({
     method: 'post',
     url: `${BASE_URL}/unmatched/${unmatchedReceiptId}/match`,
@@ -81,16 +93,20 @@ export const matchUnmatchedReceipt = async (
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data;
 };
 
 // 매칭할 신청 건 검색
-export const searchRequests = async (keyword?: string) => {
+export const searchRequests = async (
+  keyword?: string,
+): Promise<AlbumPurchaseRequestSimple[]> => {
   const { data } = await requests({
     method: 'get',
     url: `${BASE_URL}/search`,
@@ -100,9 +116,11 @@ export const searchRequests = async (keyword?: string) => {
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data as AlbumPurchaseRequestSimple[];

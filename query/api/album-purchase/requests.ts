@@ -16,7 +16,7 @@ export const getRequests = async (params?: {
   status?: PurchaseRequestStatus;
   userId?: number;
   eventId?: number;
-}) => {
+}): Promise<AlbumPurchaseRequestSimple[]> => {
   const { data } = await requests({
     method: 'get',
     url: BASE_URL,
@@ -26,16 +26,20 @@ export const getRequests = async (params?: {
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data as AlbumPurchaseRequestSimple[];
 };
 
 // 매입 신청 상세 조회
-export const getRequestDetail = async (requestId: number) => {
+export const getRequestDetail = async (
+  requestId: number,
+): Promise<AlbumPurchaseRequestDetail> => {
   const { data } = await requests({
     method: 'get',
     url: `${BASE_URL}/${requestId}`,
@@ -44,9 +48,11 @@ export const getRequestDetail = async (requestId: number) => {
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data as AlbumPurchaseRequestDetail;
@@ -56,7 +62,7 @@ export const getRequestDetail = async (requestId: number) => {
 export const acceptRequest = async (
   requestId: number,
   requestData: AcceptRequestDTO,
-) => {
+): Promise<any> => {
   const { data } = await requests({
     method: 'post',
     url: `${BASE_URL}/${requestId}/accept`,
@@ -66,9 +72,11 @@ export const acceptRequest = async (
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data;
@@ -78,7 +86,7 @@ export const acceptRequest = async (
 export const rejectRequest = async (
   requestId: number,
   requestData: RejectRequestDTO,
-) => {
+): Promise<any> => {
   const { data } = await requests({
     method: 'post',
     url: `${BASE_URL}/${requestId}/reject`,
@@ -88,9 +96,11 @@ export const rejectRequest = async (
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data;
@@ -100,7 +110,7 @@ export const rejectRequest = async (
 export const proposePrice = async (
   requestId: number,
   requestData: ProposeRequestDTO,
-) => {
+): Promise<any> => {
   const { data } = await requests({
     method: 'post',
     url: `${BASE_URL}/${requestId}/propose-price`,
@@ -110,9 +120,11 @@ export const proposePrice = async (
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data;

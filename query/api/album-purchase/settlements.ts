@@ -14,7 +14,7 @@ import type {
 const BASE_URL = `${API_URL}/logi/album-purchase/admin/settlement`;
 
 // 정산 대상 조회
-export const getEligibleRequests = async () => {
+export const getEligibleRequests = async (): Promise<EligibleRequest[]> => {
   const { data } = await requests({
     method: 'get',
     url: `${BASE_URL}/eligible`,
@@ -23,9 +23,11 @@ export const getEligibleRequests = async () => {
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data as EligibleRequest[];
@@ -34,7 +36,7 @@ export const getEligibleRequests = async () => {
 // 정산 생성
 export const createSettlements = async (
   requestData: CreateSettlementRequest,
-) => {
+): Promise<any> => {
   const { data } = await requests({
     method: 'post',
     url: `${BASE_URL}/create`,
@@ -44,9 +46,11 @@ export const createSettlements = async (
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data;
@@ -58,7 +62,7 @@ export const getSettlements = async (params?: {
   userId?: number;
   startDate?: string;
   endDate?: string;
-}) => {
+}): Promise<SettlementSimple[]> => {
   const { data } = await requests({
     method: 'get',
     url: BASE_URL,
@@ -68,16 +72,20 @@ export const getSettlements = async (params?: {
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data as SettlementSimple[];
 };
 
 // 정산 상세 조회
-export const getSettlementDetail = async (settlementId: number) => {
+export const getSettlementDetail = async (
+  settlementId: number,
+): Promise<SettlementDetail> => {
   const { data } = await requests({
     method: 'get',
     url: `${BASE_URL}/${settlementId}`,
@@ -86,9 +94,11 @@ export const getSettlementDetail = async (settlementId: number) => {
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data as SettlementDetail;
@@ -98,7 +108,7 @@ export const getSettlementDetail = async (settlementId: number) => {
 export const completeSettlement = async (
   settlementId: number,
   requestData: CompleteSettlementRequest,
-) => {
+): Promise<SettlementDetail> => {
   const { data } = await requests({
     method: 'post',
     url: `${BASE_URL}/${settlementId}/complete`,
@@ -108,16 +118,18 @@ export const completeSettlement = async (
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data as SettlementDetail;
 };
 
 // 대시보드 통계
-export const getDashboardStats = async () => {
+export const getDashboardStats = async (): Promise<DashboardStats> => {
   const { data } = await requests({
     method: 'get',
     url: `${BASE_URL}/stats`,
@@ -126,9 +138,11 @@ export const getDashboardStats = async () => {
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data as DashboardStats;
@@ -138,7 +152,7 @@ export const getDashboardStats = async () => {
 export const getSettlementReport = async (
   startDate: string,
   endDate: string,
-) => {
+): Promise<PeriodReport> => {
   const { data } = await requests({
     method: 'get',
     url: `${BASE_URL}/report`,
@@ -148,9 +162,11 @@ export const getSettlementReport = async (
   const { errorMessage, errorCode, customMessage } = data;
 
   if (customMessage) {
-    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    throw new Error(customMessage);
   } else if (errorMessage) {
-    return alert(`${errorMessage}\n${errorCode}`);
+    alert(`${errorMessage}\n${errorCode}`);
+    throw new Error(errorMessage);
   }
 
   return data as PeriodReport;
