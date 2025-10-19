@@ -32,6 +32,17 @@ export const menus = [
     ],
   },
   {
+    text: '음반 매입',
+    subMenus: [
+      { href: '/album-purchase/dashboard', text: '대시보드' },
+      { href: '/album-purchase/events', text: '행사 관리' },
+      { href: '/album-purchase/requests', text: '매입 신청 관리' },
+      { href: '/album-purchase/receipts', text: '수령 처리' },
+      { href: '/album-purchase/settlements', text: '정산 관리' },
+      { href: '/album-purchase/settlements/report', text: '정산 리포트' },
+    ],
+  },
+  {
     text: '공지사항',
     subMenus: [
       { href: '/notice', text: '공지사항 목록' },
