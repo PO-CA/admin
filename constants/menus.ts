@@ -35,6 +35,7 @@ export const menus = [
     text: '음반 매입',
     subMenus: [
       { href: '/album-purchase/dashboard', text: '대시보드' },
+      { href: '/album-purchase/albums', text: '앨범 관리' },
       { href: '/album-purchase/events', text: '행사 관리' },
       { href: '/album-purchase/requests', text: '매입 신청 관리' },
       { href: '/album-purchase/receipts', text: '수령 처리' },

@@ -1,13 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
+import { useRouter } from 'next/navigation';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Chip from '@mui/material/Chip';
+import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import {
   useGetSettlements,
   useGetEligibleRequests,
   useCreateSettlements,
 } from '@/query/query/album-purchase/settlements';
 import type { SettlementStatus } from '@/types/albumPurchase';
-import styles from './page.module.css';
 
 const statusLabels: Record<SettlementStatus, string> = {
   PENDING: '정산대기',
@@ -17,28 +26,197 @@ const statusLabels: Record<SettlementStatus, string> = {
   HOLD: '정산보류',
 };
 
+function EligibleRequestsTable({
+  selectedRequestIds,
+  onSelectionChange,
+}: {
+  selectedRequestIds: number[];
+  onSelectionChange: (ids: number[]) => void;
+}) {
+  const { data: eligibleRequests } = useGetEligibleRequests();
+
+  const columns: GridColDef[] = [
+    {
+      field: 'requestId',
+      headerName: '신청 ID',
+      width: 90,
+    },
+    {
+      field: 'userName',
+      headerName: '신청자',
+      width: 100,
+    },
+    {
+      field: 'userEmail',
+      headerName: '이메일',
+      flex: 1,
+      minWidth: 180,
+    },
+    {
+      field: 'totalEvaluatedPrice',
+      headerName: '평가 금액',
+      width: 130,
+      type: 'number',
+      renderCell: (params: any) => {
+        return `₩${params.value?.toLocaleString() || '0'}`;
+      },
+    },
+    {
+      field: 'finishReviewAt',
+      headerName: '검수 완료일',
+      width: 130,
+      renderCell: (params: any) => {
+        return new Date(params.value).toLocaleDateString();
+      },
+    },
+    {
+      field: 'bankName',
+      headerName: '은행',
+      width: 100,
+    },
+    {
+      field: 'bankAccountNumber',
+      headerName: '계좌번호',
+      width: 150,
+    },
+  ];
+
+  const rows = (eligibleRequests || []).map((request: any) => ({
+    id: request.requestId,
+    requestId: request.requestId,
+    userName: request.userName,
+    userEmail: request.userEmail,
+    totalEvaluatedPrice: request.totalEvaluatedPrice,
+    finishReviewAt: request.finishReviewAt,
+    bankName: request.bankName,
+    bankAccountNumber: request.bankAccountNumber,
+  }));
+
+  return (
+    <DataGrid
+      sx={{ height: 'auto', background: 'white', fontSize: 14 }}
+      rows={rows}
+      columns={columns}
+      pageSizeOptions={[20, 50, 100]}
+      initialState={{
+        pagination: {
+          paginationModel: { page: 0, pageSize: 20 },
+        },
+      }}
+      checkboxSelection
+      rowSelectionModel={selectedRequestIds as any}
+      onRowSelectionModelChange={(newSelection: any) => {
+        onSelectionChange(Array.from(newSelection) as number[]);
+      }}
+      disableRowSelectionOnClick
+    />
+  );
+}
+
+function SettlementsTable({
+  statusFilter,
+}: {
+  statusFilter?: SettlementStatus;
+}) {
+  const { data: settlements, isLoading } = useGetSettlements({
+    status: statusFilter,
+  });
+  const router = useRouter();
+
+  const columns: GridColDef[] = [
+    {
+      field: 'id',
+      headerName: '정산 ID',
+      width: 90,
+    },
+    {
+      field: 'userName',
+      headerName: '신청자',
+      width: 100,
+    },
+    {
+      field: 'userEmail',
+      headerName: '이메일',
+      flex: 1,
+      minWidth: 180,
+    },
+    {
+      field: 'finalAmount',
+      headerName: '정산 금액',
+      width: 130,
+      type: 'number',
+      renderCell: (params: any) => {
+        return `₩${params.value?.toLocaleString() || '0'}`;
+      },
+    },
+    {
+      field: 'settlementDate',
+      headerName: '정산일',
+      width: 120,
+    },
+    {
+      field: 'status',
+      headerName: '상태',
+      width: 120,
+      renderCell: (params: any) => {
+        const status = params.value as SettlementStatus;
+        const color = status === 'COMPLETED' ? 'success' : 'default';
+        return <Chip label={statusLabels[status]} color={color} size="small" />;
+      },
+    },
+    {
+      field: 'actions',
+      headerName: '작업',
+      type: 'actions',
+      width: 80,
+      getActions: (params: any) => [
+        <GridActionsCellItem
+          key="view"
+          icon={<VisibilityIcon />}
+          label="상세"
+          onClick={() =>
+            router.push(`/album-purchase/settlements/${params.id}`)
+          }
+        />,
+      ],
+    },
+  ];
+
+  const rows = (settlements || []).map((settlement: any) => ({
+    id: settlement.id,
+    userName: settlement.userName,
+    userEmail: settlement.userEmail,
+    finalAmount: settlement.finalAmount,
+    settlementDate: settlement.settlementDate,
+    status: settlement.status,
+  }));
+
+  return (
+    <DataGrid
+      sx={{ height: 'auto', background: 'white', fontSize: 14 }}
+      rows={rows}
+      columns={columns}
+      pageSizeOptions={[20, 50, 100]}
+      initialState={{
+        pagination: {
+          paginationModel: { page: 0, pageSize: 20 },
+        },
+      }}
+      loading={isLoading}
+      disableRowSelectionOnClick
+    />
+  );
+}
+
 export default function SettlementsPage() {
   const [statusFilter, setStatusFilter] = useState<
     SettlementStatus | undefined
   >();
   const [selectedRequestIds, setSelectedRequestIds] = useState<number[]>([]);
 
-  const { data: settlements, isLoading } = useGetSettlements({
-    status: statusFilter,
-  });
   const { data: eligibleRequests, refetch: refetchEligible } =
     useGetEligibleRequests();
   const createMutation = useCreateSettlements();
-
-  const handleToggleSelect = (requestId: number) => {
-    if (selectedRequestIds.includes(requestId)) {
-      setSelectedRequestIds(
-        selectedRequestIds.filter((id) => id !== requestId),
-      );
-    } else {
-      setSelectedRequestIds([...selectedRequestIds, requestId]);
-    }
-  };
 
   const handleCreateSettlements = async () => {
     if (selectedRequestIds.length === 0) {
@@ -61,87 +239,74 @@ export default function SettlementsPage() {
     }
   };
 
-  if (isLoading) {
-    return <div>로딩 중...</div>;
-  }
-
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>정산 관리</h1>
+    <Box sx={{ p: 3 }}>
+      <Typography
+        variant="h6"
+        sx={{
+          background: 'white',
+          p: 2,
+          fontWeight: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          mb: 2,
+          fontSize: 18,
+        }}
+      >
+        정산 관리
+      </Typography>
 
       {/* 정산 대상 */}
       {eligibleRequests && eligibleRequests.length > 0 && (
-        <div className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <h2>정산 대상</h2>
-            <button
+        <Paper sx={{ p: 2, mb: 3 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              mb: 2,
+            }}
+          >
+            <Typography variant="h6" sx={{ fontSize: 16, fontWeight: 600 }}>
+              정산 대상 ({eligibleRequests.length}건)
+            </Typography>
+            <Button
+              variant="contained"
               onClick={handleCreateSettlements}
-              className={styles.createButton}
               disabled={selectedRequestIds.length === 0}
+              sx={{
+                background: '#4caf50',
+                '&:hover': { background: '#45a049' },
+              }}
             >
               정산 생성 ({selectedRequestIds.length}건)
-            </button>
-          </div>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>
-                  <input
-                    type="checkbox"
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedRequestIds(
-                          eligibleRequests.map((r) => r.requestId),
-                        );
-                      } else {
-                        setSelectedRequestIds([]);
-                      }
-                    }}
-                    checked={
-                      selectedRequestIds.length === eligibleRequests.length
-                    }
-                  />
-                </th>
-                <th>신청 ID</th>
-                <th>신청자</th>
-                <th>이메일</th>
-                <th>평가 금액</th>
-                <th>검수 완료일</th>
-                <th>은행</th>
-                <th>계좌번호</th>
-              </tr>
-            </thead>
-            <tbody>
-              {eligibleRequests.map((request) => (
-                <tr key={request.requestId}>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={selectedRequestIds.includes(request.requestId)}
-                      onChange={() => handleToggleSelect(request.requestId)}
-                    />
-                  </td>
-                  <td>{request.requestId}</td>
-                  <td>{request.userName}</td>
-                  <td>{request.userEmail}</td>
-                  <td>₩{request.totalEvaluatedPrice.toLocaleString()}</td>
-                  <td>
-                    {new Date(request.finishReviewAt).toLocaleDateString()}
-                  </td>
-                  <td>{request.bankName}</td>
-                  <td>{request.bankAccountNumber}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            </Button>
+          </Box>
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <EligibleRequestsTable
+              selectedRequestIds={selectedRequestIds}
+              onSelectionChange={setSelectedRequestIds}
+            />
+          </Suspense>
+        </Paper>
       )}
 
       {/* 정산 목록 */}
-      <div className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <h2>정산 목록</h2>
-          <select
+      <Paper sx={{ p: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 2,
+          }}
+        >
+          <Typography variant="h6" sx={{ fontSize: 16, fontWeight: 600 }}>
+            정산 목록
+          </Typography>
+          <TextField
+            select
+            label="상태 필터"
             value={statusFilter || ''}
             onChange={(e) =>
               setStatusFilter(
@@ -150,60 +315,18 @@ export default function SettlementsPage() {
                   : undefined,
               )
             }
-            className={styles.filterSelect}
+            sx={{ minWidth: 150 }}
+            size="small"
           >
-            <option value="">상태 전체</option>
-            <option value="PENDING">정산대기</option>
-            <option value="COMPLETED">정산완료</option>
-          </select>
-        </div>
-
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>정산 ID</th>
-              <th>신청자</th>
-              <th>이메일</th>
-              <th>정산 금액</th>
-              <th>정산일</th>
-              <th>상태</th>
-              <th>작업</th>
-            </tr>
-          </thead>
-          <tbody>
-            {settlements && settlements.length > 0 ? (
-              settlements.map((settlement) => (
-                <tr key={settlement.id}>
-                  <td>{settlement.id}</td>
-                  <td>{settlement.userName}</td>
-                  <td>{settlement.userEmail}</td>
-                  <td>₩{settlement.finalAmount.toLocaleString()}</td>
-                  <td>{settlement.settlementDate}</td>
-                  <td>
-                    <span className={styles.statusBadge}>
-                      {statusLabels[settlement.status]}
-                    </span>
-                  </td>
-                  <td>
-                    <a
-                      href={`/album-purchase/settlements/${settlement.id}`}
-                      className={styles.actionButton}
-                    >
-                      상세
-                    </a>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={7} className={styles.noData}>
-                  정산 내역이 없습니다.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
+            <MenuItem value="">전체</MenuItem>
+            <MenuItem value="PENDING">정산대기</MenuItem>
+            <MenuItem value="COMPLETED">정산완료</MenuItem>
+          </TextField>
+        </Box>
+        <Suspense fallback={<div>로딩 중...</div>}>
+          <SettlementsTable statusFilter={statusFilter} />
+        </Suspense>
+      </Paper>
+    </Box>
   );
 }

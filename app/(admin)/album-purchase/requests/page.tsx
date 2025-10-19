@@ -1,9 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
+import { useRouter } from 'next/navigation';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Chip from '@mui/material/Chip';
+import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useGetRequests } from '@/query/query/album-purchase/requests';
 import type { PurchaseRequestStatus } from '@/types/albumPurchase';
-import styles from './page.module.css';
 
 const statusLabels: Record<PurchaseRequestStatus, string> = {
   DRAFT: '초안',
@@ -19,28 +27,164 @@ const statusLabels: Record<PurchaseRequestStatus, string> = {
   SETTLEMENT_COMPLETED: '정산완료',
 };
 
+function RequestsTable({
+  statusFilter,
+}: {
+  statusFilter?: PurchaseRequestStatus;
+}) {
+  const { data: requests, isLoading } = useGetRequests({
+    status: statusFilter,
+  });
+  const router = useRouter();
+
+  const columns: GridColDef[] = [
+    {
+      field: 'requestId',
+      headerName: '신청 ID',
+      width: 90,
+    },
+    {
+      field: 'userName',
+      headerName: '신청자',
+      width: 100,
+    },
+    {
+      field: 'userEmail',
+      headerName: '이메일',
+      flex: 1,
+      minWidth: 180,
+    },
+    {
+      field: 'phoneNumber',
+      headerName: '연락처',
+      width: 130,
+    },
+    {
+      field: 'eventTitle',
+      headerName: '행사명',
+      flex: 0.8,
+      minWidth: 150,
+    },
+    {
+      field: 'albumTitle',
+      headerName: '음반명',
+      flex: 0.8,
+      minWidth: 150,
+    },
+    {
+      field: 'itemCount',
+      headerName: '아이템 수',
+      width: 100,
+      type: 'number',
+    },
+    {
+      field: 'totalEvaluatedPrice',
+      headerName: '총 금액',
+      width: 130,
+      type: 'number',
+      renderCell: (params: any) => {
+        return `₩${params.value?.toLocaleString() || '0'}`;
+      },
+    },
+    {
+      field: 'status',
+      headerName: '상태',
+      width: 130,
+      renderCell: (params: any) => {
+        const status = params.value as PurchaseRequestStatus;
+        const color =
+          status === 'NEED_NEGOTIATION'
+            ? 'warning'
+            : status === 'SETTLEMENT_COMPLETED'
+              ? 'success'
+              : 'default';
+        return <Chip label={statusLabels[status]} color={color} size="small" />;
+      },
+    },
+    {
+      field: 'createdAt',
+      headerName: '신청일',
+      width: 110,
+      renderCell: (params: any) => {
+        return new Date(params.value).toLocaleDateString();
+      },
+    },
+    {
+      field: 'actions',
+      headerName: '작업',
+      type: 'actions',
+      width: 80,
+      getActions: (params: any) => [
+        <GridActionsCellItem
+          key="view"
+          icon={<VisibilityIcon />}
+          label="상세"
+          onClick={() =>
+            router.push(`/album-purchase/requests/${params.row.requestId}`)
+          }
+        />,
+      ],
+    },
+  ];
+
+  const rows = (requests || []).map((request: any) => ({
+    id: request.requestId,
+    requestId: request.requestId,
+    userName: request.userName,
+    userEmail: request.userEmail,
+    phoneNumber: request.phoneNumber,
+    eventTitle: request.eventTitle,
+    albumTitle: request.albumTitle,
+    itemCount: request.itemCount,
+    totalEvaluatedPrice: request.totalEvaluatedPrice,
+    status: request.status,
+    createdAt: request.createdAt,
+  }));
+
+  return (
+    <DataGrid
+      sx={{ height: 'auto', background: 'white', fontSize: 14 }}
+      rows={rows}
+      columns={columns}
+      pageSizeOptions={[20, 50, 100]}
+      initialState={{
+        pagination: {
+          paginationModel: { page: 0, pageSize: 20 },
+        },
+      }}
+      loading={isLoading}
+      disableRowSelectionOnClick
+    />
+  );
+}
+
 export default function RequestsPage() {
   const [statusFilter, setStatusFilter] = useState<
     PurchaseRequestStatus | undefined
   >();
 
-  const { data: requests, isLoading } = useGetRequests({
-    status: statusFilter,
-  });
-
-  if (isLoading) {
-    return <div>로딩 중...</div>;
-  }
-
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>매입 신청 관리</h1>
-      </div>
+    <Box sx={{ p: 3 }}>
+      <Typography
+        variant="h6"
+        sx={{
+          background: 'white',
+          p: 2,
+          fontWeight: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          mb: 2,
+          fontSize: 18,
+        }}
+      >
+        매입 신청 관리
+      </Typography>
 
       {/* 필터 */}
-      <div className={styles.filters}>
-        <select
+      <Box sx={{ mb: 2 }}>
+        <TextField
+          select
+          label="상태 필터"
           value={statusFilter || ''}
           onChange={(e) =>
             setStatusFilter(
@@ -49,83 +193,34 @@ export default function RequestsPage() {
                 : undefined,
             )
           }
-          className={styles.filterSelect}
+          sx={{ minWidth: 200 }}
+          size="small"
         >
-          <option value="">상태 전체</option>
-          <option value="NEED_NEGOTIATION">가격조정필요</option>
-          <option value="SUBMITTED">접수완료</option>
-          <option value="RECEIVED_AND_MATCHED">수령완료</option>
-          <option value="REVIEWING">검수중</option>
-          <option value="FINISH_REVIEW">검수완료</option>
-          <option value="PENDING_SETTLEMENT">정산대기</option>
-          <option value="SETTLEMENT_COMPLETED">정산완료</option>
-        </select>
-      </div>
+          <MenuItem value="">전체</MenuItem>
+          <MenuItem value="NEED_NEGOTIATION">가격조정필요</MenuItem>
+          <MenuItem value="SUBMITTED">접수완료</MenuItem>
+          <MenuItem value="RECEIVED_AND_MATCHED">수령완료</MenuItem>
+          <MenuItem value="REVIEWING">검수중</MenuItem>
+          <MenuItem value="FINISH_REVIEW">검수완료</MenuItem>
+          <MenuItem value="PENDING_SETTLEMENT">정산대기</MenuItem>
+          <MenuItem value="SETTLEMENT_COMPLETED">정산완료</MenuItem>
+        </TextField>
+      </Box>
 
-      {/* 테이블 */}
-      <div className={styles.tableContainer}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>신청 ID</th>
-              <th>신청자</th>
-              <th>이메일</th>
-              <th>연락처</th>
-              <th>행사명</th>
-              <th>음반명</th>
-              <th>아이템 수</th>
-              <th>총 금액</th>
-              <th>상태</th>
-              <th>신청일</th>
-              <th>작업</th>
-            </tr>
-          </thead>
-          <tbody>
-            {requests && requests.length > 0 ? (
-              requests.map((request) => (
-                <tr key={request.requestId}>
-                  <td>{request.requestId}</td>
-                  <td>{request.userName}</td>
-                  <td>{request.userEmail}</td>
-                  <td>{request.phoneNumber}</td>
-                  <td>{request.eventTitle}</td>
-                  <td>{request.albumTitle}</td>
-                  <td>{request.itemCount}</td>
-                  <td>₩{request.totalEvaluatedPrice.toLocaleString()}</td>
-                  <td>
-                    <span
-                      className={`${styles.statusBadge} ${
-                        request.status === 'NEED_NEGOTIATION'
-                          ? styles.statusWarning
-                          : request.status === 'SETTLEMENT_COMPLETED'
-                            ? styles.statusSuccess
-                            : ''
-                      }`}
-                    >
-                      {statusLabels[request.status]}
-                    </span>
-                  </td>
-                  <td>{new Date(request.createdAt).toLocaleDateString()}</td>
-                  <td className={styles.actions}>
-                    <a
-                      href={`/album-purchase/requests/${request.requestId}`}
-                      className={styles.actionButton}
-                    >
-                      상세
-                    </a>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={11} className={styles.noData}>
-                  매입 신청이 없습니다.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
+      <Paper
+        sx={{
+          background: 'white',
+          fontSize: 14,
+          fontWeight: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          p: 2,
+        }}
+      >
+        <Suspense fallback={<div>로딩 중...</div>}>
+          <RequestsTable statusFilter={statusFilter} />
+        </Suspense>
+      </Paper>
+    </Box>
   );
 }
