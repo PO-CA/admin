@@ -6,6 +6,7 @@ import DeleteShippingButton from '../deleteShippingButton';
 import PayShippingButton from '../payShippingButton';
 import { Button } from '@mui/material';
 import CancelCompleteShippingButton from '../cancelCompleteShippingButton';
+import UpdateCreatedAtButton from '../updateCreatedAtButton';
 
 // !!! 주의 !!! - 이 파일은 더 이상 사용되지 않습니다.
 // 대신 app/(admin)/shippings/(components)/ShippingTable.tsx 파일에서 직접 컬럼을 정의합니다.
@@ -51,7 +52,7 @@ export const shippingColumns: GridColDef[] = [
   {
     field: 'buttons',
     headerName: '',
-    flex: 1.5,
+    flex: 2,
     sortable: false,
     filterable: false,
     renderCell: (params: GridRenderCellParams) => (
@@ -63,6 +64,7 @@ export const shippingColumns: GridColDef[] = [
           height: '100%',
         }}
       >
+        <UpdateCreatedAtButton info={{ row: { original: params.row } }} />
         <DeleteShippingButton info={{ row: { original: params.row } }} />
         <PayShippingButton info={{ row: { original: params.row } }} />
         <CancelCompleteShippingButton

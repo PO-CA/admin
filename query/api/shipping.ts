@@ -225,3 +225,29 @@ export const registerRes = async (
     return alert('비디오 등록 실패');
   }
 };
+
+// 발송일 수정
+export const updateShippingCreatedAt = async (
+  shippingId: number,
+  createdAt: string,
+) => {
+  const { data } = await requests(
+    `${API_URL}/logi/shipping/${shippingId}/created-at`,
+    {
+      method: 'patch',
+      headers: { 'Content-Type': 'application/json' },
+      data: JSON.stringify({ createdAt }),
+    },
+  );
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    return alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+  } else if (errorMessage) {
+    return alert(`${errorMessage}\n${errorCode}`);
+  }
+  alert('발송일이 수정되었습니다');
+
+  return data;
+};

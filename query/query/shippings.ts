@@ -9,6 +9,7 @@ import {
   getShippingById,
   updateAShipping,
   cancelCompleteAShipping,
+  updateShippingCreatedAt,
 } from '../api/shipping';
 import { CreateShippingDTO } from '@/types/createShippingDTO';
 
@@ -107,6 +108,19 @@ export const useCancelCompleteShipping = () => {
 
   return useMutation({
     mutationFn: (shippingId: number) => cancelCompleteAShipping(shippingId),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+    },
+  });
+};
+
+export const useUpdateShippingCreatedAt = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ shippingId, createdAt }: { shippingId: number; createdAt: string }) =>
+      updateShippingCreatedAt(shippingId, createdAt),
 
     onSuccess: () => {
       queryClient.invalidateQueries();
