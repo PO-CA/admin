@@ -8,6 +8,7 @@ export const toDateTimeString = (dateTimeISOString: string) => {
   )}시 ${dateTimeISOString.slice(14, 16)}분`;
 };
 
+
 export const toDateString = (dateTimeISOString: string) => {
   if (!dateTimeISOString) {
     return "";
