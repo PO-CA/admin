@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hm-admin
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hm-admin
+  template:
+    metadata:
+      labels:
+        app: hm-admin
+    spec:
+      containers:
+        - name: app
+          # Kustomize가 'images' 정의에 따라 이 부분을 덮어씁니다.
+          image: ghcr.io/team-dogfoot/hm-admin:placeholder
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: "production"
+      imagePullSecrets:
+        - name: ghcr-auth-secret
