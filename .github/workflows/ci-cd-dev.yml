@@ -19,7 +19,6 @@ jobs:
       packages: write
 
     outputs:
-      # Job output을 Step 3에서 직접 설정한 단일 태그로 연결
       image_tag: ${{ steps.set_tag.outputs.IMAGE_FULL_TAG }}
     steps:
       - name: 1. Checkout source code
