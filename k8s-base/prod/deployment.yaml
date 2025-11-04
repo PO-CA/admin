@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: hm-admin
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: hm-admin
@@ -25,5 +25,12 @@ spec:
           envFrom:
             - secretRef:
                 name: hm-admin-secrets
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
       imagePullSecrets:
         - name: ghcr-auth-secret
