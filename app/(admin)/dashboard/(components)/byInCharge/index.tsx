@@ -30,11 +30,16 @@ export default function StatsByInCharge() {
     isLoading: isSellsByInChargeLoading,
     isSuccess: isSellsByInChargeSuccess,
   } = useGetSellsByInCharge();
-  const [selectedData, setSelectedData] = React.useState([]);
+  const [selectedData, setSelectedData] = React.useState<any[]>([]);
 
   useEffect(() => {
+    if (!selectedInCharge || !Array.isArray(sellsByInChargeData)) {
+      setSelectedData([]);
+      return;
+    }
+
     setSelectedData(
-      sellsByInChargeData?.filter(
+      sellsByInChargeData.filter(
         (item: any) => item.inCharge === selectedInCharge,
       ),
     );
