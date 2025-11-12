@@ -5,6 +5,7 @@ import {
   getUnmatchedReceipts,
   matchUnmatchedReceipt,
   searchRequests,
+  unmatchReceipt,
 } from '../../api/album-purchase/receipts';
 import type {
   ScanReceiptRequest,
@@ -14,16 +15,16 @@ import type {
 // 수령 건 목록 조회
 export function useGetReceipts(params?: { isReceived?: boolean }) {
   return useQuery({
-    queryKey: ['album-purchase', 'receipts', params],
+    queryKey: ['album-purchase', 'receipts', params?.isReceived ?? null],
     queryFn: () => getReceipts(params),
   });
 }
 
 // 미매칭 수령 건 목록
-export function useGetUnmatchedReceipts() {
+export function useGetUnmatchedReceipts(params?: { isMatched?: boolean }) {
   return useQuery({
-    queryKey: ['album-purchase', 'unmatched-receipts'],
-    queryFn: () => getUnmatchedReceipts(),
+    queryKey: ['album-purchase', 'unmatched-receipts', params?.isMatched ?? null],
+    queryFn: () => getUnmatchedReceipts(params),
   });
 }
 
@@ -64,7 +65,33 @@ export function useMatchUnmatchedReceipt() {
         queryKey: ['album-purchase', 'unmatched-receipts'],
       });
       queryClient.invalidateQueries({
+        queryKey: ['album-purchase', 'receipts'],
+      });
+      queryClient.invalidateQueries({
         queryKey: ['album-purchase', 'requests'],
+      });
+    },
+  });
+}
+
+// 미매칭 수령 건 매칭 해제
+export function useUnmatchReceipt() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      unmatchedReceiptId,
+      requestData,
+    }: {
+      unmatchedReceiptId: number;
+      requestData: { unmatchedBy: string; reason?: string };
+    }) => unmatchReceipt(unmatchedReceiptId, requestData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['album-purchase', 'unmatched-receipts'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['album-purchase', 'receipts'],
       });
     },
   });

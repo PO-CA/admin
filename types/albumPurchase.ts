@@ -181,6 +181,9 @@ export interface ShippingInfo {
   isReceived: boolean;
   receivedAt?: string;
   receivedBy?: string;
+  requestId?: number;
+  memo?: string;
+  matchedReceiptId?: number;
 }
 
 // Receipt DTOs
@@ -218,6 +221,17 @@ export interface MatchReceiptRequest {
   requestId: number;
   trackingNumber?: string;
   matchedBy: string;
+}
+
+export interface UnmatchReceiptRequest {
+  unmatchedBy: string;
+  reason?: string;
+}
+
+export interface UnmatchReceiptResponse {
+  unmatchedReceiptId: number;
+  trackingNumber: string;
+  message: string;
 }
 
 // Settlement DTOs
