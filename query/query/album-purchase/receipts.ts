@@ -60,7 +60,7 @@ export function useMatchUnmatchedReceipt() {
       unmatchedReceiptId: number;
       requestData: MatchReceiptRequest;
     }) => matchUnmatchedReceipt(unmatchedReceiptId, requestData),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: ['album-purchase', 'unmatched-receipts'],
       });
@@ -70,6 +70,11 @@ export function useMatchUnmatchedReceipt() {
       queryClient.invalidateQueries({
         queryKey: ['album-purchase', 'requests'],
       });
+      if (variables.requestData.requestId) {
+        queryClient.invalidateQueries({
+          queryKey: ['album-purchase', 'request', variables.requestData.requestId],
+        });
+      }
     },
   });
 }

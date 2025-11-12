@@ -26,10 +26,15 @@ export function useGetRequests(params?: {
 }
 
 // 매입 신청 상세 조회
-export function useGetRequestDetail(requestId: number) {
+export function useGetRequestDetail(requestId?: number) {
   return useQuery({
     queryKey: ['album-purchase', 'request', requestId],
-    queryFn: () => getRequestDetail(requestId),
+    queryFn: () => {
+      if (!requestId) {
+        throw new Error('requestId is required');
+      }
+      return getRequestDetail(requestId);
+    },
     enabled: !!requestId,
   });
 }

@@ -154,6 +154,7 @@ export interface AlbumPurchaseRequestDetail {
   eventTitle: string;
   items: RequestItem[];
   shippings: ShippingInfo[];
+  trackingNumbers?: TrackingNumberInfo[];
   rejectionReason?: string;
   reviewerNote?: string;
   receivedAt?: string;
@@ -184,6 +185,16 @@ export interface ShippingInfo {
   requestId?: number;
   memo?: string;
   matchedReceiptId?: number;
+}
+
+export interface TrackingNumberInfo {
+  trackingNumberId: number;
+  trackingNumber: string;
+  shippingCompany: string;
+  isMatched: boolean;
+  memo?: string;
+  createdAt: string;
+  matchedAt?: string;
 }
 
 // Receipt DTOs

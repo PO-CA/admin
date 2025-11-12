@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
@@ -12,6 +12,11 @@ import Tab from '@mui/material/Tab';
 import Radio from '@mui/material/Radio';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
+import Chip from '@mui/material/Chip';
+import Divider from '@mui/material/Divider';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import LinearProgress from '@mui/material/LinearProgress';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -25,12 +30,30 @@ import {
   useSearchRequests,
   useUnmatchReceipt,
 } from '@/query/query/album-purchase/receipts';
+import { useGetRequestDetail } from '@/query/query/album-purchase/requests';
 import type {
   ScanReceiptResponse,
   ShippingInfo,
   UnmatchedReceiptDetail,
+  AlbumPurchaseRequestDetail,
+  TrackingNumberInfo,
 } from '@/types/albumPurchase';
 import { useSnackbar } from '../_components/useSnackbar';
+
+function useDebouncedValue<T>(value: T, delay = 300) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
+function formatDateTime(value?: string | null) {
+  return value ? new Date(value).toLocaleString() : '-';
+}
 
 function MatchedReceiptsTable({
   receipts,
@@ -41,72 +64,73 @@ function MatchedReceiptsTable({
   isLoading: boolean;
   onUnmatchRequest: (receipt: ShippingInfo) => void;
 }) {
-  const columns: GridColDef[] = [
-    {
-      field: 'shippingId',
-      headerName: 'ID',
-      width: 80,
-    },
-    {
-      field: 'trackingNumber',
-      headerName: '송장번호',
-      flex: 1,
-      minWidth: 150,
-    },
-    {
-      field: 'shippingCompany',
-      headerName: '택배사',
-      width: 120,
-    },
-    {
-      field: 'actualQuantity',
-      headerName: '수량',
-      width: 80,
-      type: 'number',
-    },
-    {
-      field: 'requestId',
-      headerName: '매입 신청 ID',
-      width: 130,
-    },
-    {
-      field: 'receivedAt',
-      headerName: '수령일',
-      width: 180,
-      renderCell: (params: any) => {
-        return params.value ? new Date(params.value).toLocaleString() : '-';
+  const columns = useMemo<GridColDef[]>(
+    () => [
+      {
+        field: 'shippingId',
+        headerName: 'ID',
+        width: 80,
       },
-    },
-    {
-      field: 'receivedBy',
-      headerName: '수령자',
-      width: 120,
-    },
-    {
-      field: 'actions',
-      headerName: '작업',
-      width: 140,
-      renderCell: (params: any) => {
-        const disabled = !params.row.matchedReceiptId;
-        const button = (
-          <Button
-            variant="outlined"
-            size="small"
-            disabled={disabled}
-            onClick={() => onUnmatchRequest(params.row)}
-          >
-            매칭 해제
-          </Button>
-        );
+      {
+        field: 'trackingNumber',
+        headerName: '송장번호',
+        flex: 1,
+        minWidth: 150,
+      },
+      {
+        field: 'shippingCompany',
+        headerName: '택배사',
+        width: 120,
+      },
+      {
+        field: 'actualQuantity',
+        headerName: '수량',
+        width: 80,
+        type: 'number',
+      },
+      {
+        field: 'requestId',
+        headerName: '매입 신청 ID',
+        width: 130,
+      },
+      {
+        field: 'receivedAt',
+        headerName: '수령일',
+        width: 180,
+        renderCell: (params: any) => formatDateTime(params.value),
+      },
+      {
+        field: 'receivedBy',
+        headerName: '수령자',
+        width: 120,
+      },
+      {
+        field: 'actions',
+        headerName: '작업',
+        width: 140,
+        renderCell: (params: any) => {
+          const disabled = !params.row.matchedReceiptId;
+          const button = (
+            <Button
+              variant="outlined"
+              size="small"
+              disabled={disabled}
+              onClick={() => onUnmatchRequest(params.row)}
+            >
+              매칭 해제
+            </Button>
+          );
 
-        return disabled ? (
-          <Tooltip title="미매칭 수령 건과 연결되지 않은 송장입니다.">{button}</Tooltip>
-        ) : (
-          button
-        );
+          return disabled ? (
+            <Tooltip title="미매칭 수령 건과 연결되지 않은 송장입니다.">{button}</Tooltip>
+          ) : (
+            button
+          );
+        },
       },
-    },
-  ];
+    ],
+    [onUnmatchRequest],
+  );
 
   return (
     <DataGrid
@@ -140,54 +164,59 @@ function UnmatchedReceiptsTable({
   onSelectUnmatched: (id: number | null) => void;
 }) {
 
-  const columns: GridColDef[] = [
-    {
-      field: 'select',
-      headerName: '선택',
-      width: 80,
-      renderCell: (params: any) => (
-        <Radio
-          checked={selectedUnmatchedId === params.row.id}
-          onChange={() => onSelectUnmatched(params.row.id)}
-        />
-      ),
-    },
-    {
-      field: 'id',
-      headerName: 'ID',
-      width: 80,
-    },
-    {
-      field: 'trackingNumber',
-      headerName: '송장번호',
-      flex: 1,
-      minWidth: 150,
-    },
-    {
-      field: 'shippingCompany',
-      headerName: '택배사',
-      width: 120,
-    },
-    {
-      field: 'receivedAt',
-      headerName: '수령일',
-      width: 180,
-      renderCell: (params: any) => {
-        return new Date(params.value).toLocaleString();
+  const columns = useMemo<GridColDef[]>(
+    () => [
+      {
+        field: 'select',
+        headerName: '선택',
+        width: 80,
+        renderCell: (params: any) => (
+          <Radio
+            checked={selectedUnmatchedId === params.row.id}
+            onChange={() =>
+              onSelectUnmatched(
+                selectedUnmatchedId === params.row.id ? null : params.row.id,
+              )
+            }
+          />
+        ),
       },
-    },
-    {
-      field: 'receivedBy',
-      headerName: '수령자',
-      width: 120,
-    },
-    {
-      field: 'memo',
-      headerName: '메모',
-      flex: 0.8,
-      minWidth: 150,
-    },
-  ];
+      {
+        field: 'id',
+        headerName: 'ID',
+        width: 80,
+      },
+      {
+        field: 'trackingNumber',
+        headerName: '송장번호',
+        flex: 1,
+        minWidth: 150,
+      },
+      {
+        field: 'shippingCompany',
+        headerName: '택배사',
+        width: 120,
+      },
+      {
+        field: 'receivedAt',
+        headerName: '수령일',
+        width: 180,
+        renderCell: (params: any) => formatDateTime(params.value),
+      },
+      {
+        field: 'receivedBy',
+        headerName: '수령자',
+        width: 120,
+      },
+      {
+        field: 'memo',
+        headerName: '메모',
+        flex: 0.8,
+        minWidth: 150,
+      },
+    ],
+    [onSelectUnmatched, selectedUnmatchedId],
+  );
 
   const rows = (receipts || []).map((receipt) => ({
     id: receipt.id,
@@ -224,54 +253,62 @@ function SearchRequestsTable({
   selectedRequestId: number | null;
   onSelectRequest: (id: number | null) => void;
 }) {
-  const { data: searchResults, isLoading } = useSearchRequests(searchKeyword);
+  const debouncedKeyword = useDebouncedValue(searchKeyword.trim(), 400);
+  const { data: searchResults, isLoading } = useSearchRequests(debouncedKeyword);
 
-  const columns: GridColDef[] = [
-    {
-      field: 'select',
-      headerName: '선택',
-      width: 80,
-      renderCell: (params: any) => (
-        <Radio
-          checked={selectedRequestId === params.row.requestId}
-          onChange={() => onSelectRequest(params.row.requestId)}
-        />
-      ),
-    },
-    {
-      field: 'requestId',
-      headerName: '신청 ID',
-      width: 90,
-    },
-    {
-      field: 'userName',
-      headerName: '신청자',
-      width: 100,
-    },
-    {
-      field: 'userEmail',
-      headerName: '이메일',
-      flex: 1,
-      minWidth: 180,
-    },
-    {
-      field: 'phoneNumber',
-      headerName: '연락처',
-      width: 130,
-    },
-    {
-      field: 'eventTitle',
-      headerName: '행사명',
-      flex: 0.8,
-      minWidth: 150,
-    },
-    {
-      field: 'albumTitle',
-      headerName: '음반명',
-      flex: 0.8,
-      minWidth: 150,
-    },
-  ];
+  const columns = useMemo<GridColDef[]>(
+    () => [
+      {
+        field: 'select',
+        headerName: '선택',
+        width: 80,
+        renderCell: (params: any) => (
+          <Radio
+            checked={selectedRequestId === params.row.requestId}
+            onChange={() =>
+              onSelectRequest(
+                selectedRequestId === params.row.requestId ? null : params.row.requestId,
+              )
+            }
+          />
+        ),
+      },
+      {
+        field: 'requestId',
+        headerName: '신청 ID',
+        width: 90,
+      },
+      {
+        field: 'userName',
+        headerName: '신청자',
+        width: 100,
+      },
+      {
+        field: 'userEmail',
+        headerName: '이메일',
+        flex: 1,
+        minWidth: 180,
+      },
+      {
+        field: 'phoneNumber',
+        headerName: '연락처',
+        width: 130,
+      },
+      {
+        field: 'eventTitle',
+        headerName: '행사명',
+        flex: 0.8,
+        minWidth: 150,
+      },
+      {
+        field: 'albumTitle',
+        headerName: '음반명',
+        flex: 0.8,
+        minWidth: 150,
+      },
+    ],
+    [onSelectRequest, selectedRequestId],
+  );
 
   const rows = (searchResults || []).map((request: any) => ({
     id: request.requestId,
@@ -300,6 +337,153 @@ function SearchRequestsTable({
   );
 }
 
+function TrackingNumbersList({
+  trackingNumbers,
+  highlightTrackingNumber,
+}: {
+  trackingNumbers?: TrackingNumberInfo[];
+  highlightTrackingNumber?: string;
+}) {
+  if (!trackingNumbers?.length) {
+    return (
+      <Typography variant="body2" color="text.secondary">
+        등록된 송장 정보가 없습니다.
+      </Typography>
+    );
+  }
+
+  return (
+    <Stack direction="row" flexWrap="wrap" gap={1}>
+      {trackingNumbers.map((tracking) => {
+        const isHighlight = highlightTrackingNumber === tracking.trackingNumber;
+        return (
+          <Chip
+            key={tracking.trackingNumberId}
+            size="small"
+            label={`${tracking.trackingNumber} · ${tracking.shippingCompany}`}
+            color={
+              isHighlight ? 'secondary' : tracking.isMatched ? 'default' : 'warning'
+            }
+            variant={tracking.isMatched ? 'outlined' : 'filled'}
+            sx={{ fontWeight: isHighlight ? 600 : undefined }}
+          />
+        );
+      })}
+    </Stack>
+  );
+}
+
+function MatchContextPanel({
+  unmatchedReceipt,
+  requestDetail,
+  requestLoading,
+  onClearRequest,
+}: {
+  unmatchedReceipt: UnmatchedReceiptDetail | undefined;
+  requestDetail: AlbumPurchaseRequestDetail | undefined;
+  requestLoading: boolean;
+  onClearRequest: () => void;
+}) {
+  if (!unmatchedReceipt && !requestDetail) {
+    return null;
+  }
+
+  return (
+    <Card sx={{ mb: 3 }}>
+      <CardContent>
+        <Stack spacing={2.5}>
+          {unmatchedReceipt && (
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+                선택된 미매칭 송장
+              </Typography>
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={1.5}
+                alignItems="flex-start"
+              >
+                <Chip
+                  color="primary"
+                  label={`송장번호 ${unmatchedReceipt.trackingNumber}`}
+                />
+                <Chip
+                  variant="outlined"
+                  label={`택배사 ${unmatchedReceipt.shippingCompany}`}
+                />
+                <Chip
+                  variant="outlined"
+                  label={`수령일 ${formatDateTime(unmatchedReceipt.receivedAt)}`}
+                />
+                <Chip
+                  variant="outlined"
+                  label={`수령자 ${unmatchedReceipt.receivedBy}`}
+                />
+              </Stack>
+            </Box>
+          )}
+
+          {unmatchedReceipt && (requestDetail || requestLoading) && <Divider />}
+
+          <Box>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              sx={{ mb: 1 }}
+            >
+              <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                매칭할 매입 신청
+              </Typography>
+              {requestDetail && (
+                <Button size="small" onClick={onClearRequest}>
+                  선택 해제
+                </Button>
+              )}
+            </Stack>
+
+            {requestLoading && (
+              <Box sx={{ py: 1 }}>
+                <LinearProgress />
+              </Box>
+            )}
+
+            {!requestDetail && !requestLoading && (
+              <Typography variant="body2" color="text.secondary">
+                신청을 선택하면 등록된 송장 정보를 바로 확인할 수 있습니다.
+              </Typography>
+            )}
+
+            {requestDetail && (
+              <Stack spacing={1.5}>
+                <Box>
+                  <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                    #{requestDetail.requestId} · {requestDetail.userName}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {requestDetail.userEmail} · {requestDetail.phoneNumber || '연락처 없음'}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {requestDetail.eventTitle || '행사 정보 없음'}
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                    등록된 송장번호
+                  </Typography>
+                  <TrackingNumbersList
+                    trackingNumbers={requestDetail.trackingNumbers}
+                    highlightTrackingNumber={unmatchedReceipt?.trackingNumber}
+                  />
+                </Box>
+              </Stack>
+            )}
+          </Box>
+        </Stack>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function ReceiptsPage() {
   const { showSnackbar, SnackbarComponent } = useSnackbar();
   const [tabValue, setTabValue] = useState<'matched' | 'unmatched'>('matched');
@@ -316,11 +500,27 @@ export default function ReceiptsPage() {
 
   const receiptsQuery = useGetReceipts({ isReceived: true });
   const unmatchedQuery = useGetUnmatchedReceipts({ isMatched: false });
+  const {
+    data: selectedRequestDetail,
+    isFetching: isRequestDetailLoading,
+    refetch: refetchRequestDetail,
+  } = useGetRequestDetail(selectedRequestId ?? undefined);
+  const selectedUnmatchedReceipt = useMemo(
+    () =>
+      unmatchedQuery.data?.find((receipt) => receipt.id === selectedUnmatchedId),
+    [selectedUnmatchedId, unmatchedQuery.data],
+  );
 
   const scanMutation = useScanReceipt();
   const matchMutation = useMatchUnmatchedReceipt();
   const unmatchMutation = useUnmatchReceipt();
   const operatorName = receivedBy || 'admin';
+
+  useEffect(() => {
+    if (!selectedUnmatchedId) {
+      setSearchKeyword('');
+    }
+  }, [selectedUnmatchedId]);
 
   const handleScan = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -345,7 +545,6 @@ export default function ReceiptsPage() {
       }
 
       setTrackingNumber('');
-      setShippingCompany('');
       setScanMemo('');
       receiptsQuery.refetch();
       unmatchedQuery.refetch();
@@ -366,22 +565,24 @@ export default function ReceiptsPage() {
         requestData: {
           requestId: selectedRequestId,
           matchedBy: operatorName,
+          trackingNumber: selectedUnmatchedReceipt?.trackingNumber,
         },
       });
       showSnackbar('매칭 완료!', 'success');
       setSelectedUnmatchedId(null);
-      setSelectedRequestId(null);
-      setSearchKeyword('');
       receiptsQuery.refetch();
       unmatchedQuery.refetch();
+      if (selectedRequestId) {
+        refetchRequestDetail();
+      }
     } catch (error: any) {
       showSnackbar(error?.message || '매칭에 실패했습니다.', 'error');
     }
   };
 
-  const handleRequestUnmatch = (receipt: ShippingInfo) => {
+  const handleRequestUnmatch = useCallback((receipt: ShippingInfo) => {
     setUnmatchDialog({ open: true, receipt, reason: '' });
-  };
+  }, []);
 
   const handleConfirmUnmatch = async () => {
     if (!unmatchDialog.receipt?.matchedReceiptId) {
@@ -401,10 +602,28 @@ export default function ReceiptsPage() {
       setUnmatchDialog({ open: false, receipt: null, reason: '' });
       receiptsQuery.refetch();
       unmatchedQuery.refetch();
+      if (
+        unmatchDialog.receipt?.requestId &&
+        unmatchDialog.receipt.requestId === selectedRequestId
+      ) {
+        refetchRequestDetail();
+      }
     } catch (error: any) {
       showSnackbar(error?.message || '매칭 해제에 실패했습니다.', 'error');
     }
   };
+
+  const handleSelectUnmatched = useCallback((id: number | null) => {
+    setSelectedUnmatchedId(id);
+  }, []);
+
+  const handleSelectRequest = useCallback((id: number | null) => {
+    setSelectedRequestId(id);
+  }, []);
+
+  const handleClearRequestSelection = useCallback(() => {
+    setSelectedRequestId(null);
+  }, []);
 
   const disableMatchButton = !selectedUnmatchedId || !selectedRequestId;
 
@@ -511,9 +730,18 @@ export default function ReceiptsPage() {
               receipts={unmatchedQuery.data || []}
               isLoading={unmatchedQuery.isLoading}
               selectedUnmatchedId={selectedUnmatchedId}
-              onSelectUnmatched={setSelectedUnmatchedId}
+              onSelectUnmatched={handleSelectUnmatched}
             />
           </Paper>
+
+          {(selectedUnmatchedReceipt || selectedRequestDetail) && (
+            <MatchContextPanel
+              unmatchedReceipt={selectedUnmatchedReceipt}
+              requestDetail={selectedRequestDetail}
+              requestLoading={isRequestDetailLoading}
+              onClearRequest={handleClearRequestSelection}
+            />
+          )}
 
           {/* 매칭할 신청 검색 */}
           {selectedUnmatchedId && (
@@ -538,7 +766,7 @@ export default function ReceiptsPage() {
                   <SearchRequestsTable
                     searchKeyword={searchKeyword}
                     selectedRequestId={selectedRequestId}
-                    onSelectRequest={setSelectedRequestId}
+                    onSelectRequest={handleSelectRequest}
                   />
                 </Box>
               )}
