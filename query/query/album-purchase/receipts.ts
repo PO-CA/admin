@@ -105,8 +105,7 @@ export function useUnmatchReceipt() {
 // 매칭할 신청 건 검색
 export function useSearchRequests(keyword?: string) {
   return useQuery({
-    queryKey: ['album-purchase', 'search-requests', keyword],
+    queryKey: ['album-purchase', 'search-requests', keyword ?? ''],
     queryFn: () => searchRequests(keyword),
-    enabled: !!keyword,
   });
 }

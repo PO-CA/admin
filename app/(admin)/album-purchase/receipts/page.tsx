@@ -17,11 +17,15 @@ import Divider from '@mui/material/Divider';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import LinearProgress from '@mui/material/LinearProgress';
+import MenuItem from '@mui/material/MenuItem';
+import Grid from '@mui/material/Grid';
+import Alert from '@mui/material/Alert';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import Link from 'next/link';
 import {
   useScanReceipt,
   useGetReceipts,
@@ -39,6 +43,10 @@ import type {
   TrackingNumberInfo,
 } from '@/types/albumPurchase';
 import { useSnackbar } from '../_components/useSnackbar';
+import {
+  SHIPPING_COMPANIES,
+  ShippingCompanyValue,
+} from '@/constants/shippingCompanies';
 
 function useDebouncedValue<T>(value: T, delay = 300) {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -59,10 +67,12 @@ function MatchedReceiptsTable({
   receipts,
   isLoading,
   onUnmatchRequest,
+  onViewRequest,
 }: {
   receipts: ShippingInfo[];
   isLoading: boolean;
   onUnmatchRequest: (receipt: ShippingInfo) => void;
+  onViewRequest: (requestId?: number) => void;
 }) {
   const columns = useMemo<GridColDef[]>(
     () => [
@@ -105,6 +115,34 @@ function MatchedReceiptsTable({
         width: 120,
       },
       {
+        field: 'requestDetail',
+        headerName: '신청 상세',
+        width: 130,
+        renderCell: (params: any) => (
+          <Button
+            component={Link}
+            href={
+              params.row.requestId
+                ? `/album-purchase/requests/${params.row.requestId}`
+                : '#'
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+            size="small"
+            variant="text"
+            disabled={!params.row.requestId}
+            onClick={(e) => {
+              if (!params.row.requestId) {
+                e.preventDefault();
+                onViewRequest(undefined);
+              }
+            }}
+          >
+            상세보기
+          </Button>
+        ),
+      },
+      {
         field: 'actions',
         headerName: '작업',
         width: 140,
@@ -129,7 +167,7 @@ function MatchedReceiptsTable({
         },
       },
     ],
-    [onUnmatchRequest],
+    [onUnmatchRequest, onViewRequest],
   );
 
   return (
@@ -384,19 +422,15 @@ function MatchContextPanel({
   requestLoading: boolean;
   onClearRequest: () => void;
 }) {
-  if (!unmatchedReceipt && !requestDetail) {
-    return null;
-  }
-
   return (
     <Card sx={{ mb: 3 }}>
       <CardContent>
         <Stack spacing={2.5}>
-          {unmatchedReceipt && (
-            <Box>
-              <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
-                선택된 미매칭 송장
-              </Typography>
+          <Box>
+            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+              선택된 미매칭 송장
+            </Typography>
+            {unmatchedReceipt ? (
               <Stack
                 direction={{ xs: 'column', sm: 'row' }}
                 spacing={1.5}
@@ -419,10 +453,14 @@ function MatchContextPanel({
                   label={`수령자 ${unmatchedReceipt.receivedBy}`}
                 />
               </Stack>
-            </Box>
-          )}
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                미매칭 송장을 선택하면 상세 정보가 표시됩니다.
+              </Typography>
+            )}
+          </Box>
 
-          {unmatchedReceipt && (requestDetail || requestLoading) && <Divider />}
+          <Divider />
 
           <Box>
             <Stack
@@ -435,9 +473,20 @@ function MatchContextPanel({
                 매칭할 매입 신청
               </Typography>
               {requestDetail && (
-                <Button size="small" onClick={onClearRequest}>
-                  선택 해제
-                </Button>
+                <Stack direction="row" spacing={1}>
+                  <Button
+                    component={Link}
+                    href={`/album-purchase/requests/${requestDetail.requestId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    size="small"
+                  >
+                    상세 보기
+                  </Button>
+                  <Button size="small" onClick={onClearRequest}>
+                    선택 해제
+                  </Button>
+                </Stack>
               )}
             </Stack>
 
@@ -488,7 +537,7 @@ export default function ReceiptsPage() {
   const { showSnackbar, SnackbarComponent } = useSnackbar();
   const [tabValue, setTabValue] = useState<'matched' | 'unmatched'>('matched');
   const [trackingNumber, setTrackingNumber] = useState('');
-  const [shippingCompany, setShippingCompany] = useState('');
+  const [shippingCompany, setShippingCompany] = useState<ShippingCompanyValue | ''>('');
   const [receivedBy, setReceivedBy] = useState('admin');
   const [scanMemo, setScanMemo] = useState('');
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -515,12 +564,6 @@ export default function ReceiptsPage() {
   const matchMutation = useMatchUnmatchedReceipt();
   const unmatchMutation = useUnmatchReceipt();
   const operatorName = receivedBy || 'admin';
-
-  useEffect(() => {
-    if (!selectedUnmatchedId) {
-      setSearchKeyword('');
-    }
-  }, [selectedUnmatchedId]);
 
   const handleScan = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -625,6 +668,17 @@ export default function ReceiptsPage() {
     setSelectedRequestId(null);
   }, []);
 
+  const handleViewRequest = useCallback(
+    (requestId?: number) => {
+      if (!requestId) {
+        showSnackbar('연결된 매입 신청이 없습니다.', 'info');
+        return;
+      }
+      window.open(`/album-purchase/requests/${requestId}`, '_blank', 'noopener,noreferrer');
+    },
+    [showSnackbar],
+  );
+
   const disableMatchButton = !selectedUnmatchedId || !selectedRequestId;
 
   return (
@@ -653,12 +707,20 @@ export default function ReceiptsPage() {
             sx={{ flex: 1 }}
           />
           <TextField
+            select
             placeholder="택배사"
             value={shippingCompany}
             onChange={(e) => setShippingCompany(e.target.value)}
             size="small"
             sx={{ flex: 1 }}
-          />
+          >
+            <MenuItem value="">택배사를 선택해주세요</MenuItem>
+            {SHIPPING_COMPANIES.map((company) => (
+              <MenuItem key={company.value} value={company.value}>
+                {company.label}
+              </MenuItem>
+            ))}
+          </TextField>
           <TextField
             placeholder="수령자"
             value={receivedBy}
@@ -712,84 +774,85 @@ export default function ReceiptsPage() {
             receipts={receiptsQuery.data || []}
             isLoading={receiptsQuery.isLoading}
             onUnmatchRequest={handleRequestUnmatch}
+            onViewRequest={handleViewRequest}
           />
         </Paper>
       )}
 
       {/* 미매칭 수령 건 + 매칭 기능 */}
       {tabValue === 'unmatched' && (
-        <>
-          <Paper sx={{ p: 2, mb: 3 }}>
-            <Typography
-              variant="h6"
-              sx={{ mb: 2, fontSize: 16, fontWeight: 600 }}
-            >
-              미매칭 수령 건
-            </Typography>
-            <UnmatchedReceiptsTable
-              receipts={unmatchedQuery.data || []}
-              isLoading={unmatchedQuery.isLoading}
-              selectedUnmatchedId={selectedUnmatchedId}
-              onSelectUnmatched={handleSelectUnmatched}
-            />
-          </Paper>
-
-          {(selectedUnmatchedReceipt || selectedRequestDetail) && (
-            <MatchContextPanel
-              unmatchedReceipt={selectedUnmatchedReceipt}
-              requestDetail={selectedRequestDetail}
-              requestLoading={isRequestDetailLoading}
-              onClearRequest={handleClearRequestSelection}
-            />
-          )}
-
-          {/* 매칭할 신청 검색 */}
-          {selectedUnmatchedId && (
-            <Paper sx={{ p: 3 }}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={7}>
+            <Paper sx={{ p: 2, height: '100%' }}>
               <Typography
                 variant="h6"
-                sx={{ mb: 2, fontSize: 18, fontWeight: 600 }}
+                sx={{ mb: 2, fontSize: 16, fontWeight: 600 }}
               >
-                매칭할 매입 신청 검색
+                미매칭 수령 건
               </Typography>
-              <TextField
-                fullWidth
-                placeholder="신청자 이름, 이메일, 연락처로 검색"
-                value={searchKeyword}
-                onChange={(e) => setSearchKeyword(e.target.value)}
-                size="small"
-                sx={{ mb: 2 }}
+              <UnmatchedReceiptsTable
+                receipts={unmatchedQuery.data || []}
+                isLoading={unmatchedQuery.isLoading}
+                selectedUnmatchedId={selectedUnmatchedId}
+                onSelectUnmatched={handleSelectUnmatched}
               />
-
-              {searchKeyword && (
-                <Box sx={{ mb: 2 }}>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={5}>
+            <Stack spacing={3} sx={{ height: '100%' }}>
+              <MatchContextPanel
+                unmatchedReceipt={selectedUnmatchedReceipt}
+                requestDetail={selectedRequestDetail}
+                requestLoading={isRequestDetailLoading}
+                onClearRequest={handleClearRequestSelection}
+              />
+              <Paper sx={{ p: 3, flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <Typography
+                  variant="h6"
+                  sx={{ mb: 2, fontSize: 18, fontWeight: 600 }}
+                >
+                  매칭할 매입 신청
+                </Typography>
+                {!selectedUnmatchedId && (
+                  <Alert severity="info" sx={{ mb: 2 }}>
+                    미매칭 송장을 먼저 선택하면 신청 선택 후 매칭할 수 있습니다.
+                  </Alert>
+                )}
+                <TextField
+                  fullWidth
+                  placeholder="신청자 이름, 이메일, 연락처로 검색"
+                  value={searchKeyword}
+                  onChange={(e) => setSearchKeyword(e.target.value)}
+                  size="small"
+                  sx={{ mb: 2 }}
+                />
+                <Box sx={{ flex: 1, mb: 2 }}>
                   <SearchRequestsTable
                     searchKeyword={searchKeyword}
                     selectedRequestId={selectedRequestId}
                     onSelectRequest={handleSelectRequest}
                   />
                 </Box>
-              )}
-
-              <Button
-                variant="contained"
-                onClick={handleMatch}
-                disabled={disableMatchButton || matchMutation.isPending}
-                startIcon={
-                  matchMutation.isPending && (
-                    <CircularProgress size={16} color="inherit" />
-                  )
-                }
-                sx={{
-                  background: '#4caf50',
-                  '&:hover': { background: '#45a049' },
-                }}
-              >
-                {matchMutation.isPending ? '매칭 중...' : '매칭하기'}
-              </Button>
-            </Paper>
-          )}
-        </>
+                <Button
+                  variant="contained"
+                  onClick={handleMatch}
+                  disabled={disableMatchButton || matchMutation.isPending}
+                  startIcon={
+                    matchMutation.isPending && (
+                      <CircularProgress size={16} color="inherit" />
+                    )
+                  }
+                  sx={{
+                    background: '#4caf50',
+                    '&:hover': { background: '#45a049' },
+                  }}
+                >
+                  {matchMutation.isPending ? '매칭 중...' : '매칭하기'}
+                </Button>
+              </Paper>
+            </Stack>
+          </Grid>
+        </Grid>
       )}
 
       <Dialog
