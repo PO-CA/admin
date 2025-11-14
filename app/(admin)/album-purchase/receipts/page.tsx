@@ -18,7 +18,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import LinearProgress from '@mui/material/LinearProgress';
 import MenuItem from '@mui/material/MenuItem';
-import Grid from '@mui/material/Grid';
 import Alert from '@mui/material/Alert';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -710,7 +709,9 @@ export default function ReceiptsPage() {
             select
             placeholder="택배사"
             value={shippingCompany}
-            onChange={(e) => setShippingCompany(e.target.value)}
+            onChange={(e) =>
+              setShippingCompany(e.target.value as ShippingCompanyValue | '')
+            }
             size="small"
             sx={{ flex: 1 }}
           >
@@ -781,8 +782,12 @@ export default function ReceiptsPage() {
 
       {/* 미매칭 수령 건 + 매칭 기능 */}
       {tabValue === 'unmatched' && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={7}>
+        <Stack
+          direction={{ xs: 'column', lg: 'row' }}
+          spacing={3}
+          alignItems="stretch"
+        >
+          <Box flex={{ xs: 1, lg: 1.1 }}>
             <Paper sx={{ p: 2, height: '100%' }}>
               <Typography
                 variant="h6"
@@ -797,62 +802,60 @@ export default function ReceiptsPage() {
                 onSelectUnmatched={handleSelectUnmatched}
               />
             </Paper>
-          </Grid>
-          <Grid item xs={12} md={5}>
-            <Stack spacing={3} sx={{ height: '100%' }}>
-              <MatchContextPanel
-                unmatchedReceipt={selectedUnmatchedReceipt}
-                requestDetail={selectedRequestDetail}
-                requestLoading={isRequestDetailLoading}
-                onClearRequest={handleClearRequestSelection}
+          </Box>
+          <Stack flex={{ xs: 1, lg: 0.9 }} spacing={3}>
+            <MatchContextPanel
+              unmatchedReceipt={selectedUnmatchedReceipt}
+              requestDetail={selectedRequestDetail}
+              requestLoading={isRequestDetailLoading}
+              onClearRequest={handleClearRequestSelection}
+            />
+            <Paper sx={{ p: 3, flex: 1, display: 'flex', flexDirection: 'column' }}>
+              <Typography
+                variant="h6"
+                sx={{ mb: 2, fontSize: 18, fontWeight: 600 }}
+              >
+                매칭할 매입 신청
+              </Typography>
+              {!selectedUnmatchedId && (
+                <Alert severity="info" sx={{ mb: 2 }}>
+                  미매칭 송장을 먼저 선택하면 신청 선택 후 매칭할 수 있습니다.
+                </Alert>
+              )}
+              <TextField
+                fullWidth
+                placeholder="신청자 이름, 이메일, 연락처로 검색"
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+                size="small"
+                sx={{ mb: 2 }}
               />
-              <Paper sx={{ p: 3, flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <Typography
-                  variant="h6"
-                  sx={{ mb: 2, fontSize: 18, fontWeight: 600 }}
-                >
-                  매칭할 매입 신청
-                </Typography>
-                {!selectedUnmatchedId && (
-                  <Alert severity="info" sx={{ mb: 2 }}>
-                    미매칭 송장을 먼저 선택하면 신청 선택 후 매칭할 수 있습니다.
-                  </Alert>
-                )}
-                <TextField
-                  fullWidth
-                  placeholder="신청자 이름, 이메일, 연락처로 검색"
-                  value={searchKeyword}
-                  onChange={(e) => setSearchKeyword(e.target.value)}
-                  size="small"
-                  sx={{ mb: 2 }}
+              <Box sx={{ flex: 1, mb: 2 }}>
+                <SearchRequestsTable
+                  searchKeyword={searchKeyword}
+                  selectedRequestId={selectedRequestId}
+                  onSelectRequest={handleSelectRequest}
                 />
-                <Box sx={{ flex: 1, mb: 2 }}>
-                  <SearchRequestsTable
-                    searchKeyword={searchKeyword}
-                    selectedRequestId={selectedRequestId}
-                    onSelectRequest={handleSelectRequest}
-                  />
-                </Box>
-                <Button
-                  variant="contained"
-                  onClick={handleMatch}
-                  disabled={disableMatchButton || matchMutation.isPending}
-                  startIcon={
-                    matchMutation.isPending && (
-                      <CircularProgress size={16} color="inherit" />
-                    )
-                  }
-                  sx={{
-                    background: '#4caf50',
-                    '&:hover': { background: '#45a049' },
-                  }}
-                >
-                  {matchMutation.isPending ? '매칭 중...' : '매칭하기'}
-                </Button>
-              </Paper>
-            </Stack>
-          </Grid>
-        </Grid>
+              </Box>
+              <Button
+                variant="contained"
+                onClick={handleMatch}
+                disabled={disableMatchButton || matchMutation.isPending}
+                startIcon={
+                  matchMutation.isPending && (
+                    <CircularProgress size={16} color="inherit" />
+                  )
+                }
+                sx={{
+                  background: '#4caf50',
+                  '&:hover': { background: '#45a049' },
+                }}
+              >
+                {matchMutation.isPending ? '매칭 중...' : '매칭하기'}
+              </Button>
+            </Paper>
+          </Stack>
+        </Stack>
       )}
 
       <Dialog
