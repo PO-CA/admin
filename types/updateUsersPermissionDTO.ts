@@ -1,4 +1,5 @@
 export interface UpdateUsersPermissionDTO {
   id: number;
-  userLevel: string;
+  userLevel?: string;
+  pocaStorePermissionLevel?: string;
 }
