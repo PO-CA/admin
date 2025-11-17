@@ -11,7 +11,7 @@ export default function CreateLogiPocaProductPage() {
         Logi 포토카드 등록
       </Typography>
 
-      <Box sx={{ maxWidth: 480 }}>
+      <Box sx={{ maxWidth: 1100, mx: 'auto' }}>
         <CreateLogiPocaProductForm />
       </Box>
     </Box>

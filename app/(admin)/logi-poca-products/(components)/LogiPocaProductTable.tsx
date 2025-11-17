@@ -1,35 +1,72 @@
 'use client';
 
-import Paper from '@mui/material/Paper';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import CircularProgress from '@mui/material/CircularProgress';
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import dayjs from 'dayjs';
+import CircularProgress from '@mui/material/CircularProgress';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useGetLogiPocaProducts } from '@/query/query/logiPocaProducts';
+import type { LogiPocaProduct } from '@/types/logiPocaProduct';
 
-const columns: GridColDef[] = [
-  { field: 'title', headerName: '상품명', flex: 1, minWidth: 180 },
-  { field: 'artist', headerName: '아티스트', flex: 0.6, minWidth: 120 },
-  { field: 'member', headerName: '멤버', flex: 0.6, minWidth: 120 },
-  { field: 'company', headerName: '유통사', flex: 0.6, minWidth: 120 },
-  { field: 'sku', headerName: 'SKU', flex: 0.6, minWidth: 120 },
+const columns: GridColDef<LogiPocaProduct>[] = [
+  {
+    field: 'thumbNailUrl',
+    headerName: '썸네일',
+    flex: 0.5,
+    minWidth: 110,
+    sortable: false,
+    filterable: false,
+    renderCell: ({ value, row }) =>
+      value ? (
+        <Avatar
+          variant="rounded"
+          src={value}
+          alt={row.title ?? '썸네일 이미지'}
+          sx={{ width: 56, height: 56 }}
+        />
+      ) : (
+        <Avatar variant="rounded" sx={{ width: 56, height: 56, fontSize: 14 }}>
+          없음
+        </Avatar>
+      ),
+  },
+  {
+    field: 'eventName',
+    headerName: '이벤트명',
+    flex: 1.1,
+    minWidth: 180,
+    valueGetter: (_value, row) => row.eventName || row.title || '-',
+  },
+  { field: 'artist', headerName: '아티스트', flex: 0.7, minWidth: 140 },
+  { field: 'member', headerName: '멤버', flex: 0.7, minWidth: 140 },
   {
     field: 'price',
-    headerName: '가격',
-    flex: 0.5,
+    headerName: '판매가',
+    flex: 0.6,
     minWidth: 120,
     valueFormatter: ({ value }) =>
       value ? Number(value).toLocaleString('ko-KR') : '-',
   },
   { field: 'stock', headerName: '재고', flex: 0.4, minWidth: 90 },
   {
-    field: 'createdAt',
-    headerName: '등록일',
-    flex: 0.6,
+    field: 'description',
+    headerName: '설명',
+    flex: 1,
+    minWidth: 200,
+    renderCell: ({ value }) => (
+      <Typography variant="body2" color="text.primary" noWrap>
+        {value ?? '-'}
+      </Typography>
+    ),
+  },
+  {
+    field: 'vectorStatus',
+    headerName: '이미지 상태',
+    flex: 0.5,
     minWidth: 140,
-    valueFormatter: ({ value }) => (value ? dayjs(value).format('YY.MM.DD') : '-'),
+    valueFormatter: ({ value }) => (value ? value : '-'),
   },
 ];
 

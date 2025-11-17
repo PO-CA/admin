@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  createLogiPocaProduct,
+  bulkCreateLogiPocaProduct,
   getLogiPocaProducts,
 } from '@/query/api/logiPocaProducts';
-import { CreateLogiPocaProductPayload } from '@/types/logiPocaProduct';
+import { BulkCreateLogiPocaProductPayload } from '@/types/logiPocaProduct';
 
 export function useGetLogiPocaProducts() {
   return useQuery({
@@ -15,12 +15,12 @@ export function useGetLogiPocaProducts() {
   });
 }
 
-export function useCreateLogiPocaProduct() {
+export function useBulkCreateLogiPocaProduct() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: CreateLogiPocaProductPayload) =>
-      createLogiPocaProduct(payload),
+    mutationFn: (payload: BulkCreateLogiPocaProductPayload) =>
+      bulkCreateLogiPocaProduct(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['logi-poca-products'] });
     },
