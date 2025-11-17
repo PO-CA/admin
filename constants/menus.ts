@@ -17,7 +17,13 @@ export const menus = [
       { href: '/products', text: '상품목록' },
       { href: '/addproduct', text: '상품추가' },
       { href: '/import-products', text: '상품입고' },
-      { href: '/logi-poca-products', text: '포토카드 관리' },
+    ],
+  },
+  {
+    text: '포토카드 관리',
+    subMenus: [
+      { href: '/logi-poca-products/create', text: '등록' },
+      { href: '/logi-poca-products', text: '목록' },
     ],
   },
   {
