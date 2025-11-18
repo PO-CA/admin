@@ -39,7 +39,7 @@ export default function ProductDetail({
     onChange,
   } = useInput<UpdateProductData>({
     productId: 0,
-    logiCategoryId: '',
+    logiCategoryId: 0,
     sku: '',
     title: '',
     thumbNailUrl: '',
@@ -65,7 +65,7 @@ export default function ProductDetail({
     if (productData !== undefined)
       setValue({
         productId: productData.id || 0,
-        logiCategoryId: productData.logiCategory.id || '',
+        logiCategoryId: productData.logiCategory.id || 0,
         sku: productData.sku || '',
         title: productData.title || '',
         thumbNailUrl: productData.thumbNailUrl || '',
@@ -90,7 +90,7 @@ export default function ProductDetail({
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (productInputData.logiCategoryId === '')
+    if (!productInputData.logiCategoryId)
       return alert('카테고리를 선택해주세요.');
     if (productInputData.title === '') return alert('상품명을 작성해주세요.');
     if (productInputData.sku === '') return alert('sku를 작성해주세요.');
@@ -127,6 +127,7 @@ export default function ProductDetail({
     const payload: UpdateProductData = {
       ...productInputData,
       productId: Number(productInputData.productId),
+      logiCategoryId: Number(productInputData.logiCategoryId),
       stock: stockValue,
       price: priceValue,
       purchase: purchaseValue,
@@ -203,6 +204,7 @@ export default function ProductDetail({
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
               <CategorySelect
                 name="logiCategoryId"
+                value={productInputData.logiCategoryId || ''}
                 onChange={(e: SelectChangeEvent) => {
                   onChange({
                     target: {

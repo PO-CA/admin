@@ -11,9 +11,11 @@ import type { SelectChangeEvent } from '@mui/material/Select';
 export default function CategorySelect({
   onChange,
   name = 'categoryId',
+  value,
 }: {
   onChange: (event: SelectChangeEvent) => void;
   name?: string;
+  value?: string | number;
 }) {
   const {
     data: categoryData,
@@ -41,7 +43,9 @@ export default function CategorySelect({
           name={name}
           label="카테고리 선택(필수)"
           onChange={onChange}
-          defaultValue=""
+          value={
+            value === undefined || value === null || value === '' ? '' : value
+          }
         >
           <MenuItem value="">카테고리 선택(필수)</MenuItem>
           {categoryData.map((category: any, i: number) => (

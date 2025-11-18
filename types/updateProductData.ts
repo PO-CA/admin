@@ -1,6 +1,6 @@
 export interface UpdateProductData {
   productId: number;
-  logiCategoryId: string;
+  logiCategoryId: number;
   sku: string;
   title: string;
   thumbNailUrl: string;
