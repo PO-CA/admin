@@ -96,13 +96,49 @@ export default function ProductDetail({
     if (productInputData.sku === '') return alert('sku를 작성해주세요.');
     if (productInputData.barcode === '')
       return alert('Barcode를 작성해주세요.');
-    productInputData.releaseDate = new Date(
-      productInputData.releaseDate,
-    ).toISOString();
-    productInputData.deadlineDate = new Date(
-      productInputData.deadlineDate,
-    ).toISOString();
-    updateProduct(productInputData).then(() => {
+
+    const parseNumber = (value: unknown): number | undefined => {
+      if (value === '' || value === null || value === undefined) return undefined;
+      const parsed = Number(value);
+      return Number.isNaN(parsed) ? undefined : parsed;
+    };
+
+    const stockValue = parseNumber(productInputData.stock) ?? 0;
+    const priceValue = parseNumber(productInputData.price);
+    const purchaseValue = parseNumber(productInputData.purchase) ?? 0;
+    const weightValue = parseNumber(productInputData.weight) ?? 0;
+    const xValue = parseNumber(productInputData.x) ?? 0;
+    const yValue = parseNumber(productInputData.y) ?? 0;
+    const zValue = parseNumber(productInputData.z) ?? 0;
+
+    if (priceValue === undefined)
+      return alert('가격을 숫자로 입력해주세요.');
+
+    const releaseDateISO =
+      productInputData.releaseDate === '' || productInputData.releaseDate === null
+        ? ''
+        : new Date(productInputData.releaseDate).toISOString();
+    const deadlineDateISO =
+      productInputData.deadlineDate === '' ||
+      productInputData.deadlineDate === null
+        ? ''
+        : new Date(productInputData.deadlineDate).toISOString();
+
+    const payload: UpdateProductData = {
+      ...productInputData,
+      productId: Number(productInputData.productId),
+      stock: stockValue,
+      price: priceValue,
+      purchase: purchaseValue,
+      weight: weightValue,
+      x: xValue,
+      y: yValue,
+      z: zValue,
+      releaseDate: releaseDateISO,
+      deadlineDate: deadlineDateISO,
+    };
+
+    updateProduct(payload).then(() => {
       router.refresh();
     });
   };
