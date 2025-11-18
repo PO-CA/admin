@@ -13,7 +13,7 @@ export default function CategorySelect({
   name = 'categoryId',
   value,
 }: {
-  onChange: (event: SelectChangeEvent) => void;
+  onChange: (event: SelectChangeEvent, child?: React.ReactNode) => void;
   name?: string;
   value?: string | number;
 }) {
@@ -42,7 +42,7 @@ export default function CategorySelect({
           id={name}
           name={name}
           label="카테고리 선택(필수)"
-          onChange={onChange}
+          onChange={(event, child) => onChange(event as SelectChangeEvent, child)}
           value={
             value === undefined || value === null || value === '' ? '' : value
           }
