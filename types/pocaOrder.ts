@@ -24,6 +24,7 @@ export interface PocaOrderUserSummary {
   nickname?: string;
   pendingOrderCount?: number;
   totalOrderCount?: number;
+  totalOrderQuantity?: number;
   totalAmount?: number;
   pocaCreditBalance?: number;
   pocaDiscountRate?: number;

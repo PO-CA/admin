@@ -24,6 +24,7 @@ export const menus = [
     subMenus: [
       { href: '/logi-poca-products/create', text: '등록' },
       { href: '/logi-poca-products', text: '목록' },
+      { href: '/logi-poca-orders', text: '유저별 주문목록' },
     ],
   },
   {
