@@ -202,10 +202,11 @@ export default function ProductDetail({
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
               <CategorySelect
+                name="logiCategoryId"
                 onChange={(e: SelectChangeEvent) => {
                   onChange({
                     target: {
-                      name: e.target.name || 'categoryId',
+                      name: e.target.name || 'logiCategoryId',
                       value: e.target.value,
                     },
                   } as any);

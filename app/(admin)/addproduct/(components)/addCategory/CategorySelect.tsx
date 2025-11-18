@@ -10,8 +10,10 @@ import type { SelectChangeEvent } from '@mui/material/Select';
 
 export default function CategorySelect({
   onChange,
+  name = 'categoryId',
 }: {
   onChange: (event: SelectChangeEvent) => void;
+  name?: string;
 }) {
   const {
     data: categoryData,
@@ -27,12 +29,16 @@ export default function CategorySelect({
       <Typography fontWeight={600} fontSize={14} sx={{ minWidth: 70 }}>
         카테고리❗️
       </Typography>
+      {/*
+        label/input id를 name 기반으로 고유하게 구성해 재사용 컴포넌트가
+        다른 폼에서도 충돌 없이 사용할 수 있도록 한다.
+      */}
       <FormControl size="small" sx={{ minWidth: 180 }}>
-        <InputLabel id="categoryId">카테고리 선택(필수)</InputLabel>
+        <InputLabel id={`${name}-label`}>카테고리 선택(필수)</InputLabel>
         <Select
-          labelId="categoryId"
-          id="categoryId"
-          name="categoryId"
+          labelId={`${name}-label`}
+          id={name}
+          name={name}
           label="카테고리 선택(필수)"
           onChange={onChange}
           defaultValue=""
