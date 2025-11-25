@@ -5,6 +5,7 @@ import UserDcAmount from './(components)/dcAmount';
 import UserDcRate from './(components)/dcRate';
 import UserNickname from './(components)/userNickname';
 import UpdateInCharge from './(components)/updateInCharge';
+import UserAccountPermission from './(components)/userAccountPermission';
 import { useGetUsersDetailByUsersEmail } from '@/query/query/users';
 import { Box, Typography, Paper, Container } from '@mui/material';
 
@@ -41,6 +42,7 @@ export default function CustomerDetail({
             </Typography>
             <UserNickname usersData={usersData} />
             <UpdateInCharge usersData={usersData} />
+            <UserAccountPermission usersData={usersData} />
           </Box>
         )}
 

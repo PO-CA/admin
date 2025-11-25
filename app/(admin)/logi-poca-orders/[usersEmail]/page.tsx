@@ -45,7 +45,7 @@ import {
 } from '@mui/material';
 import { PocaCreditType } from '@/types/pocaCredit';
 import { CreatePocaShippingDTO } from '@/types/createPocaShippingDTO';
-import UserPermission from '@/app/(admin)/customers/[usersEmail]/(components)/userPermission';
+import UserPocaPermission from './(components)/userPocaPermission';
 
 interface ShippingFormState {
   addressId: string;
@@ -325,7 +325,7 @@ export default function PocaUserDetailPage({
             {usersEmail}
           </Typography>
           {!isUsersLoading && isUsersSuccess && usersData && (
-            <UserPermission usersData={usersData} />
+            <UserPocaPermission usersData={usersData} />
           )}
         </Paper>
 
