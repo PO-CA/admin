@@ -8,6 +8,8 @@ export interface UserState {
   setUserEmail: (newUserEmail: string) => void;
   userLevel: string;
   setUserLevel: (userLevel: string) => void;
+  pocaStorePermissionLevel: string;
+  setPocaStorePermissionLevel: (level: string) => void;
   isAuthenticated: boolean;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   isLoading: boolean;
@@ -23,6 +25,9 @@ const useUserStore = create(
       setUserEmail: (newUserEmail: string) => set({ userEmail: newUserEmail }),
       userLevel: '',
       setUserLevel: (userLevel: string) => set({ userLevel }),
+      pocaStorePermissionLevel: '',
+      setPocaStorePermissionLevel: (level: string) =>
+        set({ pocaStorePermissionLevel: level }),
       isAuthenticated: false,
       setIsAuthenticated: (isAuthenticated: boolean) =>
         set({ isAuthenticated }),

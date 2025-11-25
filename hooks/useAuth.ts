@@ -11,6 +11,8 @@ export const useAuth = () => {
     setUserEmail,
     userLevel,
     setUserLevel,
+    pocaStorePermissionLevel,
+    setPocaStorePermissionLevel,
     isAuthenticated,
     setIsAuthenticated,
     isLoading,
@@ -26,6 +28,7 @@ export const useAuth = () => {
       setUserId(data.userId);
       setUserEmail(data.userEmail);
       setUserLevel(data.userLevel);
+      setPocaStorePermissionLevel(data.pocaStorePermissionLevel ?? '');
       setIsAuthenticated(true);
     }
     setIsLoading(false);
@@ -35,6 +38,7 @@ export const useAuth = () => {
     setUserId,
     setUserEmail,
     setUserLevel,
+    setPocaStorePermissionLevel,
     setIsAuthenticated,
     setIsLoading,
   ]);
@@ -45,6 +49,7 @@ export const useAuth = () => {
     isLoading,
     userLevel,
     userEmail,
+    pocaStorePermissionLevel,
     isAuthenticated,
   };
 };

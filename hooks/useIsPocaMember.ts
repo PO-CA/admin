@@ -1,25 +1,18 @@
 import { useEffect } from 'react';
 import { useAuth } from './useAuth';
 import { usePathname, useRouter } from 'next/navigation';
-import { useSignOut } from '@/query/query/users';
 
 export const useIsPocaMember = () => {
-  const { isAuthenticated, myInfoLoading, userLevel, userId, userEmail } =
+  const { isAuthenticated, myInfoLoading, pocaStorePermissionLevel } =
     useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
-  const { mutateAsync: signOut } = useSignOut();
-
   useEffect(() => {
     if (!myInfoLoading) {
       if (isAuthenticated) {
-        if (
-          userEmail === 'rudghksldl@gmail.com' ||
-          userEmail === 'dbfl990501@naver.com' ||
-          userEmail === 'kurare@naver.com'
-        ) {
-        } else {
+        if (pocaStorePermissionLevel !== 'ORDER') {
+          alert('포카 스토어 접근 권한이 없습니다.');
           router.push('/store');
         }
       } else {
@@ -31,12 +24,10 @@ export const useIsPocaMember = () => {
       }
     }
   }, [
-    signOut,
     pathname,
     myInfoLoading,
     router,
     isAuthenticated,
-    userLevel,
-    userEmail,
+    pocaStorePermissionLevel,
   ]);
 };

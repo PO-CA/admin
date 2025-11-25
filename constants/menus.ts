@@ -20,6 +20,14 @@ export const menus = [
     ],
   },
   {
+    text: '포토카드 관리',
+    subMenus: [
+      { href: '/logi-poca-products/create', text: '등록' },
+      { href: '/logi-poca-products', text: '목록' },
+      { href: '/logi-poca-orders', text: '유저별 주문목록' },
+    ],
+  },
+  {
     text: '고객',
     subMenus: [{ href: '/customers', text: '고객 목록' }],
     // href: '/customers',
@@ -42,6 +50,10 @@ export const menus = [
       { href: '/album-purchase/settlements', text: '정산 관리' },
       { href: '/album-purchase/settlements/report', text: '정산 리포트' },
     ],
+  },
+  {
+    text: '시스템',
+    subMenus: [{ href: '/logi-audit-logs', text: '감사 로그' }],
   },
   {
     text: '공지사항',

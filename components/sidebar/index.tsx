@@ -269,6 +269,16 @@ function Sidebar() {
 
   const showPocaMenus =
     userEmail === 'rudghksldl@gmail.com' || userEmail === 'kurare@naver.com';
+  const showAuditMenus = ['rudghksldl', 'kurare', 'kkhdevs'].some((keyword) =>
+    (userEmail || '').includes(keyword),
+  );
+  const visibleMenus = React.useMemo(
+    () =>
+      showAuditMenus
+        ? menus
+        : menus.filter((menu) => menu.text !== '시스템'),
+    [showAuditMenus],
+  );
 
   const renderMenus = (menuList: any[]) =>
     menuList.map((menu, idx) => {
@@ -374,7 +384,7 @@ function Sidebar() {
       }}
     >
       <List>
-        {renderMenus(menus)}
+        {renderMenus(visibleMenus)}
         {showPocaMenus && renderMenus(pocaMenus)}
       </List>
       <Box sx={{ position: 'absolute', bottom: 0, left: 0, right: 0, p: 2 }}>

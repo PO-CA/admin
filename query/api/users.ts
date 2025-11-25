@@ -146,3 +146,26 @@ export const updateUsersInCharge = async (payload: UpdateUsersInChargeDTO) => {
   alert('담당자 수정을 성공했습니다');
   return data;
 };
+
+export const updateUsersPocaDiscount = async (payload: {
+  id: number;
+  discountRate: number;
+}) => {
+  const { data } = await requests(`${API_URL}/users/poca-discount`, {
+    method: 'put',
+    headers: { 'Content-Type': 'application/json' },
+    data: payload,
+  });
+
+  const { errorMessage, errorCode, customMessage } = data;
+
+  if (customMessage) {
+    alert(`${errorMessage}\n${errorCode}\n${customMessage}`);
+    return;
+  } else if (errorMessage) {
+    alert(`${errorMessage}\n${errorCode}`);
+    return;
+  }
+
+  return data;
+};

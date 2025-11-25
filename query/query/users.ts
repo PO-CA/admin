@@ -6,6 +6,7 @@ import {
   updateUsersInCharge,
   updateUsersNickname,
   updateUsersPermission,
+  updateUsersPocaDiscount,
 } from '../api/users';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { myInfo, signIn, signOut, signUp } from '../api/users';
@@ -70,6 +71,18 @@ export function useUpodateUsersInCharge() {
   return useMutation({
     mutationFn: (payload: UpdateUsersInChargeDTO) =>
       updateUsersInCharge(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+  });
+}
+
+export function useUpdateUsersPocaDiscount() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: { id: number; discountRate: number }) =>
+      updateUsersPocaDiscount(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
     },

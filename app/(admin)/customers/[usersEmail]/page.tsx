@@ -1,12 +1,13 @@
 'use client';
+
 import UserAddress from './(components)/address';
 import UserDcAmount from './(components)/dcAmount';
 import UserDcRate from './(components)/dcRate';
-import { useGetUsersDetailByUsersEmail } from '@/query/query/users';
-import UserPermission from './(components)/userPermission';
 import UserNickname from './(components)/userNickname';
 import UpdateInCharge from './(components)/updateInCharge';
-import { Box, Typography, Paper, Container, Stack } from '@mui/material';
+import UserAccountPermission from './(components)/userAccountPermission';
+import { useGetUsersDetailByUsersEmail } from '@/query/query/users';
+import { Box, Typography, Paper, Container } from '@mui/material';
 
 export default function CustomerDetail({
   params,
@@ -34,14 +35,14 @@ export default function CustomerDetail({
           고객-상세
         </Typography>
 
-        {!isUsersLoading && isUsersSuccess && (
+        {!isUsersLoading && isUsersSuccess && usersData && (
           <Box sx={{ mb: 3 }}>
             <Typography variant="body1" sx={{ mb: 1 }}>
               유저 아이디 : {usersData.userEmail}
             </Typography>
             <UserNickname usersData={usersData} />
-            <UserPermission usersData={usersData} />
             <UpdateInCharge usersData={usersData} />
+            <UserAccountPermission usersData={usersData} />
           </Box>
         )}
 
