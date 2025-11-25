@@ -39,7 +39,7 @@ export default function ProductDetail({
     onChange,
   } = useInput<UpdateProductData>({
     productId: 0,
-    logiCategoryId: '',
+    logiCategoryId: 0,
     sku: '',
     title: '',
     thumbNailUrl: '',
@@ -65,7 +65,7 @@ export default function ProductDetail({
     if (productData !== undefined)
       setValue({
         productId: productData.id || 0,
-        logiCategoryId: productData.logiCategory.id || '',
+        logiCategoryId: productData.logiCategory.id || 0,
         sku: productData.sku || '',
         title: productData.title || '',
         thumbNailUrl: productData.thumbNailUrl || '',
@@ -90,19 +90,56 @@ export default function ProductDetail({
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (productInputData.logiCategoryId === '')
+    if (!productInputData.logiCategoryId)
       return alert('카테고리를 선택해주세요.');
     if (productInputData.title === '') return alert('상품명을 작성해주세요.');
     if (productInputData.sku === '') return alert('sku를 작성해주세요.');
     if (productInputData.barcode === '')
       return alert('Barcode를 작성해주세요.');
-    productInputData.releaseDate = new Date(
-      productInputData.releaseDate,
-    ).toISOString();
-    productInputData.deadlineDate = new Date(
-      productInputData.deadlineDate,
-    ).toISOString();
-    updateProduct(productInputData).then(() => {
+
+    const parseNumber = (value: unknown): number | undefined => {
+      if (value === '' || value === null || value === undefined) return undefined;
+      const parsed = Number(value);
+      return Number.isNaN(parsed) ? undefined : parsed;
+    };
+
+    const stockValue = parseNumber(productInputData.stock) ?? 0;
+    const priceValue = parseNumber(productInputData.price);
+    const purchaseValue = parseNumber(productInputData.purchase) ?? 0;
+    const weightValue = parseNumber(productInputData.weight) ?? 0;
+    const xValue = parseNumber(productInputData.x) ?? 0;
+    const yValue = parseNumber(productInputData.y) ?? 0;
+    const zValue = parseNumber(productInputData.z) ?? 0;
+
+    if (priceValue === undefined)
+      return alert('가격을 숫자로 입력해주세요.');
+
+    const releaseDateISO =
+      productInputData.releaseDate === '' || productInputData.releaseDate === null
+        ? ''
+        : new Date(productInputData.releaseDate).toISOString();
+    const deadlineDateISO =
+      productInputData.deadlineDate === '' ||
+      productInputData.deadlineDate === null
+        ? ''
+        : new Date(productInputData.deadlineDate).toISOString();
+
+    const payload: UpdateProductData = {
+      ...productInputData,
+      productId: Number(productInputData.productId),
+      logiCategoryId: Number(productInputData.logiCategoryId),
+      stock: stockValue,
+      price: priceValue,
+      purchase: purchaseValue,
+      weight: weightValue,
+      x: xValue,
+      y: yValue,
+      z: zValue,
+      releaseDate: releaseDateISO,
+      deadlineDate: deadlineDateISO,
+    };
+
+    updateProduct(payload).then(() => {
       router.refresh();
     });
   };
@@ -166,10 +203,12 @@ export default function ProductDetail({
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
               <CategorySelect
+                name="logiCategoryId"
+                value={productInputData.logiCategoryId || ''}
                 onChange={(e: SelectChangeEvent) => {
                   onChange({
                     target: {
-                      name: e.target.name || 'categoryId',
+                      name: e.target.name || 'logiCategoryId',
                       value: e.target.value,
                     },
                   } as any);

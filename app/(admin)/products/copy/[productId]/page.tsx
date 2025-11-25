@@ -175,6 +175,7 @@ export default function ProductCopy({
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
               <CategorySelect
+                value={productInputData.categoryId || ''}
                 onChange={(e: SelectChangeEvent) => {
                   onChange({
                     target: {

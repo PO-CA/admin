@@ -132,6 +132,7 @@ export default function AddProduct() {
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
               <CategorySelect
+                value={addProductData.categoryId || ''}
                 onChange={(e: SelectChangeEvent) => {
                   onChange({
                     target: {
