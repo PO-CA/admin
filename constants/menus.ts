@@ -52,6 +52,10 @@ export const menus = [
     ],
   },
   {
+    text: '시스템',
+    subMenus: [{ href: '/logi-audit-logs', text: '감사 로그' }],
+  },
+  {
     text: '공지사항',
     subMenus: [
       { href: '/notice', text: '공지사항 목록' },
